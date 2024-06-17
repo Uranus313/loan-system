@@ -38,7 +38,7 @@ function SignUp(){
             setError("passwords aren't equal");
         }else{
             setError(null);
-            navigate("/emailVerification",{state:{email: emailRef.current.value.trim()}});
+            navigate("/verifyingEmail",{state:{email: emailRef.current.value.trim()}});
         }
     }
     return (
