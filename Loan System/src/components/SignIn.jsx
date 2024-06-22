@@ -1,6 +1,6 @@
 import { useState,useRef } from "react";
 import { useNavigate } from "react-router-dom";
-let user = {userID : "hello12", username : "Uranus", firstName : "Mehrbod", nickName : null, lastName : "Hashemi", email: "mehrbodmh82@gmail.com" ,dateOfBirth : "2003-11-23",password: "12345678", IDNumber : "313"}
+let user = {userID : "hello12", username : "Uranus", firstName : "Mehrbod", middleName : null,lastName : "Hashemi", email: "mehrbodmh82@gmail.com" ,dateOfBirth : "2003-11-23",password: "12345678", IDNumber : "313"}
 function SignIn(){
     let [error,setError] = useState(null);
     let [passVisibility,setPassVisibility] = useState('password');
