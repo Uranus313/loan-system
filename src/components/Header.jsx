@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import '../component styles/Header.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
@@ -7,8 +8,8 @@ function Header(){
             <p className={"mt-2 navbar-text-logo"}>LOAN REMINDER</p>
             <img  className={'navbar-img-logo'} src={'./src/assets/logo.png'}/>
             <nav className={'d-flex gap-4'}>
-                <a className={"mt-2 navbar-text"} href={''}>LOG IN</a>
-                <a className={"mt-2 navbar-text"} href={''}>SIGN UP</a>
+                <Link to={"/signIn"} className={"mt-2 navbar-text"} >LOG IN</Link>
+                <Link to={"/signUp"} className={"mt-2 navbar-text"} >SIGN UP</Link>
             </nav>
         </header>
     )
