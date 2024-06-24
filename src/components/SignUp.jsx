@@ -1,5 +1,9 @@
 import { useState,useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css'
+import '/src/component styles/SignUp.css'
+
+
 function SignUp(){
     let [error,setError] = useState(null);
     let [passVisibility,setPassVisibility] = useState('password');
@@ -42,22 +46,26 @@ function SignUp(){
         }
     }
     return (
-        <form action="post" onSubmit={(event) => handleSubmit(event)} style={{display: "flex", alignItems:"center", flexDirection:'column',width: "100%", color: "white"}}>
-            <h2>fill the form</h2>
-            {error? <p style={{color : 'rgb(230, 18, 18)'}}>{error}</p> : null }
-            <input type="text" ref={usernameRef} placeholder="username" />
-            <input type="text" ref={firstNameRef} placeholder="first name" />
-            <input type="text" ref={middleNameRef} placeholder="middle name" />
-            <input type="text" ref={lastNameRef} placeholder="last name" />
-            <input type="email" ref={emailRef} placeholder="email" />
-            <input type="number" ref={IDNumberRef} placeholder="ID number" />
-            <input type="date" ref={dateOfBirthRef} placeholder="date of birth" />
-            <input type= {passVisibility} ref={passwordRef} placeholder="password" />
-            <input type={passVisibility} ref={repeatPasswordRef} placeholder="repeat password" />
-            <button type="button" onClick={passVisibility == "password"? () => {setPassVisibility("text");setPassVisibilitySwitchText('hide password')}: () => {setPassVisibility("password");setPassVisibilitySwitchText('show password')}}>{passVisibilitySwitchText}</button>
-            <button type="submit" style={{backgroundColor: "orange",border: "none", borderRadius : '5px',padding: '10px 15px', cursor:'pointer'}}>Submit</button>
+        <form className={'d-flex flex-column align-items-center bg-gradient'} action="post" onSubmit={(event) => handleSubmit(event)}>
+            <div className={'d-grid p-4 rounded-3 bg-secondary-subtle'}>
+                <h4>WELCOME TO OUR WEBSITE</h4>
+                <p>Please enter the details to sign up</p>
+                {error? <p style={{color : 'rgb(230, 18, 18)'}}>{error}</p> : null }
+                <input className={'input-button rounded-1'} type="text" ref={usernameRef} placeholder="username" />
+                <input className={'input-button rounded-1'} type="text" ref={firstNameRef} placeholder="first name" />
+                <input className={'input-button rounded-1'} type="text" ref={middleNameRef} placeholder="middle name" />
+                <input className={'input-button rounded-1'} type="text" ref={lastNameRef} placeholder="last name" />
+                <input className={'input-button rounded-1'} type="email" ref={emailRef} placeholder="email" />
+                <input className={'input-button rounded-1'} type="number" ref={IDNumberRef} placeholder="ID number" />
+                <input className={'input-button rounded-1'} type="date" ref={dateOfBirthRef} placeholder="date of birth" />
+                <input className={'input-button rounded-1'} type= {passVisibility} ref={passwordRef} placeholder="password" />
+                <input className={'input-button rounded-1'} type={passVisibility} ref={repeatPasswordRef} placeholder="repeat password" />
+                <button className={'show-pass-btn rounded-1'} type='button' onClick={passVisibility == "password"? () => {setPassVisibility("text");setPassVisibilitySwitchText('hide password')}: () => {setPassVisibility("password");setPassVisibilitySwitchText('show password')}}>{passVisibilitySwitchText}</button>
+                <button className={'submit-button rounded-1'} type="submit">SUBMIT</button>
+            </div>
 
         </form>
     )
 }
 export default SignUp;
+

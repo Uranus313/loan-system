@@ -4,9 +4,9 @@ import Header from "./Header";
 function Layout(){
     return(
         <>
-            <Header />
+            <Header/>
             <Outlet/>
-            <Footer />
+            <Footer/>
         </>
         
     )
