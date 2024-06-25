@@ -1,13 +1,14 @@
 import { useState,useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '/src/component styles/SignUp.css'
 
 
-function SignUp(){
+function EditProfile(){
     let [error,setError] = useState(null);
     let [passVisibility,setPassVisibility] = useState('password');
     let [passVisibilitySwitchText,setPassVisibilitySwitchText] = useState('show password');
+    let user = useOutletContext();
     const usernameRef = useRef('');
     const firstNameRef = useRef('');
     const middleNameRef = useRef('');
@@ -20,40 +21,22 @@ function SignUp(){
     const navigate = useNavigate();
     function handleSubmit(event){
         event.preventDefault(); 
-        // console.log('hello');
-        // let namePattern = /^[a-zA-Z\s-]+$/;
-        if(usernameRef.current.value.trim() == ''){
-            setError("username shouldn't be empty");
-        }else if(firstNameRef.current.value.trim() == ''){
-            setError("first name shouldn't be empty");
-        }else if(lastNameRef.current.value.trim() == ''){
-            setError("last name shouldn't be empty");
-        }else if(emailRef.current.value.trim() == ''){
-            setError("email shouldn't be empty");
-        }else if(IDNumberRef.current.value.trim() == ''){
-            setError("identification number shouldn't be empty");
-        }else if(dateOfBirthRef.current.value.trim() == ''){
-            setError("date of birth shouldn't be empty");
-        }else if(passwordRef.current.value.trim() == ''){
-            setError("password shouldn't be empty");
-        }else if(repeatPasswordRef.current.value.trim() == ''){
-            setError("repeated password shouldn't be empty");
-        }else if(repeatPasswordRef.current.value.trim() != passwordRef.current.value.trim()){
+        if(repeatPasswordRef.current.value.trim() != passwordRef.current.value.trim()){
             setError("passwords aren't equal");
         }else{
+            //function to change info
             setError(null);
-            navigate("/verifyingEmail",{state:{email: emailRef.current.value.trim()}});
+            navigate("/",{state:{email: emailRef.current.value.trim()}});
         }
     }
     return (
         <form className={'d-flex flex-column align-items-center bg-gradient'} action="post" onSubmit={(event) => handleSubmit(event)}>
             <div className={'d-grid p-4 rounded-3 bg-secondary-subtle'}>
-                <h4>WELCOME TO OUR WEBSITE</h4>
-                <p>Please enter the details to sign up</p>
+                <h4>Fill Every Field You Want to Change</h4>
                 {error? <p style={{color : 'rgb(230, 18, 18)'}}>{error}</p> : null }
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>Username :</p>
-                    <input className={'input-button rounded-1'} type="text" ref={usernameRef} placeholder="username" />
+                    <input className={'input-button rounded-1'} type="text" ref={usernameRef} placeholder={user.username} />
                 </div>
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>First name :</p>
@@ -68,16 +51,12 @@ function SignUp(){
                     <input className={'input-button rounded-1'} type="text" ref={lastNameRef} placeholder="last name" />
                 </div>
                 <div className={'d-flex justify-content-between'}>
-                    <p className={'fw-bold me-3 '}>Email :</p>
-                    <input className={'input-button rounded-1'} type="email" ref={emailRef} placeholder="email" />
-                </div>
-                <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>ID Number :</p>
                     <input className={'input-button rounded-1'} type="number" ref={IDNumberRef} placeholder="ID number" />
                 </div>
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>Date of Birth :</p>
-                    <input className={'input-button rounded-1'} type="date" ref={dateOfBirthRef} placeholder="date of birth" />
+                    <input  className={'input-button rounded-1'} type="date" ref={dateOfBirthRef}  defaultValue={user.dateOfBirth} />
                 </div>
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>Password :</p>
@@ -94,5 +73,5 @@ function SignUp(){
         </form>
     )
 }
-export default SignUp;
+export default EditProfile;
 

@@ -12,7 +12,7 @@ function Layout(){
             <div style={{display: "flex",width: "100%",height: "100%"}}>
                 <div style={{width: "100%"}}>
                     <Header menuControl={() => setIsMenuOpen(!isMenuOpen) } user = {user}/>
-                    <Outlet/>
+                    <Outlet context={user}/>
                     <Footer/>
                 </div>
                 <UserSideMenu user={user} isMenuOpen={isMenuOpen}/>
