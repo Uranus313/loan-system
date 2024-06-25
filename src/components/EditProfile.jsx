@@ -40,19 +40,19 @@ function EditProfile(){
                 </div>
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>First name :</p>
-                    <input className={'input-button rounded-1'} type="text" ref={firstNameRef} placeholder="first name" />
+                    <input className={'input-button rounded-1'} type="text" ref={firstNameRef} placeholder={user.firstName} />
                 </div>
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>Middle Name :</p>
-                    <input className={'input-button rounded-1'} type="text" ref={middleNameRef} placeholder="middle name" />
+                    <input className={'input-button rounded-1'} type="text" ref={middleNameRef} placeholder={user.middleName}  />
                 </div>
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>Last Name :</p>
-                    <input className={'input-button rounded-1'} type="text" ref={lastNameRef} placeholder="last name" />
+                    <input className={'input-button rounded-1'} type="text" ref={lastNameRef} placeholder={user.lastName} />
                 </div>
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>ID Number :</p>
-                    <input className={'input-button rounded-1'} type="number" ref={IDNumberRef} placeholder="ID number" />
+                    <input className={'input-button rounded-1'} type="number" ref={IDNumberRef} placeholder={user.IDNumber}  />
                 </div>
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>Date of Birth :</p>
