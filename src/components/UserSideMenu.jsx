@@ -5,7 +5,7 @@ function UserSideMenu({user,isMenuOpen}){
                     <h3>{user.username}</h3>
                     <Link to={'/editProfile'}>Edit Profile</Link>
                     <Link>Loans</Link>
-                    <Link>Add Loan</Link>
+                    <Link to={'addLoan'}>Add Loan</Link>
                     <Link style={{display: "block",textWrap: "nowrap"}}>Submit Debt Payment</Link>
                     <Link>log out</Link>
 
