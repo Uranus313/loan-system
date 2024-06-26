@@ -75,7 +75,7 @@ function AddLoan(){
                         <option onClick={() => setCustomBankSelected(true)} value="customBank">Custom Bank</option>
                     </select>
                 </div>
-                <div className={ customBankSelected? ' d-flex justify-content-between' : 'd-none justify-content-between'  }>
+                <div className={ customBankSelected? ' d-flex justify-content-between' : 'd-none'  }>
                     <p className={'fw-bold me-3 '}>Custom Bank Name :</p>
                     <input className={'input-button rounded-1'} type="text" ref={customBankNameRef} placeholder="custom bank"/>
                 </div>

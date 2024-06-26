@@ -2,6 +2,7 @@ import { useState,useRef } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '/src/component styles/SignUp.css'
+import validateEmail from "../functions/validateEmail";
 
 
 function EditProfile(){
@@ -21,8 +22,13 @@ function EditProfile(){
     const navigate = useNavigate();
     function handleSubmit(event){
         event.preventDefault(); 
+
         if(repeatPasswordRef.current.value.trim() != passwordRef.current.value.trim()){
             setError("passwords aren't equal");
+        }else if(validateEmail(usernameRef.current.value.trim()) == true ){
+            setError("user name shouldn't be an email");
+        }else if (emailRef.current.value.trim() != '' && validateEmail(emailRef.current.value.trim())== false){
+            setError("wrong email format")
         }else{
             //function to change info
             setError(null);
@@ -35,35 +41,39 @@ function EditProfile(){
                 <h4>Fill Every Field You Want to Change</h4>
                 {error? <p style={{color : 'rgb(230, 18, 18)'}}>{error}</p> : null }
                 <div className={'d-flex justify-content-between'}>
-                    <p className={'fw-bold me-3 '}>Username :</p>
+                    <p className={'fw-bold me-3 '}>New Username :</p>
                     <input className={'input-button rounded-1'} type="text" ref={usernameRef} placeholder={user.username} />
                 </div>
                 <div className={'d-flex justify-content-between'}>
-                    <p className={'fw-bold me-3 '}>First name :</p>
+                    <p className={'fw-bold me-3 '}>New First name :</p>
                     <input className={'input-button rounded-1'} type="text" ref={firstNameRef} placeholder={user.firstName} />
                 </div>
                 <div className={'d-flex justify-content-between'}>
-                    <p className={'fw-bold me-3 '}>Middle Name :</p>
+                    <p className={'fw-bold me-3 '}>New Middle Name :</p>
                     <input className={'input-button rounded-1'} type="text" ref={middleNameRef} placeholder={user.middleName}  />
                 </div>
                 <div className={'d-flex justify-content-between'}>
-                    <p className={'fw-bold me-3 '}>Last Name :</p>
+                    <p className={'fw-bold me-3 '}>New Last Name :</p>
                     <input className={'input-button rounded-1'} type="text" ref={lastNameRef} placeholder={user.lastName} />
                 </div>
                 <div className={'d-flex justify-content-between'}>
-                    <p className={'fw-bold me-3 '}>ID Number :</p>
+                    <p className={'fw-bold me-3 '}>New ID Number :</p>
                     <input className={'input-button rounded-1'} type="number" ref={IDNumberRef} placeholder={user.IDNumber}  />
                 </div>
                 <div className={'d-flex justify-content-between'}>
-                    <p className={'fw-bold me-3 '}>Date of Birth :</p>
+                    <p className={'fw-bold me-3 '}>Email :</p>
+                    <input className={'input-button rounded-1'} type="email" ref={emailRef} placeholder={user.email} />
+                </div>
+                <div className={'d-flex justify-content-between'}>
+                    <p className={'fw-bold me-3 '}>New Date of Birth :</p>
                     <input  className={'input-button rounded-1'} type="date" ref={dateOfBirthRef}  defaultValue={user.dateOfBirth} />
                 </div>
                 <div className={'d-flex justify-content-between'}>
-                    <p className={'fw-bold me-3 '}>Password :</p>
+                    <p className={'fw-bold me-3 '}>New Password :</p>
                     <input className={'input-button rounded-1'} type= {passVisibility} ref={passwordRef} placeholder="password" />
                 </div>
                 <div className={'d-flex justify-content-between'}>
-                    <p className={'fw-bold me-3 '}>Repeat Password :</p>
+                    <p className={'fw-bold me-3 '}>Repeat New Password :</p>
                     <input className={'input-button rounded-1'} type={passVisibility} ref={repeatPasswordRef} placeholder="repeat password" />
                 </div>
                 <button className={'show-pass-btn rounded-1'} type='button' onClick={passVisibility == "password"? () => {setPassVisibility("text");setPassVisibilitySwitchText('hide password')}: () => {setPassVisibility("password");setPassVisibilitySwitchText('show password')}}>{passVisibilitySwitchText}</button>

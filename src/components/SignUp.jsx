@@ -2,6 +2,7 @@ import { useState,useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '/src/component styles/SignUp.css'
+import validateEmail from "../functions/validateEmail";
 
 
 function SignUp(){
@@ -24,12 +25,14 @@ function SignUp(){
         // let namePattern = /^[a-zA-Z\s-]+$/;
         if(usernameRef.current.value.trim() == ''){
             setError("username shouldn't be empty");
+        }else if(validateEmail(usernameRef.current.value.trim()) == true){
+            setError("user name shouldn't be an email");
         }else if(firstNameRef.current.value.trim() == ''){
             setError("first name shouldn't be empty");
         }else if(lastNameRef.current.value.trim() == ''){
             setError("last name shouldn't be empty");
-        }else if(emailRef.current.value.trim() == ''){
-            setError("email shouldn't be empty");
+        }else if(emailRef.current.value.trim() == '' || validateEmail(emailRef.current.value.trim())== false){
+            setError("email shouldn't be empty or in wrong format");
         }else if(IDNumberRef.current.value.trim() == ''){
             setError("identification number shouldn't be empty");
         }else if(dateOfBirthRef.current.value.trim() == ''){
