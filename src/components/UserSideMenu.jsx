@@ -4,6 +4,7 @@ function UserSideMenu({user,isMenuOpen,logOut}){
     return(
         <div style={{display: isMenuOpen? "flex": "none", backgroundColor: "yellowgreen", flexDirection: "column",alignItems: "center" }}>
                     <h3>{user?.username}</h3>
+                    <Link to={'/profileInfo'}>My Profile</Link>
                     <Link to={'/editProfile'}>Edit Profile</Link>
                     <Link>Loans</Link>
                     <Link to={'/addLoan'}>Add Loan</Link>

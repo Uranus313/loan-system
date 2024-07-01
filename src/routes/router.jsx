@@ -13,7 +13,8 @@ const router = createBrowserRouter([
         {path:'verifyingEmail',element: <VerifyingEmail />},
         {path:'signIn',element: <SignIn />},
         {path:'editProfile',element: <EditProfile />},
-        {path:'addLoan',element: <AddLoan />}
+        {path:'addLoan',element: <AddLoan />},
+        {path:'profileInfo',element: <ProfileInfo />}
 
     ]}
 ])

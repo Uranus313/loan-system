@@ -11,6 +11,7 @@ function Layout(){
     let [isMenuOpen,setIsMenuOpen] = useState(false);
     let {data: user,error,isLoading} = useCheckToken();
     let [signedIn, setSignedIn] = useState();
+    
     console.log(user);
     console.log(error);
     console.log(isLoading);
@@ -38,7 +39,7 @@ function Layout(){
             <div style={{display: "flex",width: "100%",minHeight: "100%"}}>
                 <div style={{width: "100%"}}>
                     <Header menuControl={() => setIsMenuOpen(!isMenuOpen) } signedIn ={signedIn} isLoading={isLoading}  />
-                        <SignInContext.Provider value={{signedIn: signedIn , setSignedIn: setSignedIn}}>
+                        <SignInContext.Provider value={{signedIn: signedIn , setSignedIn: setSignedIn,handleLogOut}}>
                             <Outlet context={{user : error? null :user,isLoading: isLoading}} />
                         </SignInContext.Provider>
                     <Footer/>

@@ -10,6 +10,8 @@ import capitalizeFirstLetter from "../functions/capitalizedFirstLetter";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
+import InputPopUp from "./InputPopUp";
+
 function EditProfile(){
     let [error,setError] = useState(null);
     let [passVisibility,setPassVisibility] = useState('password');
@@ -46,6 +48,7 @@ function EditProfile(){
             toast(Array.isArray(error.response?.data.detail)?  error.response?.data.detail.map((item,index) =>  {item.msg.includes("Value error,")?item.msg.replace("Value error, ",''): capitalizeFirstLetter(item.loc[item.loc.length-1]) + " " + item.msg.substr(item.msg.indexOf(" ")+1)}) : error.response?.data.detail ,{type: "error",onClose : ()=> console.log("hi")})
         }
     });
+    
     function handleSubmit(event){
         event.preventDefault(); 
         console.log(repeatPasswordRef.current.value.trim() );
@@ -112,10 +115,11 @@ function EditProfile(){
                     <input className={'input-button rounded-1'} type={passVisibility} ref={repeatPasswordRef} placeholder="repeat password" />
                 </div>
                 <div className={oldPassInput? 'd-flex justify-content-between' : 'd-none'}>
-                    <p className={'fw-bold me-3 '}>Old Password :</p>
-                    <input className={'input-button rounded-1'} type={passVisibility} ref={oldPasswordRef} placeholder="old password" />
+                    <p className={'fw-bold me-3 '}>Current Password :</p>
+                    <input className={'input-button rounded-1'} type={passVisibility} ref={oldPasswordRef} placeholder="Current password" />
                 </div>
                 <button className={'show-pass-btn rounded-1'} type='button' onClick={passVisibility == "password"? () => {setPassVisibility("text");setPassVisibilitySwitchText('hide password')}: () => {setPassVisibility("password");setPassVisibilitySwitchText('show password')}}>{passVisibilitySwitchText}</button>
+                <button className={'show-pass-btn rounded-1'} type='button' onClick={() => console.log("kkkkkkkk")}>delete</button>
                 <button className={'submit-button rounded-1'} type="submit">SUBMIT</button>
             </div>
 
