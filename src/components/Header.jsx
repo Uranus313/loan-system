@@ -3,7 +3,7 @@ import '../component styles/Header.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { useState } from 'react';
 
-function Header({menuControl,user}){
+function Header({menuControl,signedIn,isLoading}){
 
         
     return(
@@ -11,7 +11,8 @@ function Header({menuControl,user}){
         <header className={"d-flex justify-content-between text-white p-2"}>
             <p className={"mt-2 navbar-text-logo"}>LOAN REMINDER</p>
             <img  className={'navbar-img-logo'} src={'./src/assets/logo.png'}/>
-            {user? <button onClick={menuControl}>menu button</button> : <nav className={'d-flex gap-4'}>
+            {isLoading && <p>loading</p>}
+            {signedIn? <button onClick={menuControl}>menu button</button> : <nav className={'d-flex gap-4'}>
                 <Link to={"/signIn"} className={"mt-2 navbar-text"} >LOG IN</Link>
                 <Link to={"/signUp"} className={"mt-2 navbar-text"} >SIGN UP</Link>
             </nav>}

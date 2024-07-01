@@ -9,7 +9,9 @@ function EditProfile(){
     let [error,setError] = useState(null);
     let [passVisibility,setPassVisibility] = useState('password');
     let [passVisibilitySwitchText,setPassVisibilitySwitchText] = useState('show password');
-    let user = useOutletContext();
+    let {user} = useOutletContext();
+    // console.log(context);
+    console.log(user);
     const usernameRef = useRef('');
     const firstNameRef = useRef('');
     const middleNameRef = useRef('');
@@ -42,31 +44,31 @@ function EditProfile(){
                 {error? <p style={{color : 'rgb(230, 18, 18)'}}>{error}</p> : null }
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>New Username :</p>
-                    <input className={'input-button rounded-1'} type="text" ref={usernameRef} placeholder={user.username} />
+                    <input className={'input-button rounded-1'} type="text" ref={usernameRef} placeholder={user?.username} />
                 </div>
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>New First name :</p>
-                    <input className={'input-button rounded-1'} type="text" ref={firstNameRef} placeholder={user.firstName} />
+                    <input className={'input-button rounded-1'} type="text" ref={firstNameRef} placeholder={user?.firstName} />
                 </div>
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>New Middle Name :</p>
-                    <input className={'input-button rounded-1'} type="text" ref={middleNameRef} placeholder={user.middleName}  />
+                    <input className={'input-button rounded-1'} type="text" ref={middleNameRef} placeholder={user?.middleName}  />
                 </div>
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>New Last Name :</p>
-                    <input className={'input-button rounded-1'} type="text" ref={lastNameRef} placeholder={user.lastName} />
+                    <input className={'input-button rounded-1'} type="text" ref={lastNameRef} placeholder={user?.lastName} />
                 </div>
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>New ID Number :</p>
-                    <input className={'input-button rounded-1'} type="number" ref={IDNumberRef} placeholder={user.IDNumber}  />
+                    <input className={'input-button rounded-1'} type="number" ref={IDNumberRef} placeholder={user?.IDNumber}  />
                 </div>
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>Email :</p>
-                    <input className={'input-button rounded-1'} type="email" ref={emailRef} placeholder={user.email} />
+                    <input className={'input-button rounded-1'} type="email" ref={emailRef} placeholder={user?.email} />
                 </div>
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>New Date of Birth :</p>
-                    <input  className={'input-button rounded-1'} type="date" ref={dateOfBirthRef}  defaultValue={user.dateOfBirth} />
+                    <input  className={'input-button rounded-1'} type="date" ref={dateOfBirthRef}  defaultValue={user?.dateOfBirth} />
                 </div>
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>New Password :</p>
