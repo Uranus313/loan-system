@@ -1,11 +1,11 @@
-
+import { useOutletContext } from "react-router-dom";
+import InputPopUp from "./InputPopUp";
 function ProfileInfo(){
     let {user} = useOutletContext();
     return (
         <div className={'d-flex flex-column align-items-center bg-gradient'}>
-            <ToastContainer />
             <div className={'d-grid p-4 rounded-3 bg-secondary-subtle'}>
-                <h4>Fill Every Field You Want to Change</h4>
+                <h4>Your Info</h4>
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>Username : {user?.username}</p>
                 </div>
@@ -27,7 +27,9 @@ function ProfileInfo(){
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>Date of Birth : {user?.dateOfBirth} </p>
                 </div>
+                <InputPopUp />
             </div>
         </div>
     )
 }
+export default ProfileInfo;

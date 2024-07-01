@@ -52,7 +52,7 @@ function InputPopUp() {
       </div>
       <Button variant="primary" onClick={handleShow}>
 
-        Launch demo modal
+        Delete Account
       </Button>
 
       <Modal show={show} onHide={handleClose}>

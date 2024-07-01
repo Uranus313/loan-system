@@ -6,6 +6,7 @@ import VerifyingEmail from "../components/VerifyingEmail";
 import SignIn from "../components/SignIn";
 import EditProfile from "../components/EditProfile";
 import AddLoan from "../components/AddLoan";
+import ProfileInfo from "../components/ProfileInfo";
 const router = createBrowserRouter([
     {path: '/', element:<Layout /> ,children:[
         {path: '', element:<App />},
