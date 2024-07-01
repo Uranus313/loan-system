@@ -42,8 +42,6 @@ function SignUp(){
     });
     function handleSubmit(event){
         event.preventDefault(); 
-        // console.log('hello');
-        // let namePattern = /^[a-zA-Z\s-]+$/;
         if(usernameRef.current.value.trim() == ''){
             setError("username shouldn't be empty");
         }else if(validateEmail(usernameRef.current.value.trim()) == true){
@@ -74,7 +72,7 @@ function SignUp(){
             <div className={'d-grid p-4 rounded-3 bg-secondary-subtle'}>
                 <h4>WELCOME TO OUR WEBSITE</h4>
                 <p>Please enter the details to sign up</p>
-                {signUp.error && <div style={{color : 'rgb(230, 18, 18)'}}>{Array.isArray(signUp.error.response?.data.detail)?  signUp.error.response?.data.detail.map((item,index) => <p key={index}>{item.msg.includes("Value error,")?item.msg.replace("Value error, ",''): capitalizeFirstLetter(item.loc[1]) + " " + item.msg.substr(item.msg.indexOf(" ")+1)}</p>) : <p>{signUp.error.response?.data.detail}</p>  }</div> }
+                {signUp.error && <div style={{color : 'rgb(230, 18, 18)'}}>{Array.isArray(signUp.error.response?.data.detail)?  signUp.error.response?.data.detail.map((item,index) => <p key={index}>{item.msg.includes("Value error,")?item.msg.replace("Value error, ",''): capitalizeFirstLetter(item.loc.length-1) + " " + item.msg.substr(item.msg.indexOf(" ")+1)}</p>) : <p>{signUp.error.response?.data.detail}</p>  }</div> }
                 {error? <p style={{color : 'rgb(230, 18, 18)'}}>{error}</p> : null }
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>Username :</p>

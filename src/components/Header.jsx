@@ -9,7 +9,7 @@ function Header({menuControl,signedIn,isLoading}){
     return(
         <>
         <header className={"d-flex justify-content-between text-white align-items-center p-2"}>
-            <p className={"navbar-text-logo m-0"}>LOAN REMINDER</p>
+            <Link style={{textDecoration: "none"}} className={"navbar-text-logo m-0 text-white"}>LOAN REMINDER</Link>
             <img  className={'navbar-img-logo'} src={'./src/assets/logo.png'}/>
             {isLoading ? <div className="spinner-border text-dark" role="status">
                 <span className="visually-hidden">Loading...</span>

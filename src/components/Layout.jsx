@@ -5,6 +5,7 @@ import { createContext, useEffect, useState } from "react";
 import UserSideMenu from "./UserSideMenu";
 import useCheckToken from "../hooks/useCheckToken";
 import SignInContext from "../contexts/SignInContext";
+import { useQueryClient } from "@tanstack/react-query";
 
 function Layout(){
     let [isMenuOpen,setIsMenuOpen] = useState(false);
@@ -13,13 +14,15 @@ function Layout(){
     console.log(user);
     console.log(error);
     console.log(isLoading);
-
+    let queryClient = useQueryClient();
     function handleLogOut(){
         // user = null;
         setSignedIn(false);
         setIsMenuOpen( false);
-        console.log("test")
+        queryClient.invalidateQueries(["user"]);
+        // console.log("test")
     }
+
     useEffect(() => {
         if(error){
             handleLogOut();
@@ -36,7 +39,7 @@ function Layout(){
                 <div style={{width: "100%"}}>
                     <Header menuControl={() => setIsMenuOpen(!isMenuOpen) } signedIn ={signedIn} isLoading={isLoading}  />
                         <SignInContext.Provider value={{signedIn: signedIn , setSignedIn: setSignedIn}}>
-                            <Outlet context={{user : error? null :user}} />
+                            <Outlet context={{user : error? null :user,isLoading: isLoading}} />
                         </SignInContext.Provider>
                     <Footer/>
                 </div>
