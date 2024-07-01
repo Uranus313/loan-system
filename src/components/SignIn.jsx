@@ -1,9 +1,9 @@
 import { useState,useRef, useEffect, useContext } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import useLogin from "../hooks/useLogin";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import APIClient from "../connections/APIClient";
-// let user = {userID : "hello12", username : "Uranus", firstName : "Mehrbod", middleName : null,lastName : "Hashemi", email: "mehrbodmh82@gmail.com" ,dateOfBirth : "2003-11-23",password: "12345678", IDNumber : "313"}
+import SignInContext from "../contexts/SignInContext";
 
 function SignIn(){
     let [error,setError] = useState(null);
@@ -13,15 +13,15 @@ function SignIn(){
     const passwordRef = useRef('');
     const navigate = useNavigate();
     const apiClient = new APIClient('user/login');
-    const context = new useOutletContext();
+    const context = useContext(SignInContext);
+    let queryClient = useQueryClient();
     const login = useMutation({
         mutationFn: (formData) => apiClient.post(formData,null),
         onSuccess: (savedUser, user) =>{
             console.log(savedUser);
             localStorage.setItem("auth-token",savedUser.headers["auth-token"]);
-            //main menu
-            context.signIn();
-            console.log(savedUser.headers["auth-token"]);
+            queryClient.invalidateQueries(["user"]);
+            context.setSignedIn(true);
         }
     })
     function handleSubmit(event){
