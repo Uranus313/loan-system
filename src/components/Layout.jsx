@@ -7,6 +7,8 @@ import useCheckToken from "../hooks/useCheckToken";
 import SignInContext from "../contexts/SignInContext";
 import { useQueryClient } from "@tanstack/react-query";
 
+//this is the layout page, it just puts together the header, main body, footer and side menu(if visible)
+
 function Layout(){
     let [isMenuOpen,setIsMenuOpen] = useState(false);
     let {data: user,error,isLoading} = useCheckToken();
@@ -44,6 +46,7 @@ function Layout(){
                         </SignInContext.Provider>
                     <Footer/>
                 </div>
+                {/* if isMenuOpen is false then the menu is hidden */}
                 <UserSideMenu user={error? null :user} logOut={handleLogOut}    isMenuOpen={isMenuOpen}/>
             </div>
             

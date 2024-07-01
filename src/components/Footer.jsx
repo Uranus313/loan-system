@@ -1,7 +1,7 @@
 import '../component styles/Footer.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-
+// no edits needed for now
 function Footer(){
     return(
         <footer className={'d-flex flex-column text-white'}>

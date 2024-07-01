@@ -8,6 +8,10 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useMutation } from "@tanstack/react-query";
 import SignInContext from "../contexts/SignInContext";
 import capitalizeFirstLetter from "../functions/capitalizedFirstLetter";
+
+// change this page so that the errors show up in notifications, for making this you can use the on error element of the useMutation (see the editprofile, it's nearly the same)
+
+
 function SignUp(){
     let [error,setError] = useState(null);
     let [passVisibility,setPassVisibility] = useState('password');
@@ -43,6 +47,8 @@ function SignUp(){
     });
     function handleSubmit(event){
         event.preventDefault(); 
+        // handle this errors with toast notifications too (just like edit profile)
+
         if(usernameRef.current.value.trim() == ''){
             setError("username shouldn't be empty");
         }else if(validateEmail(usernameRef.current.value.trim()) == true){
@@ -73,6 +79,8 @@ function SignUp(){
             <div className={'d-grid p-4 rounded-3 bg-secondary-subtle'}>
                 <h4>WELCOME TO OUR WEBSITE</h4>
                 <p>Please enter the details to sign up</p>
+            {/* you can comment out the two following lines if the errors are shoing up in notifications  */}
+
                 {signUp.error && <div style={{color : 'rgb(230, 18, 18)'}}>{Array.isArray(signUp.error.response?.data.detail)?  signUp.error.response?.data.detail.map((item,index) => <p key={index}>{item.msg.includes("Value error,")?item.msg.replace("Value error, ",''): capitalizeFirstLetter(item.loc[item.loc.length-1]) + " " + item.msg.substr(item.msg.indexOf(" ")+1)}</p>) : <p>{signUp.error.response?.data.detail}</p>  }</div> }
                 {error? <p style={{color : 'rgb(230, 18, 18)'}}>{error}</p> : null }
                 <div className={'d-flex justify-content-between'}>

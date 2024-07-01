@@ -10,7 +10,6 @@ import capitalizeFirstLetter from "../functions/capitalizedFirstLetter";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-import InputPopUp from "./InputPopUp";
 
 function EditProfile(){
     let [error,setError] = useState(null);
@@ -38,13 +37,15 @@ function EditProfile(){
         mutationFn: (user) => apiClient.putWithToken(user,null),
         onSuccess: (savedUser, user) =>{
             queryClient.invalidateQueries(["user"]);
-            
+
+            //toast makes a notificiation on successfull edits and goes to the main page after it
             toast("your profile successfully updated",{onOpen: () => {setFormFunction(false)}, onClose: () => navigate("/"), type: 'success',autoClose: 1000,pauseOnHover: false});
             
         },
         onError: (error) =>{
             console.log(error.response?.data.detail)
 
+            //showing api errors with notifications using toast
             toast(Array.isArray(error.response?.data.detail)?  error.response?.data.detail.map((item,index) =>  {item.msg.includes("Value error,")?item.msg.replace("Value error, ",''): capitalizeFirstLetter(item.loc[item.loc.length-1]) + " " + item.msg.substr(item.msg.indexOf(" ")+1)}) : error.response?.data.detail ,{type: "error",onClose : ()=> console.log("hi")})
         }
     });
@@ -54,7 +55,7 @@ function EditProfile(){
         console.log(repeatPasswordRef.current.value.trim() );
         console.log(passwordRef.current.value.trim());
 
-        // Alert("fewwepifi")
+        // checking the inputs and showing errors with notifications
         if(repeatPasswordRef.current.value.trim() != passwordRef.current.value.trim()){
             toast("passwords aren't equal",{type: "error",onClose : ()=> console.log("hi")});
         }else if(validateEmail(usernameRef.current.value.trim()) == true ){
@@ -66,16 +67,18 @@ function EditProfile(){
             console.log(String(user.dateOfBirth))
             console.log(dateOfBirthRef.current.value.trim())
             console.log(dateOfBirthRef.current.value.trim() == '' || dateOfBirthRef.current.value.trim() == user?.dateOfBirth)
+            //api stuff, just skip
             changeInfo.mutate({updated_user : {username: usernameRef.current.value.trim() == ''? null : usernameRef.current.value.trim(),firstName : firstNameRef.current.value.trim() == ''? null : firstNameRef.current.value.trim(), middleName: middleNameRef.current.value.trim() == ''? null : middleNameRef.current.value.trim(),lastName: lastNameRef.current.value.trim() == ''? null : lastNameRef.current.value.trim(),dateOfBirth: (dateOfBirthRef.current.value.trim() == '' || dateOfBirthRef.current.value.trim() == user?.dateOfBirth)? null : dateOfBirthRef.current.value.trim(),IDNumber : IDNumberRef.current.value.trim() == ''? null : IDNumberRef.current.value.trim(),email: emailRef.current.value.trim() == ''? null : emailRef.current.value.trim(), password : passwordRef.current.value.trim() == ''? null : passwordRef.current.value.trim()},password: passwordRef.current.value.trim() == ''? null : oldPasswordRef.current.value.trim()});
         }
     }
     
     return (
         <form className={'d-flex flex-column align-items-center bg-gradient'} action="post" onSubmit={ formFunction? (event) => handleSubmit(event): (event) => {event.preventDefault()}} >
+            {/* for using toast you need 2 things, 1_the toast function that accepts a string and an object with configs 2_ toast container that shows where you want your notifications to appear */}
             <ToastContainer />
             <div className={'d-grid p-4 rounded-3 bg-secondary-subtle'}>
                 <h4>Fill Every Field You Want to Change</h4>
-                
+                {/* you can comment the following line because we show the errors with toast now */}
                 {changeInfo.error && <div style={{color : 'rgb(230, 18, 18)'}}>{Array.isArray(changeInfo.error.response?.data.detail)?  changeInfo.error.response?.data.detail.map((item,index) => <p key={index}>{item.msg.includes("Value error,")?item.msg.replace("Value error, ",''): capitalizeFirstLetter(item.loc[item.loc.length-1]) + " " + item.msg.substr(item.msg.indexOf(" ")+1)}</p>) : <p>{changeInfo.error.response?.data.detail}</p>  }</div> }
                 {error? <p style={{color : 'rgb(230, 18, 18)'}}>{error}</p> : null }
                 <div className={'d-flex justify-content-between'}>
@@ -106,6 +109,7 @@ function EditProfile(){
                     <p className={'fw-bold me-3 '}>New Date of Birth :</p>
                     <input  className={'input-button rounded-1'} type="date" ref={dateOfBirthRef}  defaultValue={user?.dateOfBirth} />
                 </div>
+                {/* when you write into new password, an input for old password opens up */}
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>New Password :</p>
                     <input className={'input-button rounded-1'} type= {passVisibility} ref={passwordRef} placeholder="password" onChange={(event) => {event.target.value== ''? setOldPassInput(false) : setOldPassInput(true)}}/>
@@ -119,7 +123,6 @@ function EditProfile(){
                     <input className={'input-button rounded-1'} type={passVisibility} ref={oldPasswordRef} placeholder="Current password" />
                 </div>
                 <button className={'show-pass-btn rounded-1'} type='button' onClick={passVisibility == "password"? () => {setPassVisibility("text");setPassVisibilitySwitchText('hide password')}: () => {setPassVisibility("password");setPassVisibilitySwitchText('show password')}}>{passVisibilitySwitchText}</button>
-                <button className={'show-pass-btn rounded-1'} type='button' onClick={() => console.log("kkkkkkkk")}>delete</button>
                 <button className={'submit-button rounded-1'} type="submit">SUBMIT</button>
             </div>
 

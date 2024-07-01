@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '/src/component styles/SignUp.css'
 
-
+//unfinished page
 function AddLoan(){
     let banks = [{id : 1,name: "Melli"},{id: 2, name: "Sepah"},{id:3, name: "Pasargad"}]
     let [error,setError] = useState(null);
+
+    //if true, an input opens up that you can write your own bank name, it gets true and false based on the fact that you got "custom bank" selected or not
     let [customBankSelected,setCustomBankSelected] = useState(false);
     const amountRef = useRef('');
     const interestRef = useRef('');
@@ -23,6 +25,9 @@ function AddLoan(){
     const navigate = useNavigate();
     function handleSubmit(event){
         event.preventDefault(); 
+
+
+        //checking errors for empty inputs, wrong date and ....
         if(amountRef.current.value.trim() == '' || parseInt(amountRef.current.value.trim()) < 1){
             setError("amount shouldn't be empty or smaller than 1");
         }else if(interestRef.current.value.trim() == '' || parseInt(interestRef.current.value.trim()) < 1){
@@ -36,6 +41,7 @@ function AddLoan(){
         }else if(customBankNameRef.current.value.trim() == '' &&  customBankSelected ){
             setError("custom bank name shouldn't be empty");
         }else{
+            //if there's no problem, remove the error
             setError(null);
             // navigate("/verifyingEmail",{state:{email: emailRef.current.value.trim()}});
             // function to add loan 
@@ -46,7 +52,9 @@ function AddLoan(){
         <form className={'d-flex flex-column align-items-center bg-gradient'} action="post" onSubmit={(event) => handleSubmit(event)}>
             <div className={'d-grid p-4 rounded-3 bg-secondary-subtle'}>
                 <h4>WELCOME TO OUR WEBSITE</h4>
-                <p>Please enter the details to sign up</p>
+                <p>Please enter the details to add loan</p>
+
+                {/* if error exists : */}
                 {error? <p style={{color : 'rgb(230, 18, 18)'}}>{error}</p> : null }
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>Amount :</p>

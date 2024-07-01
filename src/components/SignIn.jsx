@@ -4,6 +4,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import APIClient from "../connections/APIClient";
 import SignInContext from "../contexts/SignInContext";
 
+// change this page so that the errors show up in notifications, for making this you can use the on error element of the useMutation (see the editprofile, it's nearly the same)
+
+
 function SignIn(){
     let [error,setError] = useState(null);
     let [passVisibility,setPassVisibility] = useState('password');
@@ -24,10 +27,8 @@ function SignIn(){
         }
     })
     function handleSubmit(event){
-    
+        // handle this errors with toast notifications too (just like edit profile)
         event.preventDefault(); 
-        // console.log('hello');
-        // let namePattern = /^[a-zA-Z\s-]+$/;
         if(usernameRef.current.value.trim() == ''){
             setError("pls enter your username or email");
         }else if(passwordRef.current.value.trim() == ''){
@@ -45,15 +46,16 @@ function SignIn(){
             // navigate("/mainMenu",{state:{user}});
         }
     }
-    // useEffect(() => {
-    //     console.log("effect :",login.data);
-    // },[login.data])
+
 
     return (
         <form action="post" onSubmit={(event) => handleSubmit(event)} style={{display: "flex", alignItems:"center", flexDirection:'column',width: "100%", color: "white"}}>
             <h2>fill the form</h2>
+            {/* you can comment out the following line if the errors are shoing up in notifications  */}
             {login.error && <p style={{color : 'rgb(230, 18, 18)'}}>{login.error.response?.data.detail}</p> }
+            {/* use spinner/something else for this loading instead of text */}
             {login.isPending && <p style={{color: "yellow"}}>loading</p>}
+            {/* you can comment out the following line if the errors are shoing up in notifications * 2  */}
             {error? <p style={{color : 'rgb(230, 18, 18)'}}>{error}</p> : null }
             <input type="text" ref={usernameRef} placeholder="username or email" />
             <input type= {passVisibility} ref={passwordRef} placeholder="password" />

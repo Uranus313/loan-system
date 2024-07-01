@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import APIClient from '../connections/APIClient';
 import SignInContext from '../contexts/SignInContext';
+// this component is for the pop up for delete account in ProfileInfo, maybe the button for making the pop Up appear needs some improvments , I don't think any more edits is needed for now
 function InputPopUp() {
   const [show, setShow] = useState(false);
 
@@ -50,6 +51,7 @@ function InputPopUp() {
       <div>
       <ToastContainer />
       </div>
+      {/* this button appears in the ProfileInfo page, this makes the popUp show up */}
       <Button variant="primary" onClick={handleShow}>
 
         Delete Account

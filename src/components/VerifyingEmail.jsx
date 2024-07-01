@@ -1,4 +1,7 @@
 import { useLocation } from "react-router-dom";
+
+// this page needs no style for now
+
 function sendEmailVerification(email){
     //backend function
     console.log(email);
