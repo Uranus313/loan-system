@@ -1,10 +1,13 @@
-import { useState,useRef } from "react";
+import { useState,useRef,useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '/src/component styles/SignUp.css'
 import validateEmail from "../functions/validateEmail";
-
-
+import APIClient from "../connections/APIClient";
+import { useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import SignInContext from "../contexts/SignInContext";
+import capitalizeFirstLetter from "../functions/capitalizedFirstLetter";
 function SignUp(){
     let [error,setError] = useState(null);
     let [passVisibility,setPassVisibility] = useState('password');
@@ -19,6 +22,24 @@ function SignUp(){
     const passwordRef = useRef('');
     const repeatPasswordRef = useRef('');
     const navigate = useNavigate();
+    const apiClient = new APIClient('user');
+    const context = useContext(SignInContext);
+    let queryClient = useQueryClient();
+    const signUp = useMutation({
+        mutationFn: (user) => apiClient.post(user,null),
+        onSuccess: (savedUser, user) =>{
+            console.log(savedUser);
+            console.log(user);
+            localStorage.setItem("auth-token",savedUser.headers["auth-token"]);
+            queryClient.invalidateQueries(["user"]);
+            context.setSignedIn(true);
+            navigate("/verifyingEmail",{state:{email: emailRef.current.value.trim()}});
+
+        },
+        onError: (error) =>{
+            console.log(error.response?.data.detail)
+        }
+    });
     function handleSubmit(event){
         event.preventDefault(); 
         // console.log('hello');
@@ -45,7 +66,7 @@ function SignUp(){
             setError("passwords aren't equal");
         }else{
             setError(null);
-            navigate("/verifyingEmail",{state:{email: emailRef.current.value.trim()}});
+            signUp.mutate({username: usernameRef.current.value.trim(),firstName : firstNameRef.current.value.trim(), middleName: middleNameRef.current.value.trim(),lastName: lastNameRef.current.value.trim(),dateOfBirth: dateOfBirthRef.current.value.trim(),IDNumber : IDNumberRef.current.value.trim(),email: emailRef.current.value.trim(), password : passwordRef.current.value.trim()});
         }
     }
     return (
@@ -53,6 +74,7 @@ function SignUp(){
             <div className={'d-grid p-4 rounded-3 bg-secondary-subtle'}>
                 <h4>WELCOME TO OUR WEBSITE</h4>
                 <p>Please enter the details to sign up</p>
+                {signUp.error && <div style={{color : 'rgb(230, 18, 18)'}}>{Array.isArray(signUp.error.response?.data.detail)?  signUp.error.response?.data.detail.map((item,index) => <p key={index}>{item.msg.includes("Value error,")?item.msg.replace("Value error, ",''): capitalizeFirstLetter(item.loc[1]) + " " + item.msg.substr(item.msg.indexOf(" ")+1)}</p>) : <p>{signUp.error.response?.data.detail}</p>  }</div> }
                 {error? <p style={{color : 'rgb(230, 18, 18)'}}>{error}</p> : null }
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>Username :</p>

@@ -9,7 +9,7 @@ function UserSideMenu({user,isMenuOpen,logOut}){
                     <Link to={'/addLoan'}>Add Loan</Link>
                     <Link style={{display: "block",textWrap: "nowrap"}}>Submit Debt Payment</Link>
                     <Link onClick={() => {localStorage.removeItem("auth-token"); logOut();
-                    }} to={'/signUp'}>log out</Link>
+                    }} to={'/signIn'}>log out</Link>
 
         </div>
     );

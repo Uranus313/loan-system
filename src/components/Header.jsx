@@ -8,14 +8,20 @@ function Header({menuControl,signedIn,isLoading}){
         
     return(
         <>
-        <header className={"d-flex justify-content-between text-white p-2"}>
-            <p className={"mt-2 navbar-text-logo"}>LOAN REMINDER</p>
+        <header className={"d-flex justify-content-between text-white align-items-center p-2"}>
+            <p className={"navbar-text-logo m-0"}>LOAN REMINDER</p>
             <img  className={'navbar-img-logo'} src={'./src/assets/logo.png'}/>
-            {isLoading && <p>loading</p>}
+            {isLoading ? <div className="spinner-border text-dark" role="status">
+                <span className="visually-hidden">Loading...</span>
+            </div>: <div>   
             {signedIn? <button onClick={menuControl}>menu button</button> : <nav className={'d-flex gap-4'}>
-                <Link to={"/signIn"} className={"mt-2 navbar-text"} >LOG IN</Link>
-                <Link to={"/signUp"} className={"mt-2 navbar-text"} >SIGN UP</Link>
+                <Link to={"/signIn"} className={" navbar-text"} >LOG IN</Link>
+                <Link to={"/signUp"} className={" navbar-text"} >SIGN UP</Link>
             </nav>}
+            </div>}
+
+            
+            
 
             
         </header>
