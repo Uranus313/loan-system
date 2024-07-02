@@ -1,0 +1,40 @@
+
+.login-form {
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+.login-form-header {
+    margin-bottom: 40px;
+    font-weight: bold;
+}
+
+.input-field {
+    margin-bottom: 15px;
+    border: none;
+    height: 35px;
+}
+
+.showpass-btn {
+    margin-top: 40px;
+    border: none;
+    background-color: #ffff00;
+}
+
+.showpass-btn:hover {
+    background-color: #e6e600;
+}
+
+.submit-btn {
+    margin-top: 10px;
+    color: white;
+    background-color: green;
+    border: none;
+    border-radius : 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+.submit-btn:hover {
+    background-color: forestgreen;
+}

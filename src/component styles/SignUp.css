@@ -1,0 +1,45 @@
+
+
+form {
+    width: 100%;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+
+.input-button {
+    margin-bottom: 10px;
+    border: none;
+}
+
+.show-pass-btn {
+    border: none;
+    background-color: #ffff00;
+    cursor: pointer;
+}
+
+.show-pass-btn:hover {
+    background-color:  #e6e600;
+    cursor: pointer;
+}
+
+.submit-button {
+    background-color: green;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    color: white;
+    margin-top: 8px;
+}
+
+.submit-button:hover {
+    background-color: forestgreen;
+    cursor: pointer;
+}
+
+.error {
+    color : rgb(230, 18, 18);
+    font-weight: bold;
+    font-family: Arial;
+    font-size: 17px;
+}

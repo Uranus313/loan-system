@@ -1,0 +1,20 @@
+footer {
+    background-color: black;
+    height: 120px;
+}
+
+
+.footer-text {
+    width: 80px;
+    color: inherit;
+    text-decoration: none;
+    margin-top: 20px;
+    margin-left: 40px;
+    font-size: 17px;
+}
+
+
+.footer-text:hover {
+    color: greenyellow;
+}
+
