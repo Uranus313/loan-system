@@ -11,6 +11,7 @@ function useCheckToken(){
         staleTime: 30 * 60 * 1000,
         refetchOnWindowFocus: false,
         retry: 1
+        
     })
 }
 export default useCheckToken;

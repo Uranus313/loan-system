@@ -7,15 +7,19 @@ import SignIn from "../components/SignIn";
 import EditProfile from "../components/EditProfile";
 import AddLoan from "../components/AddLoan";
 import ProfileInfo from "../components/ProfileInfo";
+import PrivateLayout from "../components/PrivateLayout";
 const router = createBrowserRouter([
     {path: '/', element:<Layout /> ,children:[
         {path: '', element:<App />},
         {path:'signUp',element: <SignUp/>},
         {path:'verifyingEmail',element: <VerifyingEmail />},
         {path:'signIn',element: <SignIn />},
-        {path:'editProfile',element: <EditProfile />},
-        {path:'addLoan',element: <AddLoan />},
-        {path:'profileInfo',element: <ProfileInfo />}
+        {path: 'user/' , element: <PrivateLayout /> , children:[
+            {path:'editProfile',element: <EditProfile />},
+            {path:'addLoan',element: <AddLoan />},
+            {path:'profileInfo',element: <ProfileInfo />}
+        ]}
+        
 
     ]}
 ])

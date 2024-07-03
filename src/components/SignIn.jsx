@@ -17,6 +17,7 @@ function SignIn(){
     const apiClient = new APIClient('user/login');
     const context = useContext(SignInContext);
     let queryClient = useQueryClient();
+
     const login = useMutation({
         mutationFn: (formData) => apiClient.post(formData,null),
         onSuccess: (savedUser, user) =>{
@@ -25,7 +26,9 @@ function SignIn(){
             queryClient.invalidateQueries(["user"]);
             context.setSignedIn(true);
         }
-    })
+    });
+    
+    useEffect(() => localStorage.removeItem("auth-token"),[])
     function handleSubmit(event){
         // handle this errors with toast notifications too (just like edit profile)
         event.preventDefault(); 

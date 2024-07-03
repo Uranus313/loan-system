@@ -1,5 +1,5 @@
 import { useState,useRef, useEffect } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { Navigate, useNavigate, useOutletContext } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '/src/component styles/SignUp.css'
 import validateEmail from "../functions/validateEmail";
@@ -9,6 +9,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import capitalizeFirstLetter from "../functions/capitalizedFirstLetter";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import tokenChecker from "../functions/tokenChecker";
 
 
 function EditProfile(){
@@ -16,7 +17,7 @@ function EditProfile(){
     let [passVisibility,setPassVisibility] = useState('password');
     let [passVisibilitySwitchText,setPassVisibilitySwitchText] = useState('show password');
     let [oldPassInput,setOldPassInput] = useState(false);
-    let {user} = useOutletContext();
+    let {isLoading,user} = useOutletContext();
     // console.log(context);
     console.log(user);
     const usernameRef = useRef('');
@@ -33,6 +34,7 @@ function EditProfile(){
     const navigate = useNavigate();
     const apiClient = new APIClient('user');
     let queryClient = useQueryClient();
+   
     const changeInfo = useMutation({
         mutationFn: (user) => apiClient.putWithToken(user,null),
         onSuccess: (savedUser, user) =>{
@@ -73,6 +75,7 @@ function EditProfile(){
     }
     
     return (
+        <>
         <form className={'d-flex flex-column align-items-center bg-gradient'} action="post" onSubmit={ formFunction? (event) => handleSubmit(event): (event) => {event.preventDefault()}} >
             {/* for using toast you need 2 things, 1_the toast function that accepts a string and an object with configs 2_ toast container that shows where you want your notifications to appear */}
             <ToastContainer />
@@ -127,6 +130,8 @@ function EditProfile(){
             </div>
 
         </form>
+        </>
+
     )
 }
 export default EditProfile;

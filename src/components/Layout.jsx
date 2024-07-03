@@ -15,7 +15,7 @@ function Layout(){
     let [signedIn, setSignedIn] = useState();
     
     console.log(user);
-    console.log(error);
+    // console.log(error);
     console.log(isLoading);
     let queryClient = useQueryClient();
     function handleLogOut(){
