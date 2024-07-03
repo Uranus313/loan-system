@@ -6,10 +6,10 @@ function UserSideMenu({user,isMenuOpen,logOut}){
                     {/* showing the username */}
                     <h3>{user?.username}</h3>
                     {/* the links to the other pages */}
-                    <Link to={'/user/profileInfo'}>My Profile</Link>
-                    <Link to={'/user/editProfile'}>Edit Profile</Link>
+                    <Link to={'/profileInfo'}>My Profile</Link>
+                    <Link to={'/editProfile'}>Edit Profile</Link>
                     <Link>Loans</Link>
-                    <Link to={'/user/addLoan'}>Add Loan</Link>
+                    <Link to={'/addLoan'}>Add Loan</Link>
                     <Link style={{display: "block",textWrap: "nowrap"}}>Submit Debt Payment</Link>
                     <Link onClick={() => {localStorage.removeItem("auth-token"); logOut();
                     }} to={'/signIn'}>log out</Link>

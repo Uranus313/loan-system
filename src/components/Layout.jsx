@@ -6,6 +6,7 @@ import UserSideMenu from "./UserSideMenu";
 import useCheckToken from "../hooks/useCheckToken";
 import SignInContext from "../contexts/SignInContext";
 import { useQueryClient } from "@tanstack/react-query";
+import UserNavbar from "./Navbar.jsx";
 
 //this is the layout page, it just puts together the header, main body, footer and side menu(if visible)
 
@@ -15,7 +16,7 @@ function Layout(){
     let [signedIn, setSignedIn] = useState();
     
     console.log(user);
-    // console.log(error);
+    console.log(error);
     console.log(isLoading);
     let queryClient = useQueryClient();
     function handleLogOut(){
@@ -40,14 +41,15 @@ function Layout(){
         <>
             <div style={{display: "flex",width: "100%",minHeight: "100%"}}>
                 <div style={{width: "100%"}}>
-                    <Header menuControl={() => setIsMenuOpen(!isMenuOpen) } signedIn ={signedIn} isLoading={isLoading}  />
+                    <Header user={error? null :user} logOut={handleLogOut} setIsMenuOpen={setIsMenuOpen} isMenuOpen={isMenuOpen} menuControl={() => setIsMenuOpen(!isMenuOpen) } signedIn ={signedIn} isLoading={isLoading}  />
                         <SignInContext.Provider value={{signedIn: signedIn , setSignedIn: setSignedIn,handleLogOut}}>
                             <Outlet context={{user : error? null :user,isLoading: isLoading}} />
                         </SignInContext.Provider>
                     <Footer/>
                 </div>
                 {/* if isMenuOpen is false then the menu is hidden */}
-                <UserSideMenu user={error? null :user} logOut={handleLogOut}    isMenuOpen={isMenuOpen}/>
+                {/*<UserSideMenu user={error? null :user} logOut={handleLogOut}    isMenuOpen={isMenuOpen}/>*/}
+
             </div>
             
         </>

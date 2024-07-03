@@ -2,9 +2,8 @@
 
 form {
     width: 100%;
-    margin-top: 80px;
-    margin-bottom: 60px;
-    color: black;
+    margin-top: 40px;
+    margin-bottom: 40px;
 }
 
 
@@ -16,10 +15,12 @@ form {
 .show-pass-btn {
     border: none;
     background-color: #ffff00;
+    cursor: pointer;
 }
 
 .show-pass-btn:hover {
     background-color:  #e6e600;
+    cursor: pointer;
 }
 
 .submit-button {
@@ -33,5 +34,12 @@ form {
 
 .submit-button:hover {
     background-color: forestgreen;
+    cursor: pointer;
 }
 
+.error {
+    color : rgb(230, 18, 18);
+    font-weight: bold;
+    font-family: Arial;
+    font-size: 17px;
+}
