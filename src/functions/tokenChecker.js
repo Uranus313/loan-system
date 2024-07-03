@@ -7,4 +7,5 @@ function tokenChecker(){
         return token;
     }
 }
+
 export default tokenChecker;
