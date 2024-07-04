@@ -103,7 +103,7 @@ def get_user_loan(db: Session, user_id: int):
 
     return loans
 
-def register_loan(db: Session, user_id: int, loan:schemas.LoanCreate):
+def register_user_loan(db: Session, user_id: int, loan:schemas.LoanCreate):
 
     endDate = loan.startDate + timedelta(days=loan.debtNumber*30)
 
@@ -153,5 +153,16 @@ def register_user_customBank(db: Session, user_id: int, customBnak: schemas.Cust
     db.add(db_customBank)
     db.commit()
     db.refresh(db_customBank)
+
+    return db_customBank
+
+def delete_user_customBank(db: Session, user_id: int, bank_id: int):
+
+    db_customBank = db.query(models.CustomBank).filter(models.CustomBank.user_id == user_id).\
+        filter(models.CustomBank.bank_id == bank_id).first()
+
+    db.query(models.CustomBank).filter(models.CustomBank.user_id == user_id).\
+        filter(models.CustomBank.bank_id == bank_id).delete()
+    db.commit()
 
     return db_customBank
