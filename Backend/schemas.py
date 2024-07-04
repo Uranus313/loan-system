@@ -1,5 +1,7 @@
 from datetime import date
+from enum import Enum
 from typing import Optional
+from decimal import ROUND_HALF_UP, Decimal
 from pydantic import BaseModel, EmailStr, Field, field_validator
 
 
@@ -47,7 +49,6 @@ class UserBase(BaseModel):
             raise ValueError("ID Number must contain only 10 digits")
         return value
 
-
 class UserCreate(UserBase):
     password: str = Field(min_length=8, max_length=50)
 
@@ -63,6 +64,89 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     user_id: int
+
+    class Config:
+        orm_mode = True
+        from_attributes=True
+
+
+class BankBase(BaseModel):
+    name: str = Field(max_length=100)
+    img_URL: Optional[str] = Field(None, max_length=500)
+
+class bankCreate(BankBase):
+    pass
+
+class Bank(BankBase):
+    bank_id: int
+
+    class Config:
+        orm_mode = True
+        from_attributes=True
+
+
+class CustomBankBase(BaseModel):
+    name: str = Field(max_length=100)
+
+class CustomBankCreate(CustomBankBase):
+    pass
+
+class CustomBank(CustomBankBase):
+    bank_id: int
+    user_id: int
+
+    class Config:
+        orm_mode = True
+        from_attributes=True
+
+
+class DebtBase(BaseModel):
+    loan_id: int
+    amount: Decimal
+    paidDate: Optional[date] = None
+    deadline: date
+
+    @field_validator('amount', mode='before')
+    def set_two_decimal_places(cls, v):
+        if isinstance(v, (float, int)):
+            v = Decimal(str(v))
+        if isinstance(v, Decimal):
+            return v.quantize(Decimal('0.00'), rounding=ROUND_HALF_UP)
+        raise ValueError('amount must be a number')
+
+class DebtCreate(DebtBase):
+    pass
+
+class Debt(DebtBase):
+    debt_id: int
+
+    class Config:
+        orm_mode = True
+        from_attributes=True
+
+
+class BankType(str, Enum):
+    default = "default"
+    custom = "custom"
+
+class LoanBase(BaseModel):
+    amount: int
+    interest: int
+    startDate: date
+    debtNumber: int
+    paidDebtNumber: Optional[int] = 0
+    bank_id: Optional[int] = None
+    customBank_id: Optional[int] = None
+    bankType: BankType = BankType.default
+    note: Optional[str] = Field(None, max_length=500)
+
+class LoanCreate(LoanBase):
+    pass
+
+class Loan(LoanBase):
+    laon_id: int
+    receiver_id: int
+    endDate: date
 
     class Config:
         orm_mode = True

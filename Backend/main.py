@@ -165,3 +165,34 @@ def delete_user(request: Request, current_user: Annotated[models.User, Depends(t
         # Handle SQLAlchemy errors
         db.rollback()  # Rollback the transaction
         raise HTTPException(status_code=500, detail="Database error: " + str(e))
+
+@app.get("/user/loans")
+def get_loan(current_user: Annotated[models.User, Depends(tokens.get_current_user)],
+             db: Session = Depends(get_db)):
+    try:
+        return crud.get_user_loan(db, current_user.user_id)
+    except SQLAlchemyError as e:
+        # Handle SQLAlchemy errors
+        db.rollback()  # Rollback the transaction
+        raise HTTPException(status_code=500, detail="Database error: " + str(e))
+
+@app.post("/user/loans")
+def register_loan(current_user: Annotated[models.User, Depends(tokens.get_current_user)], loan: schemas.LoanCreate,
+             db: Session = Depends(get_db)):
+    try:
+        if not loan.bank_id and not loan.customBank_id:
+            raise HTTPException(status_code=400, detail="Bank_id or customBank_id shoud be not null")
+        return crud.register_loan(db, current_user.user_id, loan)
+    except SQLAlchemyError as e:
+        # Handle SQLAlchemy errors
+        db.rollback()  # Rollback the transaction
+        raise HTTPException(status_code=500, detail="Database error: " + str(e))
+
+@app.get("/user/banks")
+def register_loan(current_user: Annotated[models.User, Depends(tokens.get_current_user)], db: Session = Depends(get_db)):
+    try:
+        return crud.get_user_banks(db, current_user.user_id)
+    except SQLAlchemyError as e:
+        # Handle SQLAlchemy errors
+        db.rollback()  # Rollback the transaction
+        raise HTTPException(status_code=500, detail="Database error: " + str(e))
