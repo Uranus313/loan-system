@@ -9,7 +9,7 @@ class APIClient {
     constructor(endpoint) {
       this.endpoint = endpoint;
     }
-    getToken = () =>{
+    getWithToken = () =>{
       let token = localStorage.getItem("auth-token");
       console.log(token);
       const config = {
@@ -25,6 +25,17 @@ class APIClient {
     }
     post = (item,params) => {
         return axiosInstance.post(this.endpoint,item,{params: params}).then((res) => res);
+    }
+    postWithToken = (item,params) => {
+      let token = localStorage.getItem("auth-token");
+      console.log(token);
+      const config = {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          params: params
+      };
+      return axiosInstance.post(this.endpoint,item,config).then((res) => res);
     }
     put = (item,params) => {
       return axiosInstance.put(this.endpoint,item,{params: params}).then((res) => res);

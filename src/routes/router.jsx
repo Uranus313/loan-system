@@ -8,6 +8,8 @@ import EditProfile from "../components/EditProfile";
 import AddLoan from "../components/AddLoan";
 import ProfileInfo from "../components/ProfileInfo";
 import PrivateLayout from "../components/PrivateLayout";
+import MyLoans from "../components/MyLoans";
+import UserPanel from "../components/UserPanel";
 const router = createBrowserRouter([
     {path: '/', element:<Layout /> ,children:[
         {path: '', element:<App />},
@@ -17,7 +19,10 @@ const router = createBrowserRouter([
         {path: 'user/' , element: <PrivateLayout /> , children:[
             {path:'editProfile',element: <EditProfile />},
             {path:'addLoan',element: <AddLoan />},
-            {path:'profileInfo',element: <ProfileInfo />}
+            {path:'profileInfo',element: <ProfileInfo />},
+            {path:'myLoans',element:<MyLoans />},
+            {path:'panel',element:<UserPanel />}
+
         ]}
         
 

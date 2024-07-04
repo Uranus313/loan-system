@@ -1,16 +1,15 @@
 import APIClient from "../connections/APIClient";
 import { useQuery } from "@tanstack/react-query";
-function useCheckToken(){
-    const apiClient = new APIClient('user/');
+function useGetBanks(){
+    const apiClient = new APIClient('user/banks');
     
     return useQuery({
-        queryKey : ['user'],
+        queryKey : ['bank'],
         queryFn : () => {
             return apiClient.getWithToken();
         },
         staleTime: 30 * 60 * 1000,
-        refetchOnWindowFocus: false,
-        retry: 1
+        retry: 3
     })
 }
-export default useCheckToken;
+export default useGetBanks;

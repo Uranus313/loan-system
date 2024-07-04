@@ -5,6 +5,7 @@ import APIClient from "../connections/APIClient";
 import SignInContext from "../contexts/SignInContext";
 import '/src/component styles/SignIn.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import { toast, ToastContainer } from "react-toastify";
 
 
 // change this page so that the errors show up in notifications, for making this you can use the on error element of the useMutation (see the editprofile, it's nearly the same)
@@ -27,6 +28,7 @@ function SignIn(){
             localStorage.setItem("auth-token",savedUser.headers["auth-token"]);
             queryClient.invalidateQueries(["user"]);
             context.setSignedIn(true);
+            toast("logged in successFully",{onClose: () => navigate('/user/panel'),autoClose : 1000,pauseOnHover: false});
         }
     });
     
@@ -57,6 +59,7 @@ function SignIn(){
     return (
 
         <form className={'d-flex align-items-center flex-column bg-gradient login-form'} action="post" onSubmit={(event) => handleSubmit(event)}>
+            <ToastContainer />
             <div className={'d-grid p-4 rounded-3 bg-secondary-subtle'}>
                 <h5 className={'login-form-header'}>PLEASE FILL THE FORM TO SIGN IN</h5>
                 {/* you can comment out the following line if the errors are shoing up in notifications  */}
@@ -67,7 +70,12 @@ function SignIn(){
                 {error? <p style={{color : 'rgb(230, 18, 18)'}}>{error}</p> : null }
                 <input className={'input-field rounded-1'} type="text" ref={usernameRef} placeholder="username or email" />
                 <input className={'input-field rounded-1'} type= {passVisibility} ref={passwordRef} placeholder="password" />
-                <button className={'rounded-1 showpass-btn'} type="button" onClick={passVisibility == "password"? () => {setPassVisibility("text");setPassVisibilitySwitchText('hide password')}: () => {setPassVisibility("password");setPassVisibilitySwitchText('show password')}}>{passVisibilitySwitchText}</button>
+                <div className="form-check form-switch">
+                    
+                <input className={'form-check-input '} type="checkBox" id="flexSwitchCheckDefault" onClick={passVisibility == "password"? () => {setPassVisibility("text");setPassVisibilitySwitchText('hide password')}: () => {setPassVisibility("password");setPassVisibilitySwitchText('show password')}} />
+                    <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Show Password</label>
+                </div>
+                
                 <button className={'rounded-1 submit-btn'} type="submit">Submit</button>
             </div>
 

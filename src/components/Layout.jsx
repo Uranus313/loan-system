@@ -40,10 +40,14 @@ function Layout(){
     return(
         <>
             <div style={{display: "flex",width: "100%",minHeight: "100%"}}>
-                <div style={{width: "100%"}}>
+                <div style={{width: "100%",minHeight:"100vh"}} className="d-flex flex-column justify-content-between">
                     <Header user={error? null :user} logOut={handleLogOut} setIsMenuOpen={setIsMenuOpen} isMenuOpen={isMenuOpen} menuControl={() => setIsMenuOpen(!isMenuOpen) } signedIn ={signedIn} isLoading={isLoading}  />
                         <SignInContext.Provider value={{signedIn: signedIn , setSignedIn: setSignedIn,handleLogOut}}>
+                            {/* <div style={{height:"70vh"}}> */}
+                            <div>
                             <Outlet context={{user : error? null :user,isLoading: isLoading}} />
+
+                            </div>
                         </SignInContext.Provider>
                     <Footer/>
                 </div>
