@@ -28,7 +28,7 @@ class Loan(Base):
 
     loan_id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     receiver_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
-    amount = Column(Integer, nullable=False)
+    amount = Column(Numeric(precision=100, scale=0), nullable=False)
     interest = Column(Integer, nullable=False)
     startDate = Column(Date, nullable=False)
     endDate = Column(Date, nullable=False)

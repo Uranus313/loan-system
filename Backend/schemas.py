@@ -87,12 +87,12 @@ class Bank(BankBase):
 
 class CustomBankBase(BaseModel):
     name: str = Field(max_length=100)
+    bank_id: int
 
 class CustomBankCreate(CustomBankBase):
     pass
 
 class CustomBank(CustomBankBase):
-    bank_id: int
     user_id: int
 
     class Config:
