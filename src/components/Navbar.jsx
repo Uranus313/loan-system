@@ -10,7 +10,7 @@ function UserNavbar({user,isMenuOpen,logOut,setIsMenuOpen}) {
   let expand = false;
   return (
     <>
-        <Navbar key={expand} expand={expand} className={'navbar-dark'}>
+        <Navbar key={expand} expand={expand} className={'navbar-dark'} >
           <Container fluid>
             <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} className={'border-white border-2'} />
             <Navbar.Offcanvas

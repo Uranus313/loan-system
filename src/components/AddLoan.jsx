@@ -27,12 +27,27 @@ function AddLoan(){
     const bankSelectorRef = useRef('');
     const customBankNameRef = useRef('');
     const apiClient = new APIClient('user/loans');
+    const apiClient2 = new APIClient('user/banks');
+
     let queryClient = useQueryClient();
     const uploadLoan = useMutation({
         mutationFn: (loan) => apiClient.postWithToken(loan),
         onSuccess: (loan) =>{
             queryClient.invalidateQueries(["loan"]);
             console.log(loan);
+            // navigate("/");
+        },
+        onError: (error) =>{
+            console.log(error)
+            console.log(error.response?.data.detail)
+        }
+    });
+    const addCustomBank = useMutation({
+        mutationFn: (bank) => apiClient2.postWithToken(bank),
+        onSuccess: (bank) =>{
+            queryClient.invalidateQueries(["bank"]);
+            console.log(bank);
+
             // navigate("/");
         },
         onError: (error) =>{
@@ -52,8 +67,8 @@ function AddLoan(){
         //checking errors for empty inputs, wrong date and ....
         if(amountRef.current.value.trim() == '' || parseInt(amountRef.current.value.trim()) < 1){
             setError("amount shouldn't be empty or smaller than 1");
-        }else if(interestRef.current.value.trim() == '' || parseInt(interestRef.current.value.trim()) < 1){
-            setError("interest shouldn't be empty or smaller than 1");
+        }else if(interestRef.current.value.trim() == '' || parseInt(interestRef.current.value.trim()) < 0){
+            setError("interest shouldn't be empty or smaller than 0");
         }else if(debtCountRef.current.value.trim() == '' || parseInt(debtCountRef.current.value.trim()) < 1){
             setError("debt count shouldn't be empty or smaller than 1");
         }else if(startDateRef.current.value.trim() == ''){
@@ -64,7 +79,7 @@ function AddLoan(){
             let loan = {};
             if(customBankSelected){
                 if(newBankSelected){
-                    
+                    addCustomBank.mutate({name:customBankNameRef.current.value.trim()})
                 }else{
                     loan = { bank_id : null,customBank_id : selectedBank, bankType:"custom",amount : amountRef.current.value,startDate: startDateRef.current.value,debtNumber: debtCountRef.current.value,note : noteRef.current.value.trim() == ''? null : noteRef.current.value.trim(),interest : interestRef.current.value};
                     uploadLoan.mutate(loan);
@@ -124,7 +139,13 @@ function AddLoan(){
                         <option onClick={() => {setSelectedBank(0);setNewBankSelected(true)}} value="new bank">New Bank</option>
                     </select>
                 </div>
-                
+                <div className={customBankSelected? ' d-flex justify-content-between mb-2' : 'd-none'  }>
+                    <label className={'fw-bold me-3 '} htmlFor="customBankSelector">Choose a Bank:</label>
+                    <select name="customBankSelector" id="customBankSelector" ref={bankSelectorRef}>    
+                        { banks.customBanks?.map((item,index) => <option onClick={() => {setNewBankSelected(false);setSelectedBank(item.bank_id)}} value={item.name} key={index}>{item.name}</option>)}
+                        <option onClick={() => {setSelectedBank(0);setNewBankSelected(true)}} value="new bank">New Bank</option>
+                    </select>
+                </div>
                 <div className={ newBankSelected? ' d-flex justify-content-between' : 'd-none'  }>
                     <p className={'fw-bold me-3 '}>Custom Bank Name :</p>
                     <input className={'input-button rounded-1'} type="text" ref={customBankNameRef} placeholder="custom bank"/>

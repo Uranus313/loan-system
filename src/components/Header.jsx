@@ -9,7 +9,7 @@ function Header({user, logOut, isMenuOpen, menuControl,setIsMenuOpen,signedIn,is
         
     return(
         <>
-        <header className={"d-flex justify-content-between text-white align-items-center p-2"}>
+        <header className={"d-flex justify-content-between text-white align-items-center p-2 "}>
             <Link style={{textDecoration: "none"}} className={"navbar-text-logo m-0 text-white"}>LOAN REMINDER</Link>
             <img  className={'navbar-img-logo d-flex position-relative'} src={'./src/assets/logo.png'}/>
             {/* if you're getting the data from the api, it shows a spinned for loading */}
