@@ -189,9 +189,21 @@ def register_loan(current_user: Annotated[models.User, Depends(tokens.get_curren
         raise HTTPException(status_code=500, detail="Database error: " + str(e))
 
 @app.get("/user/banks")
-def register_loan(current_user: Annotated[models.User, Depends(tokens.get_current_user)], db: Session = Depends(get_db)):
+def get_banks(current_user: Annotated[models.User, Depends(tokens.get_current_user)], db: Session = Depends(get_db)):
     try:
         return crud.get_user_banks(db, current_user.user_id)
+    except SQLAlchemyError as e:
+        # Handle SQLAlchemy errors
+        db.rollback()  # Rollback the transaction
+        raise HTTPException(status_code=500, detail="Database error: " + str(e))
+
+@app.post("/user/banks", response_model=schemas.CustomBank)
+def register_banks(current_user: Annotated[models.User, Depends(tokens.get_current_user)], customBank: schemas.CustomBankCreate
+                   , db: Session = Depends(get_db)):
+    try:
+        if not customBank.bank_id or not customBank.name:
+            raise HTTPException(status_code=400, detail="Bank_id and Name shoud be not null")
+        return crud.register_user_customBank(db, current_user.user_id, customBank)
     except SQLAlchemyError as e:
         # Handle SQLAlchemy errors
         db.rollback()  # Rollback the transaction

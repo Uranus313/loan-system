@@ -124,7 +124,8 @@ def register_loan(db: Session, user_id: int, loan:schemas.LoanCreate):
     amount = float(loan.amount/loan.debtNumber) * (100 + loan.interest)/100
     for _ in range(loan.debtNumber):
         deadline += timedelta(days=30)
-        db_debt = models.Debt(loan_id=db_loan.loan_id, amount=amount, deadline=deadline)
+        debt = schemas.DebtCreate(loan_id=db_loan.loan_id, amount=amount, deadline=deadline)
+        db_debt = models.Debt(**debt.model_dump())
         db.add(db_debt)
         db.commit()
         db.refresh(db_debt)
@@ -153,3 +154,12 @@ def get_user_banks(db: Session, user_id: int):
     banks_dict['customBanks'] = [customBank for customBank in customBanks] if customBanks else []
 
     return banks_dict
+
+def register_user_customBank(db: Session, user_id: int, customBnak: schemas.CustomBankCreate):
+
+    db_customBank = models.CustomBank(user_id=user_id, **customBnak.model_dump())
+    db.add(db_customBank)
+    db.commit()
+    db.refresh(db_customBank)
+
+    return db_customBank
