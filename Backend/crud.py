@@ -86,19 +86,15 @@ def model_to_dict(model):
 
 def get_user_loan(db: Session, user_id: int):
 
-    class BankType(str, Enum):
-        default = "default"
-        custom = "custom"
-
     results =  db.query(models.Loan, models.Bank, models.CustomBank).outerjoin(models.Bank, models.Bank.bank_id == models.Loan.bank_id).\
-        outerjoin(models.CustomBank, models.CustomBank.bank_id == models.Loan.bank_id).\
+        outerjoin(models.CustomBank, models.CustomBank.bank_id == models.Loan.customBank_id).\
             filter(models.Loan.receiver_id == user_id).all()
 
     loans = []
     for loan, bank, customBank in results:
         loan_dict = model_to_dict(loan)
-        loan_dict['bank'] = bank if bank and loan.bankType==BankType.default else None
-        loan_dict['customBank'] = customBank if customBank and loan.bankType==BankType.custom else None
+        loan_dict['bank'] = bank if bank else None
+        loan_dict['customBank'] = customBank if customBank else None
 
         debts = db.query(models.Debt).filter(models.Debt.loan_id == loan.loan_id).all()
 
@@ -108,10 +104,6 @@ def get_user_loan(db: Session, user_id: int):
     return loans
 
 def register_loan(db: Session, user_id: int, loan:schemas.LoanCreate):
-
-    class BankType(str, Enum):
-        default = "default"
-        custom = "custom"
 
     endDate = loan.startDate + timedelta(days=loan.debtNumber*30)
 
@@ -131,15 +123,15 @@ def register_loan(db: Session, user_id: int, loan:schemas.LoanCreate):
         db.refresh(db_debt)
 
     result = db.query(models.Loan, models.Bank, models.CustomBank).outerjoin(models.Bank, models.Bank.bank_id == models.Loan.bank_id).\
-            outerjoin(models.CustomBank, models.CustomBank.bank_id == models.Loan.bank_id).\
+            outerjoin(models.CustomBank, models.CustomBank.bank_id == models.Loan.customBank_id).\
             filter(models.Loan.receiver_id == user_id).filter(models.Loan.loan_id == db_loan.loan_id).first()
     
     debts = db.query(models.Debt).filter(models.Debt.loan_id == db_loan.loan_id).all()
 
     loan, bank, customBank = result
     loan_dict = model_to_dict(loan)
-    loan_dict['bank'] = bank if bank and loan.bankType==BankType.default else None
-    loan_dict['customBank'] = customBank if customBank and loan.bankType==BankType.custom else None
+    loan_dict['bank'] = bank if bank else None
+    loan_dict['customBank'] = customBank if customBank else None
     loan_dict['debts'] = [debt for debt in debts] if debts else []
 
     return loan_dict
