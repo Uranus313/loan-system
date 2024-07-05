@@ -166,3 +166,22 @@ def delete_user_customBank(db: Session, user_id: int, bank_id: int):
     db.commit()
 
     return db_customBank
+def register_notification(db: Session, Notification: schemas.NotificationCreate):
+    db_notificationn = models.Notification(**Notification.model_dump())
+    db.add(db_notificationn)
+    db.commit()
+    db.refresh(db_notificationn)
+    return db_notificationn
+def register_notification(db: Session, Notification: schemas.NotificationCreate):
+    db_notificationn = models.Notification(**Notification.model_dump())
+    db.add(db_notificationn)
+    db.commit()
+    db.refresh(db_notificationn)
+    return db_notificationn
+def update_user(db: Session, notification_id: int, isRead : bool):
+
+    db.query(models.Notification).filter(models.Notification.notification_id == notification_id).update({models.Notification.isRead: isRead})
+
+    
+    db.commit()
+    return db.query(models.Notification).filter(models.Notification.notification_id == notification_id).first()    

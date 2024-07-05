@@ -10,6 +10,7 @@ import ProfileInfo from "../components/ProfileInfo";
 import PrivateLayout from "../components/PrivateLayout";
 import MyLoans from "../components/MyLoans";
 import UserPanel from "../components/UserPanel";
+import SubmitPayment from "../components/SubmitPayment";
 const router = createBrowserRouter([
     {path: '/', element:<Layout /> ,children:[
         {path: '', element:<App />},
@@ -21,7 +22,8 @@ const router = createBrowserRouter([
             {path:'addLoan',element: <AddLoan />},
             {path:'profileInfo',element: <ProfileInfo />},
             {path:'myLoans',element:<MyLoans />},
-            {path:'panel',element:<UserPanel />}
+            {path:'panel',element:<UserPanel />},
+            {path:'addPayment',element:<SubmitPayment />}
 
         ]}
         

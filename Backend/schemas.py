@@ -151,3 +151,19 @@ class Loan(LoanBase):
     class Config:
         orm_mode = True
         from_attributes=True
+class NotificationBase(BaseModel):
+    title: str = Field(max_length=100)
+    text : Optional[str] = Field(None, max_length=1000)
+    isRead : bool
+    user_id : int
+    debt_id : Optional[int] = None
+
+class NotificationCreate(NotificationBase):
+    pass
+
+class Notification(NotificationBase):
+    notification_id : int
+
+    class Config:
+        orm_mode = True
+        from_attributes=True

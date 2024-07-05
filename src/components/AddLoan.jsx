@@ -48,7 +48,9 @@ function AddLoan(){
             queryClient.invalidateQueries(["bank"]);
             console.log(bank);
 
-            // navigate("/");
+            let loan = { bank_id : null,customBank_id : bank.data.bank_id, bankType:"custom",amount : amountRef.current.value,startDate: startDateRef.current.value,debtNumber: debtCountRef.current.value,note : noteRef.current.value.trim() == ''? null : noteRef.current.value.trim(),interest : interestRef.current.value};
+            
+            uploadLoan.mutate(loan);
         },
         onError: (error) =>{
             console.log(error)
@@ -125,25 +127,25 @@ function AddLoan(){
                 </div>
                 <div className={'d-flex justify-content-between mb-2'}>
                     <label className={'fw-bold me-3 '} htmlFor="bankSelector">Choose a Bank:</label>
-                    <select name="bankSelector" id="bankSelector" ref={bankSelectorRef}>    
-                        { banks.banks?.map((item,index) => <option onClick={() => {setCustomBankSelected(false);setNewBankSelected(false);setSelectedBank(item.bank_id)}} value={item.name} key={index}>{item.name}</option>)}
-                        <option onClick={() => {setCustomBankSelected(true);setSelectedBank(0);
-                            if(banks.customBanks.length==0){setNewBankSelected(true)}
-                        }} value="customBank">Custom Bank</option>
+                    <select name="bankSelector" id="bankSelector" ref={bankSelectorRef} onChange={(event) => {if(event.target.value == "customBank") {setCustomBankSelected(true);setSelectedBank(0); console.log(event);
+                            if(banks.customBanks.length==0){setNewBankSelected(true)}}else{
+                                setCustomBankSelected(false);setNewBankSelected(false);setSelectedBank(event.target.value.bank_id)
+                            }}}>    
+                        { banks.banks?.map((item,index) => <option  value={item} key={index}>{item.name}</option>)}
+                        <option value="customBank">Custom Bank</option>
                     </select>
                 </div>
                 <div className={customBankSelected? ' d-flex justify-content-between mb-2' : 'd-none'  }>
                     <label className={'fw-bold me-3 '} htmlFor="customBankSelector">Choose a Bank:</label>
-                    <select name="customBankSelector" id="customBankSelector" ref={bankSelectorRef}>    
-                        { banks.customBanks?.map((item,index) => <option onClick={() => {setNewBankSelected(false);setSelectedBank(item.bank_id)}} value={item.name} key={index}>{item.name}</option>)}
-                        <option onClick={() => {setSelectedBank(0);setNewBankSelected(true)}} value="new bank">New Bank</option>
-                    </select>
-                </div>
-                <div className={customBankSelected? ' d-flex justify-content-between mb-2' : 'd-none'  }>
-                    <label className={'fw-bold me-3 '} htmlFor="customBankSelector">Choose a Bank:</label>
-                    <select name="customBankSelector" id="customBankSelector" ref={bankSelectorRef}>    
-                        { banks.customBanks?.map((item,index) => <option onClick={() => {setNewBankSelected(false);setSelectedBank(item.bank_id)}} value={item.name} key={index}>{item.name}</option>)}
-                        <option onClick={() => {setSelectedBank(0);setNewBankSelected(true)}} value="new bank">New Bank</option>
+                    <select name="customBankSelector" id="customBankSelector" ref={bankSelectorRef} onChange={(event) => {
+                        {if(event.target.value == "#new bank#"){
+                            setSelectedBank(0);setNewBankSelected(true);
+                        }else{
+                            setNewBankSelected(false);setSelectedBank(event.target.value .bank_id)}
+                        }}
+                    }>    
+                        { banks.customBanks?.map((item,index) => <option value={item} key={index}>{item.name}</option>)}
+                        <option onClick={() => {}} value="#new bank#">New Bank</option>
                     </select>
                 </div>
                 <div className={ newBankSelected? ' d-flex justify-content-between' : 'd-none'  }>

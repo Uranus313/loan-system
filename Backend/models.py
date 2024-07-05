@@ -1,6 +1,6 @@
 
 import enum
-from sqlalchemy import Column, ForeignKey, Integer, Numeric, String, Date, Enum
+from sqlalchemy import Column, ForeignKey, Integer, Numeric, String, Date, Enum,Boolean
 from database import Base
 
 
@@ -61,3 +61,13 @@ class Debt(Base):
     amount = Column(Numeric(precision=100, scale=2), nullable=False)
     paidDate = Column(Date, nullable=True)
     deadline = Column(Date, nullable=False)
+class Notification(Base):
+    __tablename__ = "notifications"
+
+    notification_id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+    title = Column(String(100), nullable=False)
+    text = Column(String(1000), nullable=True)
+    isRead = Column(Boolean(), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
+    # loan_id = Column(Integer, ForeignKey("loans.loan_id"), nullable=True)
+    debt_id = Column(Integer, ForeignKey("loans.loan_id"), nullable=True)

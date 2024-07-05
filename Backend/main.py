@@ -7,7 +7,47 @@ from sqlalchemy.exc import SQLAlchemyError
 from fastapi.middleware.cors import CORSMiddleware
 from database import SessionLocal, engine
 import crud, models, schemas, tokens, re
+from datetime import datetime
 
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.cron import CronTrigger
+import smtplib
+
+# Import the email modules we'll need
+from email.mime.text import MIMEText
+
+
+msg = MIMEText("hello")
+# me == the sender's email address
+# you == the recipient's email address
+msg['Subject'] = 'The contents of goodbye' 
+msg['From'] = "mehrbodmh82@gmail.com"
+msg['To'] = "mehrbodmh14@gmail.com"
+
+# Send the message via our own SMTP server, but don't include the
+# envelope header.
+s = smtplib.SMTP('smtp.gmail.com',587)
+s.starttls()  # Enable TLS
+s.login("loansystem313@gmail.com", "ukuv mosa hczv autq")
+s.sendmail("loansystem313@gmail.com", ["mehrbodmh14@gmail.com"], msg.as_string())
+s.quit()
+
+def job_function():
+    print("Hello World")
+
+sched = BackgroundScheduler()
+
+trigger = CronTrigger(
+        year="*",
+        month="*",
+        day="*",
+        hour="12",
+        minute="1",
+        second="1"
+    )
+sched.add_job(job_function, trigger= trigger)
+
+sched.start()
 
 
 models.Base.metadata.create_all(bind=engine)
@@ -201,7 +241,7 @@ def get_banks(current_user: Annotated[models.User, Depends(tokens.get_current_us
 def register_customBanks(current_user: Annotated[models.User, Depends(tokens.get_current_user)], customBank: schemas.CustomBankCreate
                    , db: Session = Depends(get_db)):
     try:
-        if not customBank.bank_id or not customBank.name:
+        if not customBank.name:
             raise HTTPException(status_code=400, detail="Bank_id and Name shoud be not null")
         return crud.register_user_customBank(db, current_user.user_id, customBank)
     except SQLAlchemyError as e:
