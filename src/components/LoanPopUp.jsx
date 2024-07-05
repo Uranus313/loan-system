@@ -3,12 +3,13 @@ import { Table } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import DebtRow from './DebtRow';
+import { useNavigate } from 'react-router-dom';
 function LoanPopUp({title,rows,debts}) {
     let [modalShow,setModalShow] = useState(false);
     let [remainingDebtsShow,SetRemainingDebtsShow] = useState(false);
     let [overdueDebtsShow,SetOverdueDebtsShow] = useState(false);
     let [paidDebtsShow,SetPaidDebtsShow] = useState(false);
-
+    let navigate = useNavigate();
 
     let counter = 0;
   return (
@@ -123,6 +124,7 @@ function LoanPopUp({title,rows,debts}) {
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={() => setModalShow(false)}>Close</Button>
+        {debts && !debts[debts.length-1].paidDate && <Button onClick={() => navigate('/user/addPayment',{state: {loan_id : debts[0].loan_id}})}>pay debt</Button>}
       </Modal.Footer>
     </Modal>
     </>

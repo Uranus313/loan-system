@@ -75,7 +75,7 @@ function AddLoan(){
             setError("debt count shouldn't be empty or smaller than 1");
         }else if(startDateRef.current.value.trim() == ''){
             setError("start date shouldn't be empty");
-        }else if(customBankNameRef.current.value.trim() == '' &&  customBankSelected ){
+        }else if(customBankNameRef.current.value.trim() == '' &&  newBankSelected ){
             setError("custom bank name shouldn't be empty");
         }else{
             let loan = {};
@@ -127,11 +127,11 @@ function AddLoan(){
                 </div>
                 <div className={'d-flex justify-content-between mb-2'}>
                     <label className={'fw-bold me-3 '} htmlFor="bankSelector">Choose a Bank:</label>
-                    <select name="bankSelector" id="bankSelector" ref={bankSelectorRef} onChange={(event) => {if(event.target.value == "customBank") {setCustomBankSelected(true);setSelectedBank(0); console.log(event);
+                    <select name="bankSelector" id="bankSelector" ref={bankSelectorRef} onChange={(event) => {if(event.target.value == "customBank") {setCustomBankSelected(true);setSelectedBank(0);
                             if(banks.customBanks.length==0){setNewBankSelected(true)}}else{
-                                setCustomBankSelected(false);setNewBankSelected(false);setSelectedBank(event.target.value.bank_id)
+                                setCustomBankSelected(false);setNewBankSelected(false);setSelectedBank(event.target.value)
                             }}}>    
-                        { banks.banks?.map((item,index) => <option  value={item} key={index}>{item.name}</option>)}
+                        { banks.banks?.map((item,index) => <option  value={item.bank_id} key={index}>{item.name}</option>)}
                         <option value="customBank">Custom Bank</option>
                     </select>
                 </div>
@@ -141,10 +141,10 @@ function AddLoan(){
                         {if(event.target.value == "#new bank#"){
                             setSelectedBank(0);setNewBankSelected(true);
                         }else{
-                            setNewBankSelected(false);setSelectedBank(event.target.value .bank_id)}
+                            setNewBankSelected(false);setSelectedBank(event.target.value )}
                         }}
                     }>    
-                        { banks.customBanks?.map((item,index) => <option value={item} key={index}>{item.name}</option>)}
+                        { banks.customBanks?.map((item,index) => <option value={item.bank_id} key={index}>{item.name}</option>)}
                         <option onClick={() => {}} value="#new bank#">New Bank</option>
                     </select>
                 </div>
