@@ -1,4 +1,3 @@
-import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Offcanvas from 'react-bootstrap/Offcanvas';
@@ -11,8 +10,7 @@ function UserNavbar({user,isMenuOpen,logOut,setIsMenuOpen}) {
   return (
     <>
         <Navbar key={expand} expand={expand} className={'navbar-dark'} >
-          <Container fluid>
-            <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} className={'border-white border-2'} />
+            <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} className={'border-white border-2 m-0'} />
             <Navbar.Offcanvas
               id={`offcanvasNavbar-expand-${expand}`}
               aria-labelledby={`offcanvasNavbarLabel-expand-${expand}`}
@@ -38,7 +36,6 @@ function UserNavbar({user,isMenuOpen,logOut,setIsMenuOpen}) {
                 </Nav>
               </Offcanvas.Body>
             </Navbar.Offcanvas>
-          </Container>
         </Navbar>
     </>
   );

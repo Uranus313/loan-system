@@ -1,4 +1,3 @@
-
 import enum
 from sqlalchemy import Column, ForeignKey, Integer, Numeric, String, Date, Enum,Boolean
 from database import Base

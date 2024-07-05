@@ -87,14 +87,14 @@ class Bank(BankBase):
 
 class CustomBankBase(BaseModel):
     name: str = Field(max_length=100)
-   
 
 class CustomBankCreate(CustomBankBase):
     pass
 
 class CustomBank(CustomBankBase):
-    user_id: int
     bank_id: int
+    user_id: int
+
     class Config:
         orm_mode = True
         from_attributes=True
@@ -102,7 +102,7 @@ class CustomBank(CustomBankBase):
 
 class DebtBase(BaseModel):
     loan_id: int
-    amount: Decimal
+    amount: Decimal = Field(gt=0)
     paidDate: Optional[date] = None
     deadline: date
 
@@ -130,8 +130,8 @@ class BankType(str, Enum):
     custom = "custom"
 
 class LoanBase(BaseModel):
-    amount: int
-    interest: int
+    amount: int = Field(gt=0)
+    interest: int = Field(0, ge=0)
     startDate: date
     debtNumber: int
     paidDebtNumber: Optional[int] = 0
