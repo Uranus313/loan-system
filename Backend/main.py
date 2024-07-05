@@ -1,6 +1,6 @@
 from typing import Annotated
 from fastapi import Body, Depends, FastAPI, HTTPException, Request, Response, status
-from datetime import timedelta
+from datetime import timedelta, date
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
@@ -37,34 +37,6 @@ def get_db():
 def read_root():
     return {"Hello": "World"}
 
-@app.post("/user/", response_model=schemas.User)
-def register_user(response: Response, user: schemas.UserCreate, db: Session = Depends(get_db)):
-    try:
-        db_user = crud.get_user_by_username(db, user.username)
-        if db_user:
-            raise HTTPException(status_code=400, detail="User by this username already registered")
-        db_user = crud.get_user_by_email(db, user.email)
-        if db_user:
-            raise HTTPException(status_code=400, detail="User by this email already registered")
-        db_user = crud.get_user_by_IDNumber(db, user.IDNumber)
-        if db_user:
-            raise HTTPException(status_code=400, detail="User by this IDNumber already registered")
-        else:
-            db_user = crud.register_user(db, user)
-            access_token_expires = timedelta(minutes=tokens.ACCESS_TOKEN_EXPIRE_MINUTES)
-            access_token = tokens.create_access_token(
-                data={"sub": db_user.user_id}, expires_delta=access_token_expires
-            )
-
-            response.headers["auth-token"] = access_token
-            return db_user
-
-
-    except SQLAlchemyError as e:
-        # Handle SQLAlchemy errors
-        db.rollback()  # Rollback the transaction
-        raise HTTPException(status_code=500, detail="Database error: " + str(e))
-
 @app.post("/user/login", response_model=schemas.User)
 async def login_for_access_token(response: Response, form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
                                 db: Session = Depends(get_db)):
@@ -92,6 +64,32 @@ async def login_for_access_token(response: Response, form_data: Annotated[OAuth2
 
         response.headers["auth-token"] = access_token
         return user
+    except SQLAlchemyError as e:
+        # Handle SQLAlchemy errors
+        db.rollback()  # Rollback the transaction
+        raise HTTPException(status_code=500, detail="Database error: " + str(e))
+
+@app.post("/user/", response_model=schemas.User)
+def register_user(response: Response, user: schemas.UserCreate, db: Session = Depends(get_db)):
+    try:
+        db_user = crud.get_user_by_username(db, user.username)
+        if db_user:
+            raise HTTPException(status_code=400, detail="User by this username already registered")
+        db_user = crud.get_user_by_email(db, user.email)
+        if db_user:
+            raise HTTPException(status_code=400, detail="User by this email already registered")
+        db_user = crud.get_user_by_IDNumber(db, user.IDNumber)
+        if db_user:
+            raise HTTPException(status_code=400, detail="User by this IDNumber already registered")
+        else:
+            db_user = crud.register_user(db, user)
+            access_token_expires = timedelta(minutes=tokens.ACCESS_TOKEN_EXPIRE_MINUTES)
+            access_token = tokens.create_access_token(
+                data={"sub": db_user.user_id}, expires_delta=access_token_expires
+            )
+
+            response.headers["auth-token"] = access_token
+            return db_user
     except SQLAlchemyError as e:
         # Handle SQLAlchemy errors
         db.rollback()  # Rollback the transaction
@@ -170,7 +168,7 @@ def delete_user(request: Request, current_user: Annotated[models.User, Depends(t
 def get_loan(current_user: Annotated[models.User, Depends(tokens.get_current_user)],
              db: Session = Depends(get_db)):
     try:
-        return crud.get_user_loan(db, current_user.user_id)
+        return crud.get_user_loans(db, current_user.user_id)
     except SQLAlchemyError as e:
         # Handle SQLAlchemy errors
         db.rollback()  # Rollback the transaction
@@ -188,6 +186,44 @@ def register_loan(current_user: Annotated[models.User, Depends(tokens.get_curren
         db.rollback()  # Rollback the transaction
         raise HTTPException(status_code=500, detail="Database error: " + str(e))
 
+@app.put("/user/loans")
+def update_debts(current_user: Annotated[models.User, Depends(tokens.get_current_user)],loan_id: Annotated[int, Body()],
+            paidDate: Annotated[date, Body()], db: Session = Depends(get_db)):
+    try:
+        db_loan = crud.validate_user_loan(db, current_user.user_id, loan_id)
+        if not db_loan:
+            raise HTTPException(status_code=400, detail="This loan does not belong to this user")
+        if not loan_id or not paidDate:
+            raise HTTPException(status_code=400, detail="Loan_id or PaidDate shoud not be null")
+        db_loan = crud.update_user_debts(db, current_user.user_id, loan_id, paidDate)
+        if db_loan:
+            return db_loan
+        else:
+            raise HTTPException(status_code=400, detail="All debts has already been paid")
+    except SQLAlchemyError as e:
+        # Handle SQLAlchemy errors
+        db.rollback()  # Rollback the transaction
+        raise HTTPException(status_code=500, detail="Database error: " + str(e))
+
+@app.put("/user/debts", response_model=schemas.Debt)
+def update_debt(current_user: Annotated[models.User, Depends(tokens.get_current_user)], loan_id: Annotated[int, Body()],
+            paidDate: Annotated[date, Body()], db: Session = Depends(get_db)):
+    try:
+        db_loan = crud.validate_user_loan(db, current_user.user_id, loan_id)
+        if not db_loan:
+            raise HTTPException(status_code=400, detail="This loan does not belong to this user")
+        if not loan_id or not paidDate:
+            raise HTTPException(status_code=400, detail="Loan_id or PaidDate shoud not be null")
+        db_debt = crud.update_user_debt(db, loan_id, paidDate)
+        if db_debt:
+            return db_debt
+        else:
+            raise HTTPException(status_code=400, detail="All debts has already been paid")
+    except SQLAlchemyError as e:
+        # Handle SQLAlchemy errors
+        db.rollback()  # Rollback the transaction
+        raise HTTPException(status_code=500, detail="Database error: " + str(e))
+
 @app.get("/user/banks")
 def get_banks(current_user: Annotated[models.User, Depends(tokens.get_current_user)], db: Session = Depends(get_db)):
     try:
@@ -198,11 +234,11 @@ def get_banks(current_user: Annotated[models.User, Depends(tokens.get_current_us
         raise HTTPException(status_code=500, detail="Database error: " + str(e))
 
 @app.post("/user/banks", response_model=schemas.CustomBank)
-def register_customBanks(current_user: Annotated[models.User, Depends(tokens.get_current_user)], customBank: schemas.CustomBankCreate
-                   , db: Session = Depends(get_db)):
+def register_customBanks(current_user: Annotated[models.User, Depends(tokens.get_current_user)], customBank: schemas.CustomBankCreate,
+                         db: Session = Depends(get_db)):
     try:
-        if not customBank.bank_id or not customBank.name:
-            raise HTTPException(status_code=400, detail="Bank_id and Name shoud be not null")
+        if not customBank.name:
+            raise HTTPException(status_code=400, detail="Name shoud not be null")
         return crud.register_user_customBank(db, current_user.user_id, customBank)
     except SQLAlchemyError as e:
         # Handle SQLAlchemy errors

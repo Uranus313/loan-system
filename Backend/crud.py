@@ -1,5 +1,4 @@
-from datetime import timedelta
-from enum import Enum
+from datetime import timedelta, date
 from sqlalchemy import inspect
 from sqlalchemy.orm import Session
 import models, schemas, hashing
@@ -84,8 +83,7 @@ def model_to_dict(model):
     """Convert SQLAlchemy model instance to dictionary."""
     return {c.key: getattr(model, c.key) for c in inspect(model).mapper.column_attrs}
 
-def get_user_loan(db: Session, user_id: int):
-
+def get_user_loans(db: Session, user_id: int):
     results =  db.query(models.Loan, models.Bank, models.CustomBank).outerjoin(models.Bank, models.Bank.bank_id == models.Loan.bank_id).\
         outerjoin(models.CustomBank, models.CustomBank.bank_id == models.Loan.customBank_id).\
             filter(models.Loan.receiver_id == user_id).all()
@@ -103,8 +101,10 @@ def get_user_loan(db: Session, user_id: int):
 
     return loans
 
-def register_user_loan(db: Session, user_id: int, loan:schemas.LoanCreate):
+def validate_user_loan(db: Session, user_id: int, loan_id):
+    return  db.query(models.Loan).filter(models.Loan.receiver_id == user_id, models.Loan.loan_id == loan_id).all()
 
+def register_user_loan(db: Session, user_id: int, loan:schemas.LoanCreate):
     endDate = loan.startDate + timedelta(days=loan.debtNumber*30)
 
     db_loan = models.Loan(receiver_id=user_id, **loan.model_dump(), endDate=endDate)
@@ -137,7 +137,6 @@ def register_user_loan(db: Session, user_id: int, loan:schemas.LoanCreate):
     return loan_dict
 
 def get_user_banks(db: Session, user_id: int):
-    
     banks = db.query(models.Bank).all()
     customBanks = db.query(models.CustomBank).filter(models.CustomBank.user_id == user_id).all()
 
@@ -148,7 +147,6 @@ def get_user_banks(db: Session, user_id: int):
     return banks_dict
 
 def register_user_customBank(db: Session, user_id: int, customBnak: schemas.CustomBankCreate):
-
     db_customBank = models.CustomBank(user_id=user_id, **customBnak.model_dump())
     db.add(db_customBank)
     db.commit()
@@ -157,7 +155,6 @@ def register_user_customBank(db: Session, user_id: int, customBnak: schemas.Cust
     return db_customBank
 
 def delete_user_customBank(db: Session, user_id: int, bank_id: int):
-
     db_customBank = db.query(models.CustomBank).filter(models.CustomBank.user_id == user_id).\
         filter(models.CustomBank.bank_id == bank_id).first()
 
@@ -166,3 +163,46 @@ def delete_user_customBank(db: Session, user_id: int, bank_id: int):
     db.commit()
 
     return db_customBank
+
+def update_user_debt(db: Session, loan_id: int, paidDebt: date):
+    db_debt = db.query(models.Debt).filter(models.Debt.loan_id == loan_id, models.Debt.paidDate == None).\
+        order_by(models.Debt.deadline).first()
+
+    if db_debt:
+        db_debt.paidDate = paidDebt
+
+        db.query(models.Loan).filter(models.Loan.loan_id == loan_id).\
+            update({models.Loan.paidDebtNumber: models.Loan.paidDebtNumber + 1})
+
+        db.commit()
+
+    return db_debt
+
+def update_user_debts(db: Session, user_id: int, loan_id: int, paidDebt: date):
+    db_debts = db.query(models.Debt).filter(models.Debt.loan_id == loan_id, models.Debt.paidDate == None).\
+        order_by(models.Debt.deadline).all()
+    
+    if not db_debts:
+        return None
+
+    for db_debt in db_debts:
+        db_debt.paidDate = paidDebt
+        db.commit()
+
+    db.query(models.Loan).filter(models.Loan.loan_id == loan_id).\
+        update({models.Loan.paidDebtNumber: models.Loan.debtNumber})
+    db.commit()
+    
+    result = db.query(models.Loan, models.Bank, models.CustomBank).outerjoin(models.Bank, models.Bank.bank_id == models.Loan.bank_id).\
+            outerjoin(models.CustomBank, models.CustomBank.bank_id == models.Loan.customBank_id).\
+            filter(models.Loan.receiver_id == user_id).filter(models.Loan.loan_id == loan_id).first()
+    
+    debts = db.query(models.Debt).filter(models.Debt.loan_id == loan_id).all()
+
+    loan, bank, customBank = result
+    loan_dict = model_to_dict(loan)
+    loan_dict['bank'] = bank if bank else None
+    loan_dict['customBank'] = customBank if customBank else None
+    loan_dict['debts'] = [debt for debt in debts] if debts else []
+
+    return loan_dict
