@@ -17,20 +17,20 @@ import smtplib
 from email.mime.text import MIMEText
 
 
-msg = MIMEText("hello")
-# me == the sender's email address
-# you == the recipient's email address
-msg['Subject'] = 'The contents of goodbye' 
-msg['From'] = "mehrbodmh82@gmail.com"
-msg['To'] = "mehrbodmh14@gmail.com"
+# msg = MIMEText("hello")
+# # me == the sender's email address
+# # you == the recipient's email address
+# msg['Subject'] = 'The contents of goodbye' 
+# msg['From'] = "mehrbodmh82@gmail.com"
+# msg['To'] = "mehrbodmh14@gmail.com"
 
-# Send the message via our own SMTP server, but don't include the
-# envelope header.
-s = smtplib.SMTP('smtp.gmail.com',587)
-s.starttls()  # Enable TLS
-s.login("loansystem313@gmail.com", "ukuv mosa hczv autq")
-s.sendmail("loansystem313@gmail.com", ["mehrbodmh14@gmail.com"], msg.as_string())
-s.quit()
+# # Send the message via our own SMTP server, but don't include the
+# # envelope header.
+# s = smtplib.SMTP('smtp.gmail.com',587)
+# s.starttls()  # Enable TLS
+# s.login("loansystem313@gmail.com", "ukuv mosa hczv autq")
+# s.sendmail("loansystem313@gmail.com", ["mehrbodmh14@gmail.com"], msg.as_string())
+# s.quit()
 
 def job_function():
     print("Hello World")
@@ -207,8 +207,17 @@ def delete_user(request: Request, current_user: Annotated[models.User, Depends(t
 @app.get("/user/loans")
 def get_loan(current_user: Annotated[models.User, Depends(tokens.get_current_user)],
              db: Session = Depends(get_db)):
+    def get_debt_id(debt):
+        return debt.debt_id
+    def get_loan_id(loan):
+        return loan['loan_id']
     try:
-        return crud.get_user_loans(db, current_user.user_id)
+
+        loans = crud.get_user_loans(db, current_user.user_id)
+        loans.sort(key= get_loan_id)
+        for loan in loans:
+             loan['debts'].sort(key = get_debt_id)
+        return loans
     except SQLAlchemyError as e:
         # Handle SQLAlchemy errors
         db.rollback()  # Rollback the transaction
