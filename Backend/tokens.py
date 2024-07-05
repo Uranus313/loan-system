@@ -7,8 +7,8 @@ from passlib.context import CryptContext
 from jwt.exceptions import InvalidTokenError
 from sqlalchemy.orm import Session
 from database import SessionLocal
-import crud, jwt
-
+from dotenv import load_dotenv
+import crud, jwt, os
 
 
 # Dependency
@@ -24,10 +24,10 @@ class Token(BaseModel):
     access_token: str
     token_type: str
 
-
-SECRET_KEY = "5fb630b20547b679a36e3325fa25e9e1c98cc17201e7f0bb2b2c61081c596a48"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 300
+load_dotenv("./config.env")
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM")
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

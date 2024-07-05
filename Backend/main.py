@@ -6,49 +6,28 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from fastapi.middleware.cors import CORSMiddleware
 from database import SessionLocal, engine
-import crud, models, schemas, tokens, re
-from datetime import datetime
-
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
-import smtplib
+import crud, models, schemas, tokens, re
 
+# import smtplib
 # Import the email modules we'll need
-from email.mime.text import MIMEText
+# from email.mime.text import MIMEText
 
+# msg = MIMEText("hello")
+# # me == the sender's email address
+# # you == the recipient's email address
+# msg['Subject'] = 'The contents of goodbye' 
+# msg['From'] = "mehrbodmh82@gmail.com"
+# msg['To'] = "mehrbodmh14@gmail.com"
 
-msg = MIMEText("hello")
-# me == the sender's email address
-# you == the recipient's email address
-msg['Subject'] = 'The contents of goodbye' 
-msg['From'] = "mehrbodmh82@gmail.com"
-msg['To'] = "mehrbodmh14@gmail.com"
-
-# Send the message via our own SMTP server, but don't include the
-# envelope header.
-s = smtplib.SMTP('smtp.gmail.com',587)
-s.starttls()  # Enable TLS
-s.login("loansystem313@gmail.com", "ukuv mosa hczv autq")
-s.sendmail("loansystem313@gmail.com", ["mehrbodmh14@gmail.com"], msg.as_string())
-s.quit()
-
-def job_function():
-    print("Hello World")
-
-sched = BackgroundScheduler()
-
-trigger = CronTrigger(
-        year="*",
-        month="*",
-        day="*",
-        hour="12",
-        minute="1",
-        second="1"
-    )
-sched.add_job(job_function, trigger= trigger)
-
-sched.start()
-
+# # Send the message via our own SMTP server, but don't include the
+# # envelope header.
+# s = smtplib.SMTP('smtp.gmail.com',587)
+# s.starttls()  # Enable TLS
+# s.login("loansystem313@gmail.com", "ukuv mosa hczv autq")
+# s.sendmail("loansystem313@gmail.com", ["mehrbodmh14@gmail.com"], msg.as_string())
+# s.quit()
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -63,7 +42,6 @@ app.add_middleware(
     expose_headers = ["*"]
 )
 
-
 # Dependency
 def get_db():
     db = SessionLocal()
@@ -73,9 +51,47 @@ def get_db():
         db.close()
 
 
+def job_function():
+    db = SessionLocal()
+
+    loans = crud.get_loans(db)
+    for loan in loans:
+        for debt in loan['debts']:
+            deadlineDate = date.today() +timedelta(days=3)
+
+            if not debt.paidDate and deadlineDate >= debt.deadline:
+                notifications = crud.get_loan_notifications(db, loan['loan_id'])
+
+                checker = False
+                for notification in notifications:
+                    if notification.debt_id == debt.debt_id:
+                        checker = True
+                        break
+
+                if not checker:
+                    if loan['bank']:
+                        bankName = loan['bank'].name
+                    else:
+                        bankName = loan['customBank'].name
+
+                    db_notification = schemas.NotificationCreate(title="Debt Reminder", text=f"Your debt deadline from loan received in {loan['startDate']} from {bankName} bank is in {debt.deadline}", sendDate=date.today(), isRead=False, user_id=loan['receiver_id'], debt_id=debt.debt_id)
+                    crud.register_notification(db, db_notification)
+
+
+sched = BackgroundScheduler()
+trigger = CronTrigger(
+        year="*",
+        month="*",
+        day="*",
+        hour="12"
+    )
+sched.add_job(job_function, trigger= trigger)
+sched.start()
+
+
 @app.get("/")
 def read_root():
-    return {"Hello": "World"}
+    return {"hello": "world"}
 
 @app.post("/user/login", response_model=schemas.User)
 async def login_for_access_token(response: Response, form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
@@ -291,6 +307,30 @@ def delete_customBanks(request: Request, current_user: Annotated[models.User, De
     try:
         bank_id = request.headers["bank_id"]
         return crud.delete_user_customBank(db, current_user.user_id, bank_id)
+    except SQLAlchemyError as e:
+        # Handle SQLAlchemy errors
+        db.rollback()  # Rollback the transaction
+        raise HTTPException(status_code=500, detail="Database error: " + str(e))
+
+@app.get("/user/notifications", response_model=list[schemas.Notification])
+def get_notifications(current_user: Annotated[models.User, Depends(tokens.get_current_user)],
+                       db: Session = Depends(get_db)):
+    try:
+        return crud.get_user_notifications(db, current_user.user_id)
+    except SQLAlchemyError as e:
+        # Handle SQLAlchemy errors
+        db.rollback()  # Rollback the transaction
+        raise HTTPException(status_code=500, detail="Database error: " + str(e))
+
+@app.put("/user/notifications", response_model=list[schemas.Notification])
+def update_notification(current_user: Annotated[models.User, Depends(tokens.get_current_user)],
+                        updated_notifications: list[schemas.NotificationUpdate], db: Session = Depends(get_db)):
+    try:
+        for updated_notification in updated_notifications:
+            db_notification = crud.validate_user_notification(db, current_user.user_id, updated_notification.notification_id)
+            if not db_notification:
+                raise HTTPException(status_code=400, detail="Some of These notifications do not belong to this user")
+        return crud.update_user_notifications(db, updated_notifications)
     except SQLAlchemyError as e:
         # Handle SQLAlchemy errors
         db.rollback()  # Rollback the transaction

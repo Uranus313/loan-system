@@ -36,6 +36,7 @@ class UserUpdate(BaseModel):
 
 class UserBase(BaseModel):
     username: str = Field(max_length=100)
+    isAdmin: Optional[bool] = False
     email: EmailStr = Field(max_length=100)
     firstName: str = Field(max_length=100)
     middleName: Optional[str] = Field(None, max_length=100)
@@ -151,19 +152,26 @@ class Loan(LoanBase):
     class Config:
         orm_mode = True
         from_attributes=True
+
 class NotificationBase(BaseModel):
     title: str = Field(max_length=100)
-    text : Optional[str] = Field(None, max_length=1000)
-    isRead : bool
-    user_id : int
-    debt_id : Optional[int] = None
+    text: Optional[str] = Field(None, max_length=1000)
+    sender_id: Optional[int] = None
+    sendDate: date
+    isRead: bool
+    user_id: int
+    debt_id: Optional[int] = None
 
 class NotificationCreate(NotificationBase):
     pass
 
 class Notification(NotificationBase):
-    notification_id : int
+    notification_id: int
 
     class Config:
         orm_mode = True
         from_attributes=True
+
+class NotificationUpdate(BaseModel):
+    notification_id: int
+    isRead: bool

@@ -1,5 +1,5 @@
 import enum
-from sqlalchemy import Column, ForeignKey, Integer, Numeric, String, Date, Enum,Boolean
+from sqlalchemy import Column, ForeignKey, Integer, Numeric, String, Date, Enum, Boolean
 from database import Base
 
 
@@ -8,6 +8,7 @@ class User(Base):
     __tablename__ = "users"
 
     user_id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+    isAdmin = Column(Boolean, nullable=False)
     username = Column(String(100), unique=True, index=True, nullable=False)
     email = Column(String(100), unique=True, index=True, nullable=False)
     firstName =Column(String(100), nullable=False)
@@ -26,7 +27,7 @@ class Loan(Base):
     __tablename__ = "loans"
 
     loan_id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
-    receiver_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
+    receiver_id = Column(Integer, ForeignKey("users.user_id"), nullable=True)
     amount = Column(Numeric(precision=100, scale=0), nullable=False)
     interest = Column(Integer, nullable=False)
     startDate = Column(Date, nullable=False)
@@ -50,7 +51,7 @@ class CustomBank(Base):
 
     bank_id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     name = Column(String(100), nullable=False)
-    user_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.user_id"), nullable=True)
 
 class Debt(Base):
     __tablename__ = "debts"
@@ -60,13 +61,15 @@ class Debt(Base):
     amount = Column(Numeric(precision=100, scale=2), nullable=False)
     paidDate = Column(Date, nullable=True)
     deadline = Column(Date, nullable=False)
+
 class Notification(Base):
     __tablename__ = "notifications"
 
     notification_id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     title = Column(String(100), nullable=False)
     text = Column(String(1000), nullable=True)
-    isRead = Column(Boolean(), nullable=False)
-    user_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
-    # loan_id = Column(Integer, ForeignKey("loans.loan_id"), nullable=True)
-    debt_id = Column(Integer, ForeignKey("loans.loan_id"), nullable=True)
+    sender_id = Column(Integer, ForeignKey("users.user_id"), nullable=True)
+    sendDate = Column(Date, nullable=False)
+    isRead = Column(Boolean, nullable=False)
+    user_id = Column(Integer, ForeignKey("users.user_id"), nullable=True)
+    debt_id = Column(Integer, ForeignKey("debts.debt_id"), nullable=True)
