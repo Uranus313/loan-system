@@ -17,12 +17,12 @@ def get_user_by_IDNumber(db: Session, IDNumber: int):
 def get_user_by_id(db: Session, user_id: int):
     return db.query(models.User).filter(models.User.user_id == user_id).first()
 
-def get_users(db: Session, skip: int, limit: int):
+def get_users(db: Session, skip: int | None=None, limit: int | None=None):
     return db.query(models.User).order_by(models.User.user_id).offset(skip).limit(limit).all()
 
 def register_user(db: Session, user: schemas.UserCreate):
     hashed_user_password = hashing.get_password_hash(user.password)
-    db_user = models.User(username=user.username.lower() ,email=user.email.lower(), firstName=user.firstName, middleName=user.middleName,
+    db_user = models.User(username=user.username.lower() ,email=user.email.lower(), isAdmin=user.isAdmin, firstName=user.firstName, middleName=user.middleName,
                           lastName=user.lastName ,password=hashed_user_password, dateOfBirth=user.dateOfBirth, IDNumber=user.IDNumber)
     db.add(db_user)
     db.commit()
@@ -101,7 +101,24 @@ def get_user_loans(db: Session, user_id: int):
 
     return loans
 
-def validate_user_loan(db: Session, user_id: int, loan_id):
+def get_loans(db: Session):
+    results =  db.query(models.Loan, models.Bank, models.CustomBank).outerjoin(models.Bank, models.Bank.bank_id == models.Loan.bank_id).\
+        outerjoin(models.CustomBank, models.CustomBank.bank_id == models.Loan.customBank_id).all()
+
+    loans = []
+    for loan, bank, customBank in results:
+        loan_dict = model_to_dict(loan)
+        loan_dict['bank'] = bank if bank else None
+        loan_dict['customBank'] = customBank if customBank else None
+
+        debts = db.query(models.Debt).filter(models.Debt.loan_id == loan.loan_id).all()
+
+        loan_dict['debts'] = [(debt) for debt in debts] if debts else []
+        loans.append(loan_dict)
+
+    return loans
+
+def validate_user_loan(db: Session, user_id: int, loan_id: int):
     return  db.query(models.Loan).filter(models.Loan.receiver_id == user_id, models.Loan.loan_id == loan_id).all()
 
 def register_user_loan(db: Session, user_id: int, loan:schemas.LoanCreate):
@@ -163,26 +180,6 @@ def delete_user_customBank(db: Session, user_id: int, bank_id: int):
     db.commit()
 
     return db_customBank
-def register_notification(db: Session, Notification: schemas.NotificationCreate):
-    db_notificationn = models.Notification(**Notification.model_dump())
-    db.add(db_notificationn)
-    db.commit()
-    db.refresh(db_notificationn)
-    return db_notificationn
-def register_notification(db: Session, Notification: schemas.NotificationCreate):
-    db_notificationn = models.Notification(**Notification.model_dump())
-    db.add(db_notificationn)
-    db.commit()
-    db.refresh(db_notificationn)
-    return db_notificationn
-def update_user(db: Session, notification_id: int, isRead : bool):
-
-    db.query(models.Notification).filter(models.Notification.notification_id == notification_id).update({models.Notification.isRead: isRead})
-
-    
-    db.commit()
-    return db.query(models.Notification).filter(models.Notification.notification_id == notification_id).first()    
-
 
 def update_user_debt(db: Session, loan_id: int, paidDebt: date):
     db_debt = db.query(models.Debt).filter(models.Debt.loan_id == loan_id, models.Debt.paidDate == None).\
@@ -226,3 +223,40 @@ def update_user_debts(db: Session, user_id: int, loan_id: int, paidDebt: date):
     loan_dict['debts'] = [debt for debt in debts] if debts else []
 
     return loan_dict
+
+def register_notification(db: Session, Notification: schemas.NotificationCreate):
+    db_notificationn = models.Notification(**Notification.model_dump())
+    db.add(db_notificationn)
+    db.commit()
+    db.refresh(db_notificationn)
+
+    return db_notificationn
+
+def validate_user_notification(db: Session, user_id: int, notification_id: int):
+    return  db.query(models.Notification).filter(models.Notification.user_id == user_id,
+                                                 models.Notification.notification_id == notification_id).first()
+
+def update_user_notifications(db: Session, updated_notifications: list[schemas.NotificationUpdate]):
+    db_notifications = []
+
+    for updated_notification in updated_notifications:
+        db_notification = db.query(models.Notification).filter(models.Notification.notification_id == updated_notification.notification_id).first()
+        db_notification.isRead = updated_notification.isRead
+        db.commit()
+        db_notifications.append(db_notification)
+
+    return db_notifications
+
+def get_user_notifications(db: Session, user_id: int):
+    return db.query(models.Notification).filter(models.Notification.user_id == user_id).order_by(models.Notification.sendDate).all()
+
+def get_loan_notifications(db: Session, loan_id: int):
+    debts = db.query(models.Debt).filter(models.Debt.loan_id == loan_id).all()
+
+    notifications = []
+    for debt in debts:
+        notification = db.query(models.Notification).filter(models.Notification.debt_id == debt.debt_id).first()
+        if notification:
+            notifications.append(notification)
+    
+    return notifications

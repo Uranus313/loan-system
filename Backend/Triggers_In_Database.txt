@@ -1,0 +1,26 @@
+create or replace function delete_user()
+	returns trigger
+	as
+	$$
+	begin
+		update custom_banks
+		set
+	    user_id = case when user_id = old.user_id then null else user_id end,
+		receiver_id = case when receiver_id = old.user_id then null else receiver_id end;
+
+		update loans
+		set
+	    user_id = case when user_id = old.user_id then null else user_id end;
+
+		update notifications
+		set
+		user_id = case when user_id = old.user_id then null else user_id end;
+
+		return old;
+
+	end;
+	$$
+	language plpgsql;
+
+create or replace trigger users_before_delete before delete on users
+	for each row execute function delete_user();
