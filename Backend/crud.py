@@ -101,6 +101,29 @@ def get_user_loans(db: Session, user_id: int):
 
     return loans
 
+def get_user_debt_loan(db: Session, user_id: int, debt_id: int):
+    db_debt = db.query(models.Debt).filter(models.Debt.debt_id == debt_id).first()
+
+    if not db_debt:
+        return None
+
+    result = db.query(models.Loan, models.Bank, models.CustomBank).outerjoin(models.Bank, models.Bank.bank_id == models.Loan.bank_id).\
+            outerjoin(models.CustomBank, models.CustomBank.bank_id == models.Loan.customBank_id).\
+            filter(models.Loan.receiver_id == user_id).filter(models.Loan.loan_id == db_debt.loan_id).first()
+    
+    if not result:
+        return None
+
+    debts = db.query(models.Debt).filter(models.Debt.loan_id == db_debt.loan_id).all()
+
+    loan, bank, customBank = result
+    loan_dict = model_to_dict(loan)
+    loan_dict['bank'] = bank if bank else None
+    loan_dict['customBank'] = customBank if customBank else None
+    loan_dict['debts'] = [debt for debt in debts] if debts else []
+
+    return loan_dict
+
 def get_loans(db: Session):
     results =  db.query(models.Loan, models.Bank, models.CustomBank).outerjoin(models.Bank, models.Bank.bank_id == models.Loan.bank_id).\
         outerjoin(models.CustomBank, models.CustomBank.bank_id == models.Loan.customBank_id).all()
@@ -119,7 +142,7 @@ def get_loans(db: Session):
     return loans
 
 def validate_user_loan(db: Session, user_id: int, loan_id: int):
-    return  db.query(models.Loan).filter(models.Loan.receiver_id == user_id, models.Loan.loan_id == loan_id).all()
+    return db.query(models.Loan).filter(models.Loan.receiver_id == user_id, models.Loan.loan_id == loan_id).all()
 
 def register_user_loan(db: Session, user_id: int, loan:schemas.LoanCreate):
     endDate = loan.startDate + timedelta(days=loan.debtNumber*30)
