@@ -28,11 +28,13 @@ function UserNavbar({user,isMenuOpen,logOut,setIsMenuOpen}) {
               <Offcanvas.Body>
                 {/* the links to the other pages */}
                 <Nav className="justify-content-end flex-grow-1 pe-3">
-                  <Link className={'text-decoration-none mb-2 p-2 menu-option'} to={'/profileInfo'}>My Profile</Link>
-                  <Link className={'text-decoration-none mb-2 p-2 menu-option'} to={'/editProfile'}>Edit Profile</Link>
-                  <Link className={'text-decoration-none mb-2 p-2 menu-option'} >Loans</Link>
-                  <Link className={'text-decoration-none mb-2 p-2 menu-option'} to={'/addLoan'}>Add Loan</Link>
-                  <Link className={'text-decoration-none mb-2 p-2 menu-option'} style={{display: "block",textWrap: "nowrap"}}>Submit Debt Payment</Link>
+                  <Link className={'text-decoration-none mb-2 p-2 menu-option'} to={'/user/profileInfo'}>My Profile</Link>
+                  <Link className={'text-decoration-none mb-2 p-2 menu-option'} to={'/user/editProfile'}>Edit Profile</Link>
+                  <Link className={'text-decoration-none mb-2 p-2 menu-option'} to={'/user/myLoans'} >Loans</Link>
+                  <Link className={'text-decoration-none mb-2 p-2 menu-option'} to={'/user/addLoan'}>Add Loan</Link>
+                  <Link className={'text-decoration-none mb-2 p-2 menu-option'} to={'/user/notifications'}>Notifications</Link>
+
+                  <Link className={'text-decoration-none mb-2 p-2 menu-option'} to={'/user/addPayment'} style={{display: "block",textWrap: "nowrap"}}>Submit Debt Payment</Link>
                   <Link className={'text-decoration-none mb-2 p-2 logout-option'} onClick={() => {localStorage.removeItem("auth-token"); logOut();
                     }} to={'/signIn'}>log out</Link>
                 </Nav>

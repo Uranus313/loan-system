@@ -3,6 +3,8 @@ import '../component styles/Header.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { useState } from 'react';
 import UserNavbar from "./Navbar.jsx";
+import logo from '../assets/logo.png'
+
 
 function Header({user, logOut, isMenuOpen, menuControl,setIsMenuOpen,signedIn,isLoading}){
 
@@ -11,7 +13,7 @@ function Header({user, logOut, isMenuOpen, menuControl,setIsMenuOpen,signedIn,is
         <>
         <header className={"d-flex justify-content-between text-white align-items-center p-2"}>
             <Link style={{textDecoration: "none"}} className={"navbar-text-logo m-0 text-white"}>LOAN REMINDER</Link>
-            <img  className={'navbar-img-logo d-flex position-relative'} src={'./src/assets/logo.png'}/>
+            <img  className={'navbar-img-logo d-flex position-relative'} src={logo}/>
             {/* if you're getting the data from the api, it shows a spinned for loading */}
             {isLoading ? <div className="spinner-border text-dark" role="status">
                 <span className="visually-hidden">Loading...</span>

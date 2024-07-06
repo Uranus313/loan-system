@@ -1,0 +1,14 @@
+
+
+h4 {
+    color: red;
+    font-weight: bold;
+}
+
+.info-row {
+    color: green;
+}
+
+.info-box {
+    box-shadow: 0px 2px 20px 4px grey;
+}
