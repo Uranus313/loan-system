@@ -1,6 +1,5 @@
 header {
     background-color: green;
-    height: 75px;
 }
 
 .navbar-text-logo {
@@ -20,3 +19,29 @@ header {
 .navbar-text:hover {
     color: yellow;
 }
+
+
+.menu-btn {
+    color: white;
+    border: white solid;
+    width: 100px;
+    background-color: green;
+    border-radius: 20px;
+}
+
+
+.menu-btn:hover {
+    background-color: rgb(0,200,10);
+}
+
+.menu-btn:active {
+    border: yellow solid;
+}
+
+
+
+
+
+
+
+
