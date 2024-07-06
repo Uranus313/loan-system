@@ -1,0 +1,47 @@
+header {
+    background-color: green;
+}
+
+.navbar-text-logo {
+    font-family: "Agency FB";
+    font-weight: bold;
+    font-size: 25px;
+}
+
+.navbar-img-logo {
+    width: 60px;
+}
+
+.navbar-text {
+    text-decoration: none;
+}
+
+.navbar-text:hover {
+    color: yellow;
+}
+
+
+.menu-btn {
+    color: white;
+    border: white solid;
+    width: 100px;
+    background-color: green;
+    border-radius: 20px;
+}
+
+
+.menu-btn:hover {
+    background-color: rgb(0,200,10);
+}
+
+.menu-btn:active {
+    border: yellow solid;
+}
+
+
+
+
+
+
+
+
