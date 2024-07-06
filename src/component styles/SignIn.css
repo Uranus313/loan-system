@@ -4,6 +4,11 @@
     margin-bottom: 100px;
 }
 
+.login-box {
+    background-color: #F1F1F4;
+    box-shadow: 0px 0px 10px 2px #888888;
+}
+
 .login-form-header {
     margin-bottom: 40px;
     font-weight: bold;
@@ -18,11 +23,11 @@
 .showpass-btn {
     margin-top: 40px;
     border: none;
-    background-color: #ffff00;
+    background-color: #55f229;
 }
 
 .showpass-btn:hover {
-    background-color: #e6e600;
+    background-color: #29f287;
 }
 
 .submit-btn {

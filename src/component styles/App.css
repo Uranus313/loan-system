@@ -1,0 +1,91 @@
+
+body{
+    background-color: #F1F1F4;
+  }
+  
+  #root{
+    width: 100%;
+  }
+  
+  body{
+    width: 100%; background: rgb(47,205,65);
+    background: linear-gradient(21deg, rgba(47,205,65,1) 0%, rgba(222,247,225,1) 21%, rgba(255,255,255,1) 25%);
+  }
+  
+  .home {
+    margin-bottom: 200px;
+  }
+  
+  .home-title {
+    font-family: "Agency FB";
+  }
+  
+  .intro{
+    margin-top: 150px;
+    margin-bottom: 150px;
+  }
+  
+  .imgHome{
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0px 3px 2px 2px rgb(200,220,200);
+    height: 570px;
+    margin-bottom: 10px;
+  }
+  
+  .temp{
+    padding-top: 50px;
+    background-color: #F1F1F4;
+  }
+  
+  .wave{
+    background-color: #F1F1F4;
+    object-fit: cover;
+    width: 100%;  
+    height: 100%;
+  }
+  
+  
+  .YCU{
+   
+    bottom: 400px;
+    font-family: 'black';
+    font-size: 96px;
+  
+  }
+  
+  
+  
+  .YCUDiv{
+  
+    flex-grow: 0;
+    flex-shrink: 0;
+    height: 300px;
+   
+  }
+  
+  .buttonHome{
+    border: solid 2px grey;
+    color: black;
+  }
+  
+  
+  .cards {
+    background-color: yellow;
+    height: 100px;
+  }
+  
+  
+  .card {
+    height: 300px;
+    width: 350px;
+    margin-bottom: 45px;
+    margin-left: 50px;
+    box-shadow: 0px 3px 10px 2px rgba(62,58,63,0.53);
+  }
+  
+  
+  .card-text {
+    font-family: sans-serif;
+  }
+  
