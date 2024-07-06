@@ -30,23 +30,6 @@ import crud, models, schemas, tokens, re
 # s.sendmail("loansystem313@gmail.com", ["mehrbodmh14@gmail.com"], msg.as_string())
 # s.quit()
 
-def job_function():
-    print("Hello World")
-
-sched = BackgroundScheduler()
-
-trigger = CronTrigger(
-        year="*",
-        month="*",
-        day="*",
-        hour="12",
-        minute="1",
-        second="1"
-    )
-sched.add_job(job_function, trigger= trigger)
-
-sched.start()
-
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -78,7 +61,7 @@ def job_function():
         for debt in loan['debts']:
             deadlineDate = date.today() +timedelta(days=3)
 
-            if not debt.paidDate and deadlineDate >= debt.deadline:
+            if not debt.paidDate and deadlineDate >= debt.deadline and debt.deadline > date.today():
                 notifications = crud.get_loan_notifications(db, loan['loan_id'])
 
                 checker = False
@@ -96,7 +79,7 @@ def job_function():
                     db_notification = schemas.NotificationCreate(title="Debt Reminder", text=f"Your debt deadline from loan received in {loan['startDate']} from {bankName} bank is in {debt.deadline}", sendDate=date.today(), isRead=False, user_id=loan['receiver_id'], debt_id=debt.debt_id)
                     crud.register_notification(db, db_notification)
 
-
+job_function()
 sched = BackgroundScheduler()
 trigger = CronTrigger(
         year="*",

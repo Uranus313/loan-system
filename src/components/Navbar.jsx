@@ -30,6 +30,7 @@ function UserNavbar({user,isMenuOpen,logOut,setIsMenuOpen}) {
                   <Link className={'text-decoration-none mb-2 p-2 menu-option'} to={'/user/editProfile'}>Edit Profile</Link>
                   <Link className={'text-decoration-none mb-2 p-2 menu-option'} to={'/user/myLoans'} >My Loans</Link>
                   <Link className={'text-decoration-none mb-2 p-2 menu-option'} to={'/user/addLoan'}>Add Loan</Link>
+                  <Link className={'text-decoration-none mb-2 p-2 menu-option'} to={'/user/notifications'}>Notifications</Link>
                   <Link className={'text-decoration-none mb-2 p-2 menu-option'} style={{display: "block",textWrap: "nowrap"}} to={'/user/addPayment'}>Submit Debt Payment</Link>
                   <Link className={'text-decoration-none mb-2 p-2 logout-option'} onClick={() => {localStorage.removeItem("auth-token"); logOut();
                     }} to={'/signIn'}>log out</Link>
