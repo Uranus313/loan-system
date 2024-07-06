@@ -261,7 +261,7 @@ def update_debts(current_user: Annotated[models.User, Depends(tokens.get_current
         db.rollback()  # Rollback the transaction
         raise HTTPException(status_code=500, detail="Database error: " + str(e))
 
-@app.get("/user/debts/{dent_id}")
+@app.get("/user/debts/{debt_id}")
 def get_debt_loan(current_user: Annotated[models.User, Depends(tokens.get_current_user)], debt_id: int, db: Session = Depends(get_db)):
     try:
         db_loan = crud.get_user_debt_loan(db, current_user.user_id, debt_id)

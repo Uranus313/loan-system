@@ -100,17 +100,17 @@ def get_user_loans(db: Session, user_id: int):
         loans.append(loan_dict)
 
     return loans
-
 def get_user_debt_loan(db: Session, user_id: int, debt_id: int):
     db_debt = db.query(models.Debt).filter(models.Debt.debt_id == debt_id).first()
-
     if not db_debt:
         return None
-
+    print(db_debt.loan_id)
+    print(user_id)
     result = db.query(models.Loan, models.Bank, models.CustomBank).outerjoin(models.Bank, models.Bank.bank_id == models.Loan.bank_id).\
             outerjoin(models.CustomBank, models.CustomBank.bank_id == models.Loan.customBank_id).\
             filter(models.Loan.receiver_id == user_id).filter(models.Loan.loan_id == db_debt.loan_id).first()
-    
+    print(result)
+
     if not result:
         return None
 
@@ -121,9 +121,8 @@ def get_user_debt_loan(db: Session, user_id: int, debt_id: int):
     loan_dict['bank'] = bank if bank else None
     loan_dict['customBank'] = customBank if customBank else None
     loan_dict['debts'] = [debt for debt in debts] if debts else []
-
+    print(loan_dict)
     return loan_dict
-
 def get_loans(db: Session):
     results =  db.query(models.Loan, models.Bank, models.CustomBank).outerjoin(models.Bank, models.Bank.bank_id == models.Loan.bank_id).\
         outerjoin(models.CustomBank, models.CustomBank.bank_id == models.Loan.customBank_id).all()
@@ -142,7 +141,7 @@ def get_loans(db: Session):
     return loans
 
 def validate_user_loan(db: Session, user_id: int, loan_id: int):
-    return db.query(models.Loan).filter(models.Loan.receiver_id == user_id, models.Loan.loan_id == loan_id).all()
+    return  db.query(models.Loan).filter(models.Loan.receiver_id == user_id, models.Loan.loan_id == loan_id).all()
 
 def register_user_loan(db: Session, user_id: int, loan:schemas.LoanCreate):
     endDate = loan.startDate + timedelta(days=loan.debtNumber*30)
@@ -271,7 +270,7 @@ def update_user_notifications(db: Session, updated_notifications: list[schemas.N
     return db_notifications
 
 def get_user_notifications(db: Session, user_id: int):
-    return db.query(models.Notification).filter(models.Notification.user_id == user_id).order_by(models.Notification.sendDate).all()
+    return db.query(models.Notification).filter(models.Notification.user_id == user_id).order_by(models.Notification.notification_id).all()
 
 def get_loan_notifications(db: Session, loan_id: int):
     debts = db.query(models.Debt).filter(models.Debt.loan_id == loan_id).all()
