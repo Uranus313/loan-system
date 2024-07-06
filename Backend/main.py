@@ -14,7 +14,6 @@ import crud, models, schemas, tokens, re
 # Import the email modules we'll need
 # from email.mime.text import MIMEText
 
-
 # msg = MIMEText("hello")
 # # me == the sender's email address
 # # you == the recipient's email address
@@ -29,7 +28,6 @@ import crud, models, schemas, tokens, re
 # s.login("loansystem313@gmail.com", "ukuv mosa hczv autq")
 # s.sendmail("loansystem313@gmail.com", ["mehrbodmh14@gmail.com"], msg.as_string())
 # s.quit()
-
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -61,7 +59,7 @@ def job_function():
         for debt in loan['debts']:
             deadlineDate = date.today() +timedelta(days=3)
 
-            if not debt.paidDate and deadlineDate >= debt.deadline and debt.deadline > date.today():
+            if not debt.paidDate and deadlineDate >= debt.deadline and debt.deadline >= date.today():
                 notifications = crud.get_loan_notifications(db, loan['loan_id'])
 
                 checker = False
@@ -225,17 +223,8 @@ def delete_user(request: Request, current_user: Annotated[models.User, Depends(t
 @app.get("/user/loans")
 def get_loan(current_user: Annotated[models.User, Depends(tokens.get_current_user)],
              db: Session = Depends(get_db)):
-    def get_debt_id(debt):
-        return debt.debt_id
-    def get_loan_id(loan):
-        return loan['loan_id']
     try:
-
-        loans = crud.get_user_loans(db, current_user.user_id)
-        loans.sort(key= get_loan_id)
-        for loan in loans:
-             loan['debts'].sort(key = get_debt_id)
-        return loans
+        return crud.get_user_loans(db, current_user.user_id)
     except SQLAlchemyError as e:
         # Handle SQLAlchemy errors
         db.rollback()  # Rollback the transaction
@@ -267,6 +256,18 @@ def update_debts(current_user: Annotated[models.User, Depends(tokens.get_current
             return db_loan
         else:
             raise HTTPException(status_code=400, detail="All debts has already been paid")
+    except SQLAlchemyError as e:
+        # Handle SQLAlchemy errors
+        db.rollback()  # Rollback the transaction
+        raise HTTPException(status_code=500, detail="Database error: " + str(e))
+
+@app.get("/user/debts/{dent_id}")
+def get_debt_loan(current_user: Annotated[models.User, Depends(tokens.get_current_user)], debt_id: int, db: Session = Depends(get_db)):
+    try:
+        db_loan = crud.get_user_debt_loan(db, current_user.user_id, debt_id)
+        if db_loan:
+            return db_loan
+        raise HTTPException(status_code=400, detail="This debt does not belong to this user")
     except SQLAlchemyError as e:
         # Handle SQLAlchemy errors
         db.rollback()  # Rollback the transaction
