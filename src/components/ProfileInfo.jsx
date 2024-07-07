@@ -15,7 +15,7 @@ function ProfileInfo(){
         
         <div className={'d-flex flex-column align-items-center bg-gradient'}>
             <div className={'d-grid p-4 rounded-3 bg-alert info-box mt-5 mb-5'}>
-                <h4>Your Account Information</h4>
+                <h4 className="fw-bold">YOUR ACCOUNT INFORMATION</h4>
                 <hr></hr>
                 <div className={'d-flex justify-content-between mt-4'}>
                     <p className={'fw-bold'}> <span className={'info-row'}>Username:</span> {user?.username}</p>

@@ -9,6 +9,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import useGetLoans from "../hooks/useGetLoans";
 import useGetBanks from "../hooks/useGetBanks";
 import Loading from "./Loading";
+import 'bootstrap/dist/css/bootstrap.min.css'
+import '../component styles/AddLoan.css'
+
+
+
 //unfinished page
 function AddLoan(){
     // let banks = [{bank_id : 1,name: "Melli"},{bank_id: 2, name: "Sepah"},{bank_id:3, name: "Pasargad"}]
@@ -103,23 +108,22 @@ function AddLoan(){
     return (
         <>
             {isLoading? <Loading /> : <form className={'d-flex flex-column align-items-center bg-gradient'} action="post" onSubmit={(event) => handleSubmit(event)}>
-            <div className={'d-grid p-4 rounded-3 bg-secondary-subtle'}>
-                <h4>WELCOME TO OUR WEBSITE</h4>
-                <p>Please enter the details to add loan</p>
-
+            <div className={'d-grid p-4 rounded-3 bg-gradient addloan-box m-4'}>
+                <h4 className="mb-4">PLEASE ENTER THE DETAILS TO ADD THE LOAN</h4>
+                <hr></hr>
                 {/* if error exists : */}
                 {error? <p style={{color : 'rgb(230, 18, 18)'}}>{error}</p> : null }
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>Amount :</p>
-                    <input className={'input-button rounded-1'} type="number" ref={amountRef} placeholder="amount" />
+                    <input className={'input-button rounded-1'} type="number" ref={amountRef} placeholder=" amount" />
                 </div>
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>Interest :</p>
-                    <input className={'input-button rounded-1'} type="number" ref={interestRef} placeholder="interest" />
+                    <input className={'input-button rounded-1'} type="number" ref={interestRef} placeholder=" interest" />
                 </div>
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>How Many Debts? :</p>
-                    <input className={'input-button rounded-1'} type="number" ref={debtCountRef} placeholder="debt number" />
+                    <input className={'input-button rounded-1'} type="number" ref={debtCountRef} placeholder=" debt number" />
                 </div>
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>Start Date :</p>
@@ -154,7 +158,7 @@ function AddLoan(){
                 </div>
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>Note :</p>
-                    <input className={'input-button rounded-1'} type="text" ref={noteRef} placeholder="note" />
+                    <input className={'input-button rounded-1'} type="text" ref={noteRef} placeholder=" note" />
                 </div>
                 <button className={'submit-button rounded-1'} type="submit">SUBMIT</button>
             </div>

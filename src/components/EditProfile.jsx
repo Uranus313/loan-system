@@ -79,35 +79,35 @@ function EditProfile(){
         <form className={'d-flex flex-column align-items-center bg-gradient'} action="post" onSubmit={ formFunction? (event) => handleSubmit(event): (event) => {event.preventDefault()}} >
             {/* for using toast you need 2 things, 1_the toast function that accepts a string and an object with configs 2_ toast container that shows where you want your notifications to appear */}
             <ToastContainer />
-            <div className={'d-grid p-4 rounded-3 bg-gradient mt-4 mb-4 edit-box'}>
-                <h4>Fill Every Field You Want to Change</h4>
+            <div className={'d-grid p-4 rounded-3 bg-gradient m-4 edit-box'}>
+                <h4>FILL EVERY FIELD YOU WANT TO CHANGE</h4>
                 <hr></hr>
                 {/* you can comment the following line because we show the errors with toast now */}
                 {changeInfo.error && <div style={{color : 'rgb(230, 18, 18)'}}>{Array.isArray(changeInfo.error.response?.data.detail)?  changeInfo.error.response?.data.detail.map((item,index) => <p key={index}>{item.msg.includes("Value error,")?item.msg.replace("Value error, ",''): capitalizeFirstLetter(item.loc[item.loc.length-1]) + " " + item.msg.substr(item.msg.indexOf(" ")+1)}</p>) : <p>{changeInfo.error.response?.data.detail}</p>  }</div> }
                 {error? <p style={{color : 'rgb(230, 18, 18)'}}>{error}</p> : null }
                 <div className={'d-flex justify-content-between mt-4'}>
                     <p className={'fw-bold me-3'}>New Username :</p>
-                    <input className={'input-button rounded-1 edit-input'} type="text" ref={usernameRef} placeholder={user?.username} />
+                    <input className={'input-button rounded-1 edit-input'} type="text" ref={usernameRef} placeholder={" " + user?.username} />
                 </div>
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>New First name :</p>
-                    <input className={'input-button rounded-1 edit-input'} type="text" ref={firstNameRef} placeholder={user?.firstName} />
+                    <input className={'input-button rounded-1 edit-input'} type="text" ref={firstNameRef} placeholder={" " + user?.firstName} />
                 </div>
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>New Middle Name :</p>
-                    <input className={'input-button rounded-1 edit-input'} type="text" ref={middleNameRef} placeholder={user?.middleName}  />
+                    <input className={'input-button rounded-1 edit-input'} type="text" ref={middleNameRef} placeholder={" " +  user?.middleName}  />
                 </div>
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>New Last Name :</p>
-                    <input className={'input-button rounded-1 edit-input'} type="text" ref={lastNameRef} placeholder={user?.lastName} />
+                    <input className={'input-button rounded-1 edit-input'} type="text" ref={lastNameRef} placeholder={" " + user?.lastName} />
                 </div>
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>New ID Number :</p>
-                    <input className={'input-button rounded-1 edit-input'} type="number" ref={IDNumberRef} placeholder={user?.IDNumber}  />
+                    <input className={'input-button rounded-1 edit-input'} type="number" ref={IDNumberRef} placeholder={" " + user?.IDNumber}  />
                 </div>
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>Email :</p>
-                    <input className={'input-button rounded-1 edit-input'} type="email" ref={emailRef} placeholder={user?.email} />
+                    <input className={'input-button rounded-1 edit-input'} type="email" ref={emailRef} placeholder={" " + user?.email} />
                 </div>
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>New Date of Birth :</p>
@@ -116,22 +116,22 @@ function EditProfile(){
                 {/* when you write into new password, an input for old password opens up */}
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>New Password :</p>
-                    <input className={'input-button rounded-1 edit-input'} type= {passVisibility} ref={passwordRef} placeholder="password" onChange={(event) => {event.target.value== ''? setOldPassInput(false) : setOldPassInput(true)}}/>
+                    <input className={'input-button rounded-1 edit-input'} type= {passVisibility} ref={passwordRef} placeholder=" Password" onChange={(event) => {event.target.value== ''? setOldPassInput(false) : setOldPassInput(true)}}/>
                 </div>
                 <div className={'d-flex justify-content-between'}>
                     <p className={'fw-bold me-3 '}>Repeat New Password :</p>
-                    <input className={'input-button rounded-1 edit-input'} type={passVisibility} ref={repeatPasswordRef} placeholder="Repeat password" />
+                    <input className={'input-button rounded-1 edit-input'} type={passVisibility} ref={repeatPasswordRef} placeholder=" Repeat Password" />
                 </div>
                 <div className={oldPassInput? 'd-flex justify-content-between' : 'd-none'}>
                     <p className={'fw-bold me-3 '}>Current Password :</p>
-                    <input className={'input-button rounded-1 edit-input'} type={passVisibility} ref={oldPasswordRef} placeholder="Current password" />
+                    <input className={'input-button rounded-1 edit-input'} type={passVisibility} ref={oldPasswordRef} placeholder=" Current Password" />
                 </div>
                 <div className="form-check form-switch">
                     
                     <input className={'form-check-input '} type="checkBox" id="flexSwitchCheckDefault" onClick={passVisibility == "password"? () => {setPassVisibility("text");setPassVisibilitySwitchText('hide password')}: () => {setPassVisibility("password");setPassVisibilitySwitchText('show password')}} />
                     <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Show Password</label>
                 </div>
-                    
+                
                 <button className={'submit-button rounded-1'} type="submit">SUBMIT</button>
             </div>
 
