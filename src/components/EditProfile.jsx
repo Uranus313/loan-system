@@ -126,7 +126,12 @@ function EditProfile(){
                     <p className={'fw-bold me-3 '}>Current Password :</p>
                     <input className={'input-button rounded-1 edit-input'} type={passVisibility} ref={oldPasswordRef} placeholder="Current password" />
                 </div>
-                <button className={'show-pass-btn rounded-1'} type='button' onClick={passVisibility == "password"? () => {setPassVisibility("text");setPassVisibilitySwitchText('hide password')}: () => {setPassVisibility("password");setPassVisibilitySwitchText('show password')}}>{passVisibilitySwitchText}</button>
+                <div className="form-check form-switch">
+                    
+                    <input className={'form-check-input '} type="checkBox" id="flexSwitchCheckDefault" onClick={passVisibility == "password"? () => {setPassVisibility("text");setPassVisibilitySwitchText('hide password')}: () => {setPassVisibility("password");setPassVisibilitySwitchText('show password')}} />
+                    <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Show Password</label>
+                </div>
+                    
                 <button className={'submit-button rounded-1'} type="submit">SUBMIT</button>
             </div>
 

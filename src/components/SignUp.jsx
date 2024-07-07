@@ -121,11 +121,10 @@ function SignUp(){
                     <input className={'input-button rounded-1'} type={passVisibility} ref={repeatPasswordRef} placeholder="repeat password" />
                 </div>
                 <div className="form-check form-switch">
-                    
-                <input className={'form-check-input '} type="checkBox" id="flexSwitchCheckDefault" onClick={passVisibility == "password"? () => {setPassVisibility("text");setPassVisibilitySwitchText('hide password')}: () => {setPassVisibility("password");setPassVisibilitySwitchText('show password')}} />
+                    <input className={'form-check-input '} type="checkBox" id="flexSwitchCheckDefault" onClick={passVisibility == "password"? () => {setPassVisibility("text");setPassVisibilitySwitchText('hide password')}: () => {setPassVisibility("password");setPassVisibilitySwitchText('show password')}} />
                     <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Show Password</label>
                 </div>
-                
+
                 <button className={'submit-button rounded-1'} type="submit">SUBMIT</button>
             </div>
 
