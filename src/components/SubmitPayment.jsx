@@ -7,6 +7,10 @@ import { Button } from "react-bootstrap";
 import APIClient from "../connections/APIClient";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLocation } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css'
+import '../component styles/SubmitPayment.css'
+
+
 
 function SubmitPayment(){
     let {data: loans,error : fetchError,isLoading} = useGetLoans();
@@ -66,13 +70,13 @@ function SubmitPayment(){
         <>
         {isLoading? <Loading /> : loans.length==0 ? <p>you have no loans</p> : <div>
 
-                <form className={'d-flex flex-column align-items-center bg-gradient'} action="post" onSubmit={(event) => handleSubmit(event)}>
+                <form className={'d-flex flex-column align-items-center'} action="post" onSubmit={(event) => handleSubmit(event)}>
                 <ToastContainer />
 
-                    <div className={'d-grid p-4 rounded-3 bg-secondary-subtle'}>
+                    <div className={'d-grid p-4 rounded-3 submit-box'}>
 
-                            <p>please select a loan</p>
-                        <label className={'fw-bold me-3 '} htmlFor="loanSelector">Choose a Bank:</label>
+                            <p>PLEASE SELECT A LOAN </p>
+                        <label className={'fw-bold me-3'} htmlFor="loanSelector">Choose a Bank:</label>
                         <select name="loanSelector" id="loanSelector" defaultValue={locState?.loan_id? locState?.loan_id : null} onChange={(event) => {
                             if (event.target.value != "no Loan"){
                                 setSelectedLoan(event.target.value);
