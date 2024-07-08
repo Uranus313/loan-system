@@ -118,35 +118,38 @@ def get_user_debt_loan(db: Session, user_id: int, debt_id: int):
     if not result:
         return None
 
-    debts = db.query(models.Debt).filter(models.Debt.loan_id == db_debt.loan_id).all()
-
     loan, bank, customBank = result
     loan_dict = model_to_dict(loan)
     loan_dict['bank'] = bank if bank else None
     loan_dict['customBank'] = customBank if customBank else None
-    loan_dict['debts'] = [debt for debt in debts] if debts else []
 
     return loan_dict
 
 def get_loans(db: Session):
-    results =  db.query(models.Loan, models.Bank, models.CustomBank).outerjoin(models.Bank, models.Bank.bank_id == models.Loan.bank_id).\
-        outerjoin(models.CustomBank, models.CustomBank.bank_id == models.Loan.customBank_id).all()
+    results =  db.query(models.Loan, models.User, models.Bank, models.CustomBank).\
+        outerjoin(models.User, models.User.user_id == models.Loan.receiver_id).outerjoin(models.Bank, models.Bank.bank_id == models.Loan.bank_id).\
+        outerjoin(models.CustomBank, models.CustomBank.bank_id == models.Loan.customBank_id).order_by(models.Loan.loan_id).all()
 
     loans = []
-    for loan, bank, customBank in results:
+    for loan, user, bank, customBank in results:
         loan_dict = model_to_dict(loan)
-        loan_dict['bank'] = bank if bank else None
-        loan_dict['customBank'] = customBank if customBank else None
+        if user:
+            user_dict = model_to_dict(user)
+            user_dict.pop('password')
+            loan_dict['user'] = user_dict
+        else:
+            loan_dict['user'] = None
 
-        debts = db.query(models.Debt).filter(models.Debt.loan_id == loan.loan_id).all()
-
-        loan_dict['debts'] = [(debt) for debt in debts] if debts else []
+        loan_dict['bank'] = model_to_dict(bank) if bank else None
+        loan_dict['customBank'] = model_to_dict(customBank) if customBank else None
         loans.append(loan_dict)
 
     return loans
 
-def validate_user_loan(db: Session, user_id: int, loan_id: int):
-    return db.query(models.Loan).filter(models.Loan.receiver_id == user_id, models.Loan.loan_id == loan_id).all()
+def validate_user_loan(db: Session, loan_id: int, user_id: int|None=None):
+    if user_id:
+        return db.query(models.Loan).filter(models.Loan.receiver_id == user_id, models.Loan.loan_id == loan_id).all()
+    return db.query(models.Loan).filter(models.Loan.loan_id == loan_id).all()
 
 def register_user_loan(db: Session, user_id: int, loan:schemas.LoanCreate):
     endDate = loan.startDate + timedelta(days=loan.debtNumber*30)
@@ -207,6 +210,9 @@ def delete_user_customBank(db: Session, user_id: int, bank_id: int):
     db.commit()
 
     return db_customBank
+
+def get_loan_debts(db: Session, loan_id: int):
+    return db.query(models.Debt).filter(models.Debt.loan_id == loan_id).all()
 
 def update_user_debt(db: Session, loan_id: int, paidDebt: date):
     db_debt = db.query(models.Debt).filter(models.Debt.loan_id == loan_id, models.Debt.paidDate == None).\
