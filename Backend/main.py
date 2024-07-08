@@ -77,7 +77,7 @@ def job_function():
                     db_notification = schemas.NotificationCreate(title="Debt Reminder", text=f"Your debt deadline from loan received in {loan['startDate']} from {bankName} bank is in {debt.deadline}", sendDate=date.today(), isRead=False, user_id=loan['receiver_id'], debt_id=debt.debt_id)
                     crud.register_notification(db, db_notification)
 
-job_function()
+
 sched = BackgroundScheduler()
 trigger = CronTrigger(
         year="*",
@@ -261,7 +261,7 @@ def update_debts(current_user: Annotated[models.User, Depends(tokens.get_current
         db.rollback()  # Rollback the transaction
         raise HTTPException(status_code=500, detail="Database error: " + str(e))
 
-@app.get("/user/debts/{debt_id}")
+@app.get("/user/debts/{dent_id}")
 def get_debt_loan(current_user: Annotated[models.User, Depends(tokens.get_current_user)], debt_id: int, db: Session = Depends(get_db)):
     try:
         db_loan = crud.get_user_debt_loan(db, current_user.user_id, debt_id)
@@ -343,6 +343,205 @@ def update_notification(current_user: Annotated[models.User, Depends(tokens.get_
             if not db_notification:
                 raise HTTPException(status_code=400, detail="Some of These notifications do not belong to this user")
         return crud.update_user_notifications(db, updated_notifications)
+    except SQLAlchemyError as e:
+        # Handle SQLAlchemy errors
+        db.rollback()  # Rollback the transaction
+        raise HTTPException(status_code=500, detail="Database error: " + str(e))
+
+@app.get("/admin/users", response_model=list[schemas.User])
+def get_users(current_user: Annotated[models.User, Depends(tokens.get_current_user)], db: Session = Depends(get_db)):
+    try:
+        if current_user.isAdmin:
+            db_users = crud.get_users(db)
+            return db_users
+        raise HTTPException(status_code=400, detail="You don't have permission")     
+    except SQLAlchemyError as e:
+        # Handle SQLAlchemy errors
+        db.rollback()  # Rollback the transaction
+        raise HTTPException(status_code=500, detail="Database error: " + str(e))
+
+@app.get("/admin/user/{user_id}", response_model=schemas.User)
+def get_user(current_user: Annotated[models.User, Depends(tokens.get_current_user)], user_id: int,
+            db: Session = Depends(get_db)):
+    try:
+        if current_user.isAdmin:
+            db_user = crud.get_user_by_id(db, user_id)
+            if db_user:
+                return db_user
+            raise HTTPException(status_code=400, detail="User not found") 
+        raise HTTPException(status_code=400, detail="You don't have permission")     
+    except SQLAlchemyError as e:
+        # Handle SQLAlchemy errors
+        db.rollback()  # Rollback the transaction
+        raise HTTPException(status_code=500, detail="Database error: " + str(e))
+
+@app.post("/admin/user", response_model=schemas.User)
+def register_user(current_user: Annotated[models.User, Depends(tokens.get_current_user)], user: schemas.User,
+                    db: Session = Depends(get_db)):
+    try:
+        if not current_user.isAdmin:
+            raise HTTPException(status_code=400, detail="You don't have permission") 
+        db_user = crud.register_user(db, user)
+        return db_user  
+    except SQLAlchemyError as e:
+        # Handle SQLAlchemy errors
+        db.rollback()  # Rollback the transaction
+        raise HTTPException(status_code=500, detail="Database error: " + str(e))
+
+@app.put("/admin/user", response_model=schemas.User)
+def uodate_user(current_user: Annotated[models.User, Depends(tokens.get_current_user)], updated_user: schemas.UserUpdate,
+                        user_id: Annotated[str | None, Body()] = None, db: Session = Depends(get_db)):
+    try:
+        if not current_user.isAdmin:
+            raise HTTPException(status_code=400, detail="You don't have permission") 
+        db_user = crud.get_user_by_id(db, user_id)
+        if db_user:
+            db_user = crud.update_user(db, user_id, updated_user)
+            return db_user
+        raise HTTPException(status_code=400, detail="User not found")     
+    except SQLAlchemyError as e:
+        # Handle SQLAlchemy errors
+        db.rollback()  # Rollback the transaction
+        raise HTTPException(status_code=500, detail="Database error: " + str(e))
+
+@app.delete("/admin/user", response_model=schemas.User)
+def remove_user(request: Request, current_user: Annotated[models.User, Depends(tokens.get_current_user)],
+              db: Session = Depends(get_db)):
+    try:
+        if not current_user.isAdmin:
+            raise HTTPException(status_code=400, detail="You don't have permission") 
+        user_id = request.headers["user_id"]
+        db_user = crud.get_user_by_id(db, user_id)
+        if db_user:
+            if db_user.isAdmin:
+                raise HTTPException(status_code=400, detail="Can't remove admin")     
+            db_user = crud.delete_user(db, user_id)
+            return db_user
+        raise HTTPException(status_code=400, detail="User not found")     
+    except SQLAlchemyError as e:
+        # Handle SQLAlchemy errors
+        db.rollback()  # Rollback the transaction
+        raise HTTPException(status_code=500, detail="Database error: " + str(e))
+
+@app.get("/admin/admins", response_model=schemas.User)
+def get_admins(current_user: Annotated[models.User, Depends(tokens.get_current_user)],
+              db: Session = Depends(get_db)):
+    try:
+        if not current_user.isAdmin:
+            raise HTTPException(status_code=400, detail="You don't have permission") 
+        db_admins = crud.get_admins(db)
+        return db_admins    
+    except SQLAlchemyError as e:
+        # Handle SQLAlchemy errors
+        db.rollback()  # Rollback the transaction
+        raise HTTPException(status_code=500, detail="Database error: " + str(e))
+    
+@app.post("/admin/admin", response_model=schemas.User)
+def register_admin(current_user: Annotated[models.User, Depends(tokens.get_current_user)], user_id: Annotated[int, Body()],
+              db: Session = Depends(get_db)):
+    try:
+        if not current_user.isAdmin:
+            raise HTTPException(status_code=400, detail="You don't have permission") 
+        db_user = crud.get_user_by_id(db, user_id)
+        if db_user:
+            if db_user.isAdmin:
+                raise HTTPException(status_code=400, detail="Already Admin") 
+            db_user = crud.delete_user(db, user_id)
+            return db_user
+        raise HTTPException(status_code=400, detail="User not found")     
+    except SQLAlchemyError as e:
+        # Handle SQLAlchemy errors
+        db.rollback()  # Rollback the transaction
+        raise HTTPException(status_code=500, detail="Database error: " + str(e))
+
+@app.delete("/admin/admin", response_model=schemas.User)
+def remove_admin(request: Request, current_user: Annotated[models.User, Depends(tokens.get_current_user)],
+              db: Session = Depends(get_db)):
+    try:
+        if not current_user.isAdmin:
+            raise HTTPException(status_code=400, detail="You don't have permission")
+        user_id = request.headers["user_id"]
+        db_user = crud.get_user_by_id(db, user_id)
+        if db_user:
+            if not db_user.isAdmin:
+                raise HTTPException(status_code=400, detail="User not admin") 
+            db_user = crud.remove_admin(db, user_id)
+            return db_user
+        raise HTTPException(status_code=400, detail="User not found")     
+    except SQLAlchemyError as e:
+        # Handle SQLAlchemy errors
+        db.rollback()  # Rollback the transaction
+        raise HTTPException(status_code=500, detail="Database error: " + str(e))
+
+@app.get("/admin/loans/")
+def get_loans(current_user: Annotated[models.User, Depends(tokens.get_current_user)],
+              db: Session = Depends(get_db)):
+    try:
+        if not current_user.isAdmin:
+            raise HTTPException(status_code=400, detail="You don't have permission")
+        db_loans = crud.get_loans(db)
+        return db_loans   
+    except SQLAlchemyError as e:
+        # Handle SQLAlchemy errors
+        db.rollback()  # Rollback the transaction
+        raise HTTPException(status_code=500, detail="Database error: " + str(e))
+
+@app.get("/admin/loans/{user_id}")
+def get_user_loans(current_user: Annotated[models.User, Depends(tokens.get_current_user)], user_id: int,
+              db: Session = Depends(get_db)):
+    try:
+        if not current_user.isAdmin:
+            raise HTTPException(status_code=400, detail="You don't have permission")
+        db_user = crud.get_user_by_id(db, user_id)
+        if not db_user:
+            raise HTTPException(status_code=400, detail="User not found") 
+        db_loans = crud.get_user_loans(db, user_id)
+        return db_loans   
+    except SQLAlchemyError as e:
+        # Handle SQLAlchemy errors
+        db.rollback()  # Rollback the transaction
+        raise HTTPException(status_code=500, detail="Database error: " + str(e))
+
+@app.get("/admin/notifications/", response_model=list[schemas.Notification])
+def get_admin_notifications(current_user: Annotated[models.User, Depends(tokens.get_current_user)],
+              db: Session = Depends(get_db)):
+    try:
+        if not current_user.isAdmin:
+            raise HTTPException(status_code=400, detail="You don't have permission")
+        db_notifications = crud.get_admin_notifications(db, current_user.user_id)
+        return db_notifications   
+    except SQLAlchemyError as e:
+        # Handle SQLAlchemy errors
+        db.rollback()  # Rollback the transaction
+        raise HTTPException(status_code=500, detail="Database error: " + str(e))
+
+@app.get("/admin/notifications/{user_id}", response_model=list[schemas.Notification])
+def get_admin_to__user_notifications(current_user: Annotated[models.User, Depends(tokens.get_current_user)], user_id: int,
+              db: Session = Depends(get_db)):
+    try:
+        if not current_user.isAdmin:
+            raise HTTPException(status_code=400, detail="You don't have permission")
+        db_user = crud.get_user_by_id(db, user_id)
+        if not db_user:
+            raise HTTPException(status_code=400, detail="User not found") 
+        db_notifications = crud.get_admin_to_user_notifications(db, current_user.user_id, user_id)
+        return db_notifications   
+    except SQLAlchemyError as e:
+        # Handle SQLAlchemy errors
+        db.rollback()  # Rollback the transaction
+        raise HTTPException(status_code=500, detail="Database error: " + str(e))
+
+@app.post("/admin/notifications", response_model=schemas.Notification)
+def register_notification(current_user: Annotated[models.User, Depends(tokens.get_current_user)],
+                   notification: schemas.NotificationCreate, db: Session = Depends(get_db)):
+    try:
+        if not current_user.isAdmin:
+            raise HTTPException(status_code=400, detail="You don't have permission")
+        db_user = crud.get_user_by_id(db, notification.user_id)
+        if not db_user:
+            raise HTTPException(status_code=400, detail="User not found") 
+        db_notification = crud.register_notification(db, notification, current_user.user_id)
+        return db_notification  
     except SQLAlchemyError as e:
         # Handle SQLAlchemy errors
         db.rollback()  # Rollback the transaction

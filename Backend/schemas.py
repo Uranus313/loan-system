@@ -156,9 +156,8 @@ class Loan(LoanBase):
 class NotificationBase(BaseModel):
     title: str = Field(max_length=100)
     text: Optional[str] = Field(None, max_length=1000)
-    sender_id: Optional[int] = None
     sendDate: date
-    isRead: bool
+    isRead: Optional[bool] = False
     user_id: int
     debt_id: Optional[int] = None
 
@@ -167,6 +166,7 @@ class NotificationCreate(NotificationBase):
 
 class Notification(NotificationBase):
     notification_id: int
+    sender_id: Optional[int] = None
 
     class Config:
         orm_mode = True
