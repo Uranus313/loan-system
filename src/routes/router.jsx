@@ -12,6 +12,8 @@ import MyLoans from "../components/MyLoans";
 import UserPanel from "../components/UserPanel";
 import SubmitPayment from "../components/SubmitPayment";
 import NotificationsPage from "../components/NotificationsPage";
+import AllUsers from "../components/AllUsers";
+import PrivateAdminLayout from "../components/PrivateAdminLayout";
 const router = createBrowserRouter([
     {path: '/', element:<Layout /> ,children:[
         {path: '', element:<App />},
@@ -27,6 +29,9 @@ const router = createBrowserRouter([
             {path:'addPayment',element:<SubmitPayment />},
             {path:'notifications',element:<NotificationsPage />}
 
+        ]},
+        {path: 'admin/',element: <PrivateAdminLayout />, children: [
+            {path:'allUsers',element:<AllUsers />}
         ]}
         
 

@@ -29,7 +29,7 @@ function LoanPopUp({title,rows,debts}) {
           {title}
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body className=' overflow-x-scroll'>
         
         {rows.map((row,index) => 
         {if(row.text || row.text == 0) {return (<div key={index} className='d-flex w-100 justify-content-between'>
@@ -38,11 +38,11 @@ function LoanPopUp({title,rows,debts}) {
         </div>);}else{ return null}}
         )}
         {debts && 
-            <div className='d-flex flex-column '>
+            <div className='d-flex flex-column overflow-x-scroll'>
                 <Button variant="primary" className='text-white' onClick={remainingDebtsShow? () => SetRemainingDebtsShow(false):() => SetRemainingDebtsShow(true)}>{remainingDebtsShow? "hide remaining debts" : "show remaining debts"}</Button>
                 <div className={remainingDebtsShow? "d-block":"d-none"}>
                 <h4>Remaining Debts</h4>
-                <Table striped bordered hover>
+                <Table striped bordered hover className=' overflow-x-scroll'>
                     <thead>
                         <tr>
                         <th>#</th>
@@ -59,7 +59,11 @@ function LoanPopUp({title,rows,debts}) {
                         if(index == debts.length){
                             counter = 0;
                         }
-                        return <DebtRow key={index} index={temp} amount={debt.amount} deadline={debt.deadline} paidDate={debt.paidDate} />}})}
+                        return <DebtRow key={index} index={temp} amount={debt.amount} deadline={debt.deadline} paidDate={debt.paidDate} />}else{
+                          if(index == debts.length){
+                            counter = 0;
+                        }
+                        }})}
 
                     </tbody>
                 </Table>
@@ -86,7 +90,11 @@ function LoanPopUp({title,rows,debts}) {
                         if(index == debts.length){
                             counter = 0;
                         }
-                        return <DebtRow key={index} index={temp} amount={debt.amount} deadline={debt.deadline} paidDate={debt.paidDate} />}})}
+                        return <DebtRow key={index} index={temp} amount={debt.amount} deadline={debt.deadline} paidDate={debt.paidDate} />}else{
+                          if(index == debts.length){
+                            counter = 0;
+                        }
+                        }})}
 
                     </tbody>
                 </Table>
@@ -113,7 +121,11 @@ function LoanPopUp({title,rows,debts}) {
                         if(index == debts.length){
                             counter = 0;
                         }
-                        return <DebtRow key={index} index={temp} amount={debt.amount} deadline={debt.deadline} paidDate={debt.paidDate} />}})}
+                        return <DebtRow key={index} index={temp} amount={debt.amount} deadline={debt.deadline} paidDate={debt.paidDate} />}else{
+                          if(index == debts.length){
+                            counter = 0;
+                        }
+                        }})}
 
                     </tbody>
                 </Table>
