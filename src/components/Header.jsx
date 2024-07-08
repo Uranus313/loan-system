@@ -1,11 +1,11 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import '../component styles/Header.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import UserNavbar from "./Navbar.jsx";
 import logo from '../assets/logo.png';
-
+import { Button } from 'react-bootstrap';
 function Header({user, logOut, isMenuOpen, setIsMenuOpen,signedIn,isLoading}){
-
+    const navigate = useNavigate();
 
     return(
         <>
@@ -15,6 +15,7 @@ function Header({user, logOut, isMenuOpen, setIsMenuOpen,signedIn,isLoading}){
             </div>    
             <div className='row-col-12 d-flex align-items-center justify-content-between px-4'>
                 <div className='col-6 z-1'>
+                    <Button onClick={() => navigate(-1)}>Back</Button>
                     <Link style={{textDecoration:"none"}} className="navbar-text-logo m-0 text-white">LOAN REMINDER</Link>
                 </div>
                 {/* if you're getting the data from the api, it shows a spinned for loading */}

@@ -142,6 +142,10 @@ def get_loans(db: Session):
 
         loan_dict['bank'] = model_to_dict(bank) if bank else None
         loan_dict['customBank'] = model_to_dict(customBank) if customBank else None
+
+        debts = db.query(models.Debt).filter(models.Debt.loan_id == loan.loan_id).order_by(models.Debt.debt_id).all()
+
+        loan_dict['debts'] = [(debt) for debt in debts] if debts else []
         loans.append(loan_dict)
 
     return loans

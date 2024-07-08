@@ -2,7 +2,6 @@ import { createBrowserRouter } from "react-router-dom";
 import Layout from "../components/Layout";
 import App from "../components/App";
 import SignUp from "../components/SignUp";
-import VerifyingEmail from "../components/VerifyingEmail";
 import SignIn from "../components/SignIn";
 import EditProfile from "../components/EditProfile";
 import AddLoan from "../components/AddLoan";
@@ -14,11 +13,11 @@ import SubmitPayment from "../components/SubmitPayment";
 import NotificationsPage from "../components/NotificationsPage";
 import AllUsers from "../components/AllUsers";
 import PrivateAdminLayout from "../components/PrivateAdminLayout";
+import AllLoans from "../components/AllLoans";
 const router = createBrowserRouter([
     {path: '/', element:<Layout /> ,children:[
         {path: '', element:<App />},
         {path:'signUp',element: <SignUp/>},
-        {path:'verifyingEmail',element: <VerifyingEmail />},
         {path:'signIn',element: <SignIn />},
         {path: 'user/' , element: <PrivateLayout /> , children:[
             {path:'editProfile',element: <EditProfile />},
@@ -31,7 +30,8 @@ const router = createBrowserRouter([
 
         ]},
         {path: 'admin/',element: <PrivateAdminLayout />, children: [
-            {path:'allUsers',element:<AllUsers />}
+            {path:'allUsers',element:<AllUsers />},
+            {path: "allLoans",element:<AllLoans />}
         ]}
         
 

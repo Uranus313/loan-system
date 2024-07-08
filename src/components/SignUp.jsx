@@ -38,7 +38,7 @@ function SignUp(){
             localStorage.setItem("auth-token",savedUser.headers["auth-token"]);
             queryClient.invalidateQueries(["user"]);
             context.setSignedIn(true);
-            navigate("/verifyingEmail",{state:{email: emailRef.current.value.trim()}});
+            navigate("/panel",{state:{email: emailRef.current.value.trim()}});
 
         },
         onError: (error) =>{

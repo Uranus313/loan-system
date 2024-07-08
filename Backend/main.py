@@ -551,7 +551,7 @@ def register_notification(current_user: Annotated[models.User, Depends(tokens.ge
         db.rollback()  # Rollback the transaction
         raise HTTPException(status_code=500, detail="Database error: " + str(e))
 
-@app.get("/admin/userLoanDebts/{laon_id}", response_model=list[schemas.Debt])
+@app.get("/admin/userLoanDebts/{loan_id}", response_model=list[schemas.Debt])
 def get_user_loan_debts(current_user: Annotated[models.User, Depends(tokens.get_current_user)], loan_id: int,
                    db: Session = Depends(get_db)):
     try:
