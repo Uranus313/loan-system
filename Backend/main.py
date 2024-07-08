@@ -249,7 +249,7 @@ def update_debts(current_user: Annotated[models.User, Depends(tokens.get_current
         db_loan = crud.validate_user_loan(db=db, loan_id=loan_id)
         if not db_loan:
             raise HTTPException(status_code=400, detail="Loan not found")  
-        db_loan = crud.validate_user_loan(db, current_user.user_id, loan_id)
+        db_loan = crud.validate_user_loan(db, loan_id, current_user.user_id)
         if not db_loan:
             raise HTTPException(status_code=400, detail="This loan does not belong to this user")
         if not loan_id or not paidDate:
@@ -283,7 +283,7 @@ def update_debt(current_user: Annotated[models.User, Depends(tokens.get_current_
         db_loan = crud.validate_user_loan(db=db, loan_id=loan_id)
         if not db_loan:
             raise HTTPException(status_code=400, detail="Loan not found")  
-        db_loan = crud.validate_user_loan(db, current_user.user_id, loan_id)
+        db_loan = crud.validate_user_loan(db,loan_id, current_user.user_id )
         if not db_loan:
             raise HTTPException(status_code=400, detail="This loan does not belong to this user")
         if not loan_id or not paidDate:
@@ -441,8 +441,8 @@ def get_admins(current_user: Annotated[models.User, Depends(tokens.get_current_u
         db.rollback()  # Rollback the transaction
         raise HTTPException(status_code=500, detail="Database error: " + str(e))
     
-@app.post("/admin/admin", response_model=schemas.User)
-def register_admin(current_user: Annotated[models.User, Depends(tokens.get_current_user)], user_id: Annotated[int, Body()],
+@app.post("/admin/admin/{user_id}", response_model=schemas.User)
+def register_admin(current_user: Annotated[models.User , Depends(tokens.get_current_user)], user_id: int,
               db: Session = Depends(get_db)):
     try:
         if not current_user.isAdmin:
@@ -451,7 +451,7 @@ def register_admin(current_user: Annotated[models.User, Depends(tokens.get_curre
         if db_user:
             if db_user.isAdmin:
                 raise HTTPException(status_code=400, detail="Already Admin") 
-            db_user = crud.delete_user(db, user_id)
+            db_user = crud.register_admin(db, user_id)
             return db_user
         raise HTTPException(status_code=400, detail="User not found")     
     except SQLAlchemyError as e:

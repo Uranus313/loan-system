@@ -4,12 +4,28 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import DebtRow from './DebtRow';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient ,useMutation} from '@tanstack/react-query';
+import APIClient from '../connections/APIClient';
 function LoanPopUp({title,rows,debts}) {
     let [modalShow,setModalShow] = useState(false);
     let [remainingDebtsShow,SetRemainingDebtsShow] = useState(false);
     let [overdueDebtsShow,SetOverdueDebtsShow] = useState(false);
     let [paidDebtsShow,SetPaidDebtsShow] = useState(false);
     let navigate = useNavigate();
+    let queryClient = useQueryClient();
+    let apiClient = new APIClient("user/loans")
+    const checkOut = useMutation({
+      mutationFn: (loan) => apiClient.putWithToken(loan),
+      onSuccess: (res ) => {
+          queryClient.invalidateQueries(["loans"]);
+
+          // navigate("/");
+      },
+        onError: (error) =>{
+          console.log(error)
+          console.log(error.response?.data.detail)
+      }
+      });
 
     let counter = 0;
   return (
@@ -137,6 +153,7 @@ function LoanPopUp({title,rows,debts}) {
       <Modal.Footer>
         <Button onClick={() => setModalShow(false)}>Close</Button>
         {debts && !debts[debts.length-1].paidDate && <Button onClick={() => navigate('/user/addPayment',{state: {loan_id : debts[0].loan_id}})}>pay debt</Button>}
+        {debts && !debts[debts.length-1].paidDate && <Button onClick={() => checkOut.mutate({loan_id : debts[0].loan_id, paidDate : new Date().toISOString().split("T")[0]})}>Check Out</Button>}
       </Modal.Footer>
     </Modal>
     </>

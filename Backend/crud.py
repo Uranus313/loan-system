@@ -90,7 +90,7 @@ def model_to_dict(model):
 def get_user_loans(db: Session, user_id: int):
     results =  db.query(models.Loan, models.Bank, models.CustomBank).outerjoin(models.Bank, models.Bank.bank_id == models.Loan.bank_id).\
         outerjoin(models.CustomBank, models.CustomBank.bank_id == models.Loan.customBank_id).\
-            filter(models.Loan.receiver_id == user_id).all()
+            filter(models.Loan.receiver_id == user_id).order_by(models.Loan.loan_id).all()
 
     loans = []
     for loan, bank, customBank in results:
@@ -98,7 +98,7 @@ def get_user_loans(db: Session, user_id: int):
         loan_dict['bank'] = bank if bank else None
         loan_dict['customBank'] = customBank if customBank else None
 
-        debts = db.query(models.Debt).filter(models.Debt.loan_id == loan.loan_id).all()
+        debts = db.query(models.Debt).filter(models.Debt.loan_id == loan.loan_id).order_by(models.Debt.debt_id).all()
 
         loan_dict['debts'] = [(debt) for debt in debts] if debts else []
         loans.append(loan_dict)
@@ -305,10 +305,10 @@ def register_admin(db: Session, user_id: int):
     db.query(models.User).filter(models.User.user_id == user_id).update({models.User.isAdmin: True})
     db.commit()
 
-    return db.query(models.User).filter(models.User.user_id == user_id)
+    return db.query(models.User).filter(models.User.user_id == user_id).first()
 
 def remove_admin(db: Session, user_id: int):
     db.query(models.User).filter(models.User.user_id == user_id).update({models.User.isAdmin: False})
     db.commit()
 
-    return db.query(models.User).filter(models.User.user_id == user_id)
+    return db.query(models.User).filter(models.User.user_id == user_id).first()

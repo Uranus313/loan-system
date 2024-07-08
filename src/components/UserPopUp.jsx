@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import useGetUserLoans from "../hooks/useGetUserLoans";
 import LoanRow from "./LoanRow";
 import Loading from "./Loading";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import APIClient from "../connections/APIClient";
 function UserPopUp({ user }) {
   let [modalShow, setModalShow] = useState(false);
@@ -13,12 +14,13 @@ function UserPopUp({ user }) {
   let [paidLoansShow, SetPaidLoansShow] = useState(false);
   let navigate = useNavigate();
   let { data: loans, error: fetchError, isLoading } = useGetUserLoans(user.user_id);
-  let apiClient = new APIClient("/admin/admin");
-  const submitReadNotification = useMutation({
-        mutationFn: (notification) => apiClient.putWithToken(notification),
+  let apiClient = new APIClient("/admin/admin/"+user.user_id);
+  let apiClient2 = new APIClient("/admin/user/"+user.user_id);
+  let queryClient = useQueryClient();
+  const deleteUser = useMutation({
+        mutationFn: (notification) => apiClient2.delWithToken(notification),
         onSuccess: (res ) => {
-            queryClient.invalidateQueries(["notification"]);
-
+            queryClient.invalidateQueries(["userList"]);
             // navigate("/");
         },
         onError: (error) =>{
@@ -26,6 +28,28 @@ function UserPopUp({ user }) {
             console.log(error.response?.data.detail)
         }
     });
+  const demoteAdmin = useMutation({
+        mutationFn: (notification) => apiClient.delWithToken(notification),
+        onSuccess: (res ) => {
+            queryClient.invalidateQueries(["userList"]);
+            // navigate("/");
+        },
+        onError: (error) =>{
+            console.log(error)
+            console.log(error.response?.data.detail)
+        }
+    });  
+    const promoteAdmin = useMutation({
+        mutationFn: (notification) => apiClient.postWithToken(notification),
+        onSuccess: (res ) => {
+            queryClient.invalidateQueries(["userList"]);
+            // navigate("/");
+        },
+        onError: (error) =>{
+            console.log(error)
+            console.log(error.response?.data.detail)
+        }
+    });  
   let counter = 0;
   return (
     <>
@@ -54,10 +78,8 @@ function UserPopUp({ user }) {
           <p>{user.email}</p>
           <p>{user.dateOfBirth}</p>
           <p>{user.IDNumber}</p>
-          {isLoading ? (
-            <Loading />
-          ) : (
-            <div className="d-flex flex-column ">
+          {isLoading && <Loading />}
+          {loans && !fetchError && <div className="d-flex flex-column ">
               <Button
                 variant="primary"
                 className="text-white"
@@ -90,7 +112,7 @@ function UserPopUp({ user }) {
                   </thead>
                   <tbody>
                     {loans.map((loan, index) => {
-                      if (!loan.paidDate) {
+                      if (loan.debtNumber > loan.paidDebtNumber) {
                         counter++;
                         let temp = counter;
                         if (index == loans.length) {
@@ -138,7 +160,7 @@ function UserPopUp({ user }) {
                   </thead>
                   <tbody>
                     {loans.map((loan, index) => {
-                      if (!loan.paidDate) {
+                      if (loan.debtNumber <= loan.paidDebtNumber) {
                         counter++;
                         let temp = counter;
                         if (index == loans.length) {
@@ -154,12 +176,13 @@ function UserPopUp({ user }) {
                   </tbody>
                 </Table>
               </div>
-            </div>
-          )}
+            </div>}
         </Modal.Body>
         <Modal.Footer>
+          {user.isAdmin? <Button onClick={() => demoteAdmin.mutate()}>Demote admin</Button>:<Button onClick={() => promoteAdmin.mutate()}>Promote admin</Button>}
+          <Button onClick={() => deleteUser.mutate()} variant="danger" disabled={user.isAdmin}>Delete User</Button>
           <Button onClick={() => setModalShow(false)}>Close</Button>
-          {/* {debts && !debts[debts.length-1].paidDate && <Button onClick={() => navigate('/user/addPayment',{state: {loan_id : debts[0].loan_id}})}>pay debt</Button>} */}
+                    
         </Modal.Footer>
       </Modal>
     </>

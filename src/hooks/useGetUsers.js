@@ -8,7 +8,7 @@ function useGetUsers(){
         queryFn : () => {
             return apiClient.getWithToken();
         },
-        staleTime: 30 * 60 * 1000,
+        staleTime: 30 * 1000,
         retry: 3
     })
 }
