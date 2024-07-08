@@ -9,11 +9,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import useGetLoans from "../hooks/useGetLoans";
 import useGetBanks from "../hooks/useGetBanks";
 import Loading from "./Loading";
-import 'bootstrap/dist/css/bootstrap.min.css'
-import '../component styles/AddLoan.css'
-
-
-
 //unfinished page
 function AddLoan(){
     // let banks = [{bank_id : 1,name: "Melli"},{bank_id: 2, name: "Sepah"},{bank_id:3, name: "Pasargad"}]
@@ -108,9 +103,10 @@ function AddLoan(){
     return (
         <>
             {isLoading? <Loading /> : <form className={'d-flex flex-column align-items-center bg-gradient'} action="post" onSubmit={(event) => handleSubmit(event)}>
-            <div className={'d-grid p-4 rounded-3 bg-gradient addloan-box m-4'}>
-                <h4 className="mb-4">PLEASE ENTER THE DETAILS TO ADD THE LOAN</h4>
-                <hr></hr>
+            <div className={'d-grid p-4 rounded-3 bg-secondary-subtle'}>
+                <h4>WELCOME TO OUR WEBSITE</h4>
+                <p>Please enter the details to add loan</p>
+
                 {/* if error exists : */}
                 {error? <p style={{color : 'rgb(230, 18, 18)'}}>{error}</p> : null }
                 <div className={'d-flex justify-content-between'}>
