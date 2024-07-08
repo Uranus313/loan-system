@@ -73,18 +73,18 @@ function SubmitPayment(){
                 <form className={'d-flex flex-column align-items-center'} action="post" onSubmit={(event) => handleSubmit(event)}>
                 <ToastContainer />
 
-                    <div className={'d-grid p-4 rounded-3 submit-box'}>
+                    <div className={'d-grid p-5 rounded-3 submit-box'}>
 
-                            <p>PLEASE SELECT A LOAN </p>
-                        <label className={'fw-bold me-3'} htmlFor="loanSelector">Choose a Bank:</label>
-                        <select name="loanSelector" id="loanSelector" defaultValue={locState?.loan_id? locState?.loan_id : null} onChange={(event) => {
+                        <p>PLEASE SELECT A LOAN</p>
+                        <label className={'fw-bold me-3 mb-2'} htmlFor="loanSelector">Choose a Bank:</label>
+                        <select className={'mb-5'} name="loanSelector" id="loanSelector" defaultValue={locState?.loan_id? locState?.loan_id : null} onChange={(event) => {
                             if (event.target.value != "no Loan"){
                                 setSelectedLoan(event.target.value);
                             }else{
                                 setSelectedLoan(0);
                             }
                         }}>
-                            <option value="no Loan" >Select</option>
+                        <option value="no Loan" >Select</option>
                             { loans?.map((item,index) => item.debtNumber != item.paidDebtNumber? <option value={item.loan_id} key={index}>{item?.bankType == "default"? item.bank?.name : item.customBank?.name} : {item.amount} : {item.startDate}</option>: null)}
                         </select>
                         {(selectedLoan != 0) && loans.map( (loan,index) => {
@@ -97,10 +97,10 @@ function SubmitPayment(){
                              }
                             }) }
                         <div className={'d-flex justify-content-between'}>
-                            <p className={'fw-bold me-3 '}>Pay Date :</p>
+                            <p className={'fw-bold me-3'}>Pay Date :</p>
                             <input className={'input-button rounded-1'} type="date" ref={dateRef} defaultValue={ new Date().toISOString().split("T")[0]}/>
                         </div>
-                        <Button type="submit">Submit</Button>
+                        <Button className='submit-btn' type="submit">Submit</Button>
                     </div>
                 
 

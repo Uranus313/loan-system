@@ -4,3 +4,10 @@
     box-shadow: 0px 0px 10px 2px #888888;
 }
 
+.submit-btn {
+    background-color: green;
+}
+
+.submit-btn:hover {
+    background-color: rgb(0, 180, 0);
+}

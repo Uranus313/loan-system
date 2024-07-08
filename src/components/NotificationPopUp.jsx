@@ -8,6 +8,12 @@ import APIClient from '../connections/APIClient';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import useGetDebtLoan from '../hooks/useGetDebtLoan';
 import Loading from './Loading';
+import 'bootstrap/dist/css/bootstrap.min.css'
+import '../component styles/NotificationsPopUp.css'
+
+
+
+
 function NotificationPopUp({notification}) {
     let [modalShow,setModalShow] = useState(false);
     let navigate = useNavigate();
@@ -37,9 +43,9 @@ function NotificationPopUp({notification}) {
     // );
   return (
     <>
-        <Button variant="primary" onClick={() => {setModalShow(true); submitReadNotification.mutate([{notification_id : notification.notification_id, isRead : true}])}}>
-          expand
-        </Button>
+      <Button variant="primary" className='notif-btn' onClick={() => {setModalShow(true); submitReadNotification.mutate([{notification_id : notification.notification_id, isRead : true}])}}>
+        EXPAND
+      </Button>
       <Modal
         size="lg"
         show = {modalShow}

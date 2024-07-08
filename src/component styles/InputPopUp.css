@@ -1,0 +1,10 @@
+
+
+.delete-acc-btn {
+    background-color: green;
+    border: none;
+}
+
+.delete-acc-btn:hover {
+    background-color: rgb(0, 170, 0);
+}

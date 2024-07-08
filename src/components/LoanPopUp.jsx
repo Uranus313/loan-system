@@ -4,6 +4,11 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import DebtRow from './DebtRow';
 import { useNavigate } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css'
+import '../component styles/LoanPopUp.css'
+
+
+
 function LoanPopUp({title,rows,debts}) {
     let [modalShow,setModalShow] = useState(false);
     let [remainingDebtsShow,SetRemainingDebtsShow] = useState(false);
@@ -14,8 +19,8 @@ function LoanPopUp({title,rows,debts}) {
     let counter = 0;
   return (
     <>
-      <Button variant="primary" onClick={() => setModalShow(true)}>
-        Launch vertically centered modal
+      <Button variant="primary" onClick={() => setModalShow(true)} className='loans-btn'>
+        Show More Details
       </Button>
     <Modal
       size="lg"
@@ -38,7 +43,7 @@ function LoanPopUp({title,rows,debts}) {
         </div>);}else{ return null}}
         )}
         {debts && 
-            <div className='d-flex flex-column '>
+            <div className='d-flex flex-column'>
                 <Button variant="primary" className='text-white' onClick={remainingDebtsShow? () => SetRemainingDebtsShow(false):() => SetRemainingDebtsShow(true)}>{remainingDebtsShow? "hide remaining debts" : "show remaining debts"}</Button>
                 <div className={remainingDebtsShow? "d-block":"d-none"}>
                 <h4>Remaining Debts</h4>
