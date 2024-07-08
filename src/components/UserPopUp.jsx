@@ -6,13 +6,26 @@ import { useNavigate } from "react-router-dom";
 import useGetUserLoans from "../hooks/useGetUserLoans";
 import LoanRow from "./LoanRow";
 import Loading from "./Loading";
+import APIClient from "../connections/APIClient";
 function UserPopUp({ user }) {
   let [modalShow, setModalShow] = useState(false);
   let [remainingLoansShow, SetRemainingLoansShow] = useState(false);
   let [paidLoansShow, SetPaidLoansShow] = useState(false);
   let navigate = useNavigate();
   let { data: loans, error: fetchError, isLoading } = useGetUserLoans(user.user_id);
+  let apiClient = new APIClient("/admin/admin");
+  const submitReadNotification = useMutation({
+        mutationFn: (notification) => apiClient.putWithToken(notification),
+        onSuccess: (res ) => {
+            queryClient.invalidateQueries(["notification"]);
 
+            // navigate("/");
+        },
+        onError: (error) =>{
+            console.log(error)
+            console.log(error.response?.data.detail)
+        }
+    });
   let counter = 0;
   return (
     <>

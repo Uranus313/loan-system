@@ -410,13 +410,12 @@ def uodate_user(current_user: Annotated[models.User, Depends(tokens.get_current_
         db.rollback()  # Rollback the transaction
         raise HTTPException(status_code=500, detail="Database error: " + str(e))
 
-@app.delete("/admin/user", response_model=schemas.User)
-def remove_user(request: Request, current_user: Annotated[models.User, Depends(tokens.get_current_user)],
+@app.delete("/admin/user/{user_id}", response_model=schemas.User)
+def remove_user(user_id : int, current_user: Annotated[models.User, Depends(tokens.get_current_user)],
               db: Session = Depends(get_db)):
     try:
         if not current_user.isAdmin:
             raise HTTPException(status_code=400, detail="You don't have permission") 
-        user_id = request.headers["user_id"]
         db_user = crud.get_user_by_id(db, user_id)
         if db_user:
             if db_user.isAdmin:
@@ -460,13 +459,12 @@ def register_admin(current_user: Annotated[models.User, Depends(tokens.get_curre
         db.rollback()  # Rollback the transaction
         raise HTTPException(status_code=500, detail="Database error: " + str(e))
 
-@app.delete("/admin/admin", response_model=schemas.User)
-def remove_admin(request: Request, current_user: Annotated[models.User, Depends(tokens.get_current_user)],
+@app.delete("/admin/admin/{user_id}", response_model=schemas.User)
+def remove_admin(user_id : int, current_user: Annotated[models.User, Depends(tokens.get_current_user)],
               db: Session = Depends(get_db)):
     try:
         if not current_user.isAdmin:
             raise HTTPException(status_code=400, detail="You don't have permission")
-        user_id = request.headers["user_id"]
         db_user = crud.get_user_by_id(db, user_id)
         if db_user:
             if not db_user.isAdmin:
