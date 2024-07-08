@@ -246,6 +246,9 @@ def register_loan(current_user: Annotated[models.User, Depends(tokens.get_curren
 def update_debts(current_user: Annotated[models.User, Depends(tokens.get_current_user)],loan_id: Annotated[int, Body()],
             paidDate: Annotated[date, Body()], db: Session = Depends(get_db)):
     try:
+        db_loan = crud.validate_user_loan(db=db, loan_id=loan_id)
+        if not db_loan:
+            raise HTTPException(status_code=400, detail="Loan not found")  
         db_loan = crud.validate_user_loan(db, current_user.user_id, loan_id)
         if not db_loan:
             raise HTTPException(status_code=400, detail="This loan does not belong to this user")
@@ -261,7 +264,7 @@ def update_debts(current_user: Annotated[models.User, Depends(tokens.get_current
         db.rollback()  # Rollback the transaction
         raise HTTPException(status_code=500, detail="Database error: " + str(e))
 
-@app.get("/user/debts/{dent_id}")
+@app.get("/user/debts/{debt_id}")
 def get_debt_loan(current_user: Annotated[models.User, Depends(tokens.get_current_user)], debt_id: int, db: Session = Depends(get_db)):
     try:
         db_loan = crud.get_user_debt_loan(db, current_user.user_id, debt_id)
@@ -277,6 +280,9 @@ def get_debt_loan(current_user: Annotated[models.User, Depends(tokens.get_curren
 def update_debt(current_user: Annotated[models.User, Depends(tokens.get_current_user)], loan_id: Annotated[int, Body()],
             paidDate: Annotated[date, Body()], db: Session = Depends(get_db)):
     try:
+        db_loan = crud.validate_user_loan(db=db, loan_id=loan_id)
+        if not db_loan:
+            raise HTTPException(status_code=400, detail="Loan not found")  
         db_loan = crud.validate_user_loan(db, current_user.user_id, loan_id)
         if not db_loan:
             raise HTTPException(status_code=400, detail="This loan does not belong to this user")
@@ -473,7 +479,7 @@ def remove_admin(request: Request, current_user: Annotated[models.User, Depends(
         db.rollback()  # Rollback the transaction
         raise HTTPException(status_code=500, detail="Database error: " + str(e))
 
-@app.get("/admin/loans/")
+@app.get("/admin/userLoans/")
 def get_loans(current_user: Annotated[models.User, Depends(tokens.get_current_user)],
               db: Session = Depends(get_db)):
     try:
@@ -486,7 +492,7 @@ def get_loans(current_user: Annotated[models.User, Depends(tokens.get_current_us
         db.rollback()  # Rollback the transaction
         raise HTTPException(status_code=500, detail="Database error: " + str(e))
 
-@app.get("/admin/loans/{user_id}")
+@app.get("/admin/userLoans/{user_id}")
 def get_user_loans(current_user: Annotated[models.User, Depends(tokens.get_current_user)], user_id: int,
               db: Session = Depends(get_db)):
     try:
@@ -516,7 +522,7 @@ def get_admin_notifications(current_user: Annotated[models.User, Depends(tokens.
         raise HTTPException(status_code=500, detail="Database error: " + str(e))
 
 @app.get("/admin/notifications/{user_id}", response_model=list[schemas.Notification])
-def get_admin_to__user_notifications(current_user: Annotated[models.User, Depends(tokens.get_current_user)], user_id: int,
+def get_admin_to_user_notifications(current_user: Annotated[models.User, Depends(tokens.get_current_user)], user_id: int,
               db: Session = Depends(get_db)):
     try:
         if not current_user.isAdmin:
@@ -539,9 +545,25 @@ def register_notification(current_user: Annotated[models.User, Depends(tokens.ge
             raise HTTPException(status_code=400, detail="You don't have permission")
         db_user = crud.get_user_by_id(db, notification.user_id)
         if not db_user:
-            raise HTTPException(status_code=400, detail="User not found") 
+            raise HTTPException(status_code=400, detail="User not found")
         db_notification = crud.register_notification(db, notification, current_user.user_id)
         return db_notification  
+    except SQLAlchemyError as e:
+        # Handle SQLAlchemy errors
+        db.rollback()  # Rollback the transaction
+        raise HTTPException(status_code=500, detail="Database error: " + str(e))
+
+@app.get("/admin/userLoanDebts/{laon_id}", response_model=list[schemas.Debt])
+def get_user_loan_debts(current_user: Annotated[models.User, Depends(tokens.get_current_user)], loan_id: int,
+                   db: Session = Depends(get_db)):
+    try:
+        db_loan = crud.validate_user_loan(db=db, loan_id=loan_id)
+        if not db_loan:
+            raise HTTPException(status_code=400, detail="Loan not found")  
+        if not current_user.isAdmin:
+            raise HTTPException(status_code=400, detail="You don't have permission")
+        db_debts = crud.get_loan_debts(db, loan_id)
+        return db_debts
     except SQLAlchemyError as e:
         # Handle SQLAlchemy errors
         db.rollback()  # Rollback the transaction
