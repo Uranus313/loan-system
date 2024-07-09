@@ -1,3 +1,3 @@
 node_modules
-Backend\__pycache__
-Backend\config.py
+Backend/__pycache__
+Backend/config.env
