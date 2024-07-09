@@ -14,8 +14,9 @@ function UserCard({user}) {
         <Card.Text><strong>MiddleName: </strong>{user.middleName && " "+user.middleName}</Card.Text>
         <Card.Text><strong>LastName: </strong>{" "+user.lastName}</Card.Text>
         <div className='d-flex flex-column gap-1 col-7 mx-auto'>
-        {user?.isAdmin && <Badge className='col-5 rounded-5' bg="primary">Admin</Badge> }
         <UserPopUp user={user}/>
+        {user?.isAdmin && <Badge className='col-5 rounded-5' bg="success">Admin</Badge> }
+
         </div>
        
       </Card.Body>

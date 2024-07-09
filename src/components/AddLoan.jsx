@@ -66,7 +66,7 @@ function AddLoan(){
     const navigate = useNavigate();
     function handleSubmit(event){
         event.preventDefault(); 
-
+        
 
         //checking errors for empty inputs, wrong date and ....
         if(amountRef.current.value.trim() == '' || parseInt(amountRef.current.value.trim()) < 1){
@@ -107,7 +107,7 @@ function AddLoan(){
       {isLoading? <Loading /> : <form className={'mx-auto col-12 col-md-8 col-lg-6 d-flex flex-column align-items-center bg-light'} action="post" onSubmit={(event) => handleSubmit(event)}>
       <div className={'d-grid p-4 rounded-3 shadow-lg w-100'}>
           <h4 className="text-primary mb-5 text-center">Please enter the details to add loan</h4>
-    
+            <ToastContainer />
           {/* if error exists : */}
           {error? <p style={{color : 'rgb(230, 18, 18)'}}>{error}</p> : null }
           <div className={'d-flex justify-content-between'}>

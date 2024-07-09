@@ -1,5 +1,5 @@
 import { useOutletContext } from "react-router-dom";
-
+import { Link } from "react-router-dom";
 function UserPanel(){
     let context = useOutletContext();
     return(
@@ -17,7 +17,7 @@ function UserPanel(){
                             you can add your loans in here <br></br> so you would never forget them and keep track of them. <br></br>
                             by doing so, you can go about your life without <br></br> ever worrying of forgetting to pay your monthly debts.
                         </p>
-                        <a href="#" className="btn" style={{backgroundColor:"green",color:"white"}}>Add Loan</a>
+                        <Link className="btn btn-success  text-white" to={'/user/addLoan'}>Add Loan</Link>
                     </div>
                 </div>
 
@@ -30,7 +30,7 @@ function UserPanel(){
                             You can always view your current loans, their status and their other information. <br></br>
                             you can easily manage and handle them in the loans tab. <br></br><br></br><br></br>
                         </p>
-                        <a href="#" className="btn btn-danger">Manage Loans</a>
+                        <Link to={"/user/myLoans"} className="btn btn-danger">Manage Loans</Link>
                     </div>
                 </div>
 
@@ -48,7 +48,7 @@ function UserPanel(){
                             You don't need to check the website each day to know if the next debt time is close or not.
                             We will send you notifications whenever your debts are close so you can attend to your daily life without worry.
                         </p>
-                        <a href="#" className="btn btn-secondary">Go To Notifications</a>
+                        <Link to={"/user/notifications"} className="btn btn-secondary">Go To Notifications</Link>
                     </div>
                 </div>
             
@@ -63,7 +63,7 @@ function UserPanel(){
                             <br></br>
                             <br></br>
                         </p>
-                        <a href="#" className="btn btn-primary">Submit Debt Payment</a>
+                        <Link to={"/user/addPayment"} className="btn btn-primary">Submit Debt Payment</Link>
                     </div>
                 </div>
 
