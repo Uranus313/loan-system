@@ -18,13 +18,11 @@ function NotificationMakePopUp({user}){
     const titleRef = useRef('');
     const textRef = useRef('');
     const apiClient = new APIClient('/user/notifications');
-    const {handleLogOut} = new useContext(SignInContext);
     const queryClient = useQueryClient();
     const addNotif = useMutation({
       mutationFn: (notification) => apiClient.postWithToken(notification),
       onSuccess: () =>{
           queryClient.invalidateQueries(["notification"]);
-          handleLogOut();
           toast("message sent ",{onClose: () => {handleClose();}, type: 'success',autoClose: 500,pauseOnHover: false});
           
       },
