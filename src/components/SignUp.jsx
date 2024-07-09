@@ -9,6 +9,7 @@ import { useMutation } from "@tanstack/react-query";
 import SignInContext from "../contexts/SignInContext";
 import capitalizeFirstLetter from "../functions/capitalizedFirstLetter";
 import { Button, Form, Spinner } from 'react-bootstrap';
+import { ToastContainer,toast } from "react-toastify";
 
 
 // change this page so that the errors show up in notifications, for making this you can use the on error element of the useMutation (see the editprofile, it's nearly the same)
@@ -39,38 +40,41 @@ function SignUp(){
             localStorage.setItem("auth-token",savedUser.headers["auth-token"]);
             queryClient.invalidateQueries(["user"]);
             context.setSignedIn(true);
-            navigate("/user/panel",{state:{email: emailRef.current.value.trim()}});
-
+            toast("signed up successFully",{onClose: () => navigate('/user/panel'),autoClose : 500,pauseOnHover: false,type:"success"});
         },
         onError: (error) =>{
             console.log(error)
             console.log(error.response?.data.detail)
+            Array.isArray(error.response?.data.detail)?  error.response?.data.detail.map((item,index) => {toast(item.msg.includes("Value error,")?item.msg.replace("Value error, ",''): capitalizeFirstLetter(item.loc[item.loc.length-1]) + " " + item.msg.substr(item.msg.indexOf(" ")+1),{type: "error"})}) : toast(error.response?.data.detail ,{type: "error"})
         }
     });
+    
+
+            
     function handleSubmit(event){
         event.preventDefault(); 
         // handle this errors with toast notifications too (just like edit profile)
 
         if(usernameRef.current.value.trim() == ''){
-            setError("username shouldn't be empty!");
+            toast("username shouldn't be empty!",{type:"error"});
         }else if(validateEmail(usernameRef.current.value.trim()) == true){
-            setError("user name shouldn't be an email!");
+            toast("user name shouldn't be an email!",{type:"error"});
         }else if(firstNameRef.current.value.trim() == ''){
-            setError("first name shouldn't be empty!");
+            toast("first name shouldn't be empty!",{type:"error"});
         }else if(lastNameRef.current.value.trim() == ''){
-            setError("last name shouldn't be empty!");
+            toast("last name shouldn't be empty!",{type:"error"});
         }else if(emailRef.current.value.trim() == '' || validateEmail(emailRef.current.value.trim())== false){
-            setError("email shouldn't be empty or in wrong format!");
+            toast("email shouldn't be empty or in wrong format!",{type:"error"});
         }else if(IDNumberRef.current.value.trim() == ''){
-            setError("identification number shouldn't be empty!");
+            toast("identification number shouldn't be empty!",{type:"error"});
         }else if(dateOfBirthRef.current.value.trim() == ''){
-            setError("date of birth shouldn't be empty!");
+            toast("date of birth shouldn't be empty!",{type:"error"});
         }else if(passwordRef.current.value.trim() == ''){
-            setError("password shouldn't be empty!");
+            toast("password shouldn't be empty!",{type:"error"});
         }else if(repeatPasswordRef.current.value.trim() == ''){
-            setError("repeated password shouldn't be empty!");
+            toast("repeated password shouldn't be empty!",{type:"error"});
         }else if(repeatPasswordRef.current.value.trim() != passwordRef.current.value.trim()){
-            setError("passwords aren't equal!");
+            toast("passwords aren't equal!",{type:"error"});
         }else{
             setError(null);
             signUp.mutate({username: usernameRef.current.value.trim(),firstName : firstNameRef.current.value.trim(), middleName: middleNameRef.current.value.trim(),lastName: lastNameRef.current.value.trim(),dateOfBirth: dateOfBirthRef.current.value.trim(),IDNumber : IDNumberRef.current.value.trim(),email: emailRef.current.value.trim(), password : passwordRef.current.value.trim()});
@@ -78,6 +82,8 @@ function SignUp(){
     }
     return (
         <Form className={'col-5 mx-auto d-flex flex-column bg-light align-items-center'} action="post" onSubmit={(event) => handleSubmit(event)}>
+        <ToastContainer />
+
             <div className={'d-grid p-4 rounded-3 shadow-lg w-100'}>
                 <h4 className="text-primary text-center mb-3">WELCOME TO OUR WEBSITE</h4>
                 <p>Please enter the details to sign up</p>

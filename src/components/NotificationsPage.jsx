@@ -3,6 +3,8 @@ import useGetNotifications from "../hooks/useGetNotifications";
 import Loading from "./Loading";
 import NotificationCard from "./NotificationCard";
 import { Button } from "react-bootstrap";
+import { ToastContainer,toast } from "react-toastify";
+
 function NotificationsPage(){
     let {data: norifications,error : fetchError,isLoading} = useGetNotifications();
     let navigate = useNavigate();

@@ -9,12 +9,14 @@ import Loading from "./Loading";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import APIClient from "../connections/APIClient";
 import NotificationMakePopUp from "./NotificationMakePopUp";
+import { ToastContainer,toast } from "react-toastify";
+
 function UserPopUp({ user }) {
   let [modalShow, setModalShow] = useState(false);
   let [remainingLoansShow, SetRemainingLoansShow] = useState(false);
   let [paidLoansShow, SetPaidLoansShow] = useState(false);
   let navigate = useNavigate();
-  let { data: loans, error: fetchError, isLoading } = useGetUserLoans(user.user_id);
+  let { data: loans, error: fetchError, isLoading,refetch } = useGetUserLoans(user.user_id);
   let apiClient = new APIClient("/admin/admin/"+user.user_id);
   let apiClient2 = new APIClient("/admin/user/"+user.user_id);
   let queryClient = useQueryClient();
@@ -25,28 +27,32 @@ function UserPopUp({ user }) {
             // navigate("/");
         },
         onError: (error) =>{
-            console.log(error)
-            console.log(error.response?.data.detail)
+          Array.isArray(error.response?.data.detail)?  error.response?.data.detail.map((item,index) => {toast(item.msg.includes("Value error,")?item.msg.replace("Value error, ",''): capitalizeFirstLetter(item.loc[item.loc.length-1]) + " " + item.msg.substr(item.msg.indexOf(" ")+1),{type: "error"})}) : toast(error.response?.data.detail ,{type: "error"})// navigate("/");
+
         }
     });
   const demoteAdmin = useMutation({
         mutationFn: (notification) => apiClient.delWithToken(notification),
         onSuccess: (res ) => {
             queryClient.invalidateQueries(["userList"]);
+            toast("user got demoted",{onClose: () => navigate('/user/panel'),autoClose : 500,pauseOnHover: false,type:"success"});
             // navigate("/");
+
         },
         onError: (error) =>{
-            console.log(error)
-            console.log(error.response?.data.detail)
+          Array.isArray(error.response?.data.detail)?  error.response?.data.detail.map((item,index) => {toast(item.msg.includes("Value error,")?item.msg.replace("Value error, ",''): capitalizeFirstLetter(item.loc[item.loc.length-1]) + " " + item.msg.substr(item.msg.indexOf(" ")+1),{type: "error"})}) : toast(error.response?.data.detail ,{type: "error"})// navigate("/");
+
         }
     });  
     const promoteAdmin = useMutation({
         mutationFn: (notification) => apiClient.postWithToken(notification),
         onSuccess: (res ) => {
             queryClient.invalidateQueries(["userList"]);
+            toast("user got promoted",{onClose: () => navigate('/user/panel'),autoClose : 500,pauseOnHover: false,type:"success"});
             // navigate("/");
         },
         onError: (error) =>{
+          Array.isArray(error.response?.data.detail)?  error.response?.data.detail.map((item,index) => {toast(item.msg.includes("Value error,")?item.msg.replace("Value error, ",''): capitalizeFirstLetter(item.loc[item.loc.length-1]) + " " + item.msg.substr(item.msg.indexOf(" ")+1),{type: "error"})}) : toast(error.response?.data.detail ,{type: "error"})// navigate("/");
             console.log(error)
             console.log(error.response?.data.detail)
         }
@@ -67,6 +73,8 @@ function UserPopUp({ user }) {
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
             {user.username}
+        <ToastContainer />
+
           </Modal.Title>
         </Modal.Header>
         <Modal.Body >

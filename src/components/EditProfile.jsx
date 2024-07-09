@@ -39,14 +39,14 @@ function EditProfile(){
             queryClient.invalidateQueries(["user"]);
 
             //toast makes a notificiation on successfull edits and goes to the main page after it
-            toast("your profile successfully updated",{onOpen: () => {setFormFunction(false)}, onClose: () => navigate("/"), type: 'success',autoClose: 1000,pauseOnHover: false});
+            toast("your profile successfully updated",{onOpen: () => {setFormFunction(false)}, onClose: () => navigate("/user/panel"), type: 'success',autoClose: 500,pauseOnHover: false});
             
         },
         onError: (error) =>{
             console.log(error.response?.data.detail)
 
-            //showing api errors with notifications using toast
-            toast(Array.isArray(error.response?.data.detail)?  error.response?.data.detail.map((item,index) =>  {item.msg.includes("Value error,")?item.msg.replace("Value error, ",''): capitalizeFirstLetter(item.loc[item.loc.length-1]) + " " + item.msg.substr(item.msg.indexOf(" ")+1)}) : error.response?.data.detail ,{type: "error",onClose : ()=> console.log("hi")})
+            Array.isArray(error.response?.data.detail)?  error.response?.data.detail.map((item,index) => {toast(item.msg.includes("Value error,")?item.msg.replace("Value error, ",''): capitalizeFirstLetter(item.loc[item.loc.length-1]) + " " + item.msg.substr(item.msg.indexOf(" ")+1),{type: "error"})}) : toast(error.response?.data.detail ,{type: "error"})
+            
         }
     });
     

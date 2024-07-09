@@ -5,6 +5,7 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import '../component styles/Navbar.css'
 import {Link} from "react-router-dom";
 import { Badge } from 'react-bootstrap';
+import { ToastContainer,toast } from "react-toastify";
 
 function UserNavbar({user,isMenuOpen,logOut,setIsMenuOpen}) {
   let expand = false;
@@ -36,6 +37,7 @@ function UserNavbar({user,isMenuOpen,logOut,setIsMenuOpen}) {
                   <Link state={{hello : 1}} className={'text-decoration-none mb-2 p-2 menu-option'} style={{display: "block",textWrap: "nowrap"}} to={'/user/addPayment'} >Submit Debt Payment</Link>
                   <Link to={'/admin/allUsers'} className={user?.isAdmin? 'text-decoration-none mb-2 p-2 menu-option' : 'd-none'} >All Users</Link>
                   <Link to={'/admin/allLoans'} className={user?.isAdmin? 'text-decoration-none mb-2 p-2 menu-option' : 'd-none'} >All Loans</Link>
+                  <Link to={'/admin/addBank'} className={user?.isAdmin? 'text-decoration-none mb-2 p-2 menu-option' : 'd-none'} >Add Bank</Link>
 
                   <Link className={'text-decoration-none mb-2 p-2 logout-option'} onClick={() => {localStorage.removeItem("auth-token"); logOut();
                     }} to={'/signIn'}>log out</Link>

@@ -2,6 +2,8 @@ import useGetAllLoans from "../hooks/useGetAllLoans";
 import useGetLoans from "../hooks/useGetLoans";
 import Loading from "./Loading";
 import LoanCard from "./LoanCard";
+import { ToastContainer,toast } from "react-toastify";
+
 function AllLoans(){
     let {data: loans,error : fetchError,isLoading} = useGetAllLoans();
     return (

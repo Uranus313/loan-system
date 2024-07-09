@@ -8,6 +8,8 @@ import APIClient from '../connections/APIClient';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import useGetDebtLoan from '../hooks/useGetDebtLoan';
 import Loading from './Loading';
+import { ToastContainer,toast } from "react-toastify";
+
 function NotificationPopUp({notification}) {
     let [modalShow,setModalShow] = useState(false);
     let navigate = useNavigate();
@@ -17,14 +19,18 @@ function NotificationPopUp({notification}) {
         mutationFn: (notification) => apiClient.putWithToken(notification),
         onSuccess: (res ) => {
             queryClient.invalidateQueries(["notification"]);
-
-            // navigate("/");
+            toast("your message is marked as read now",{onOpen: () => {setFormFunction(false)}, autoClose: 500,pauseOnHover: false});      
         },
         onError: (error) =>{
             console.log(error)
             console.log(error.response?.data.detail)
+            Array.isArray(error.response?.data.detail)?  error.response?.data.detail.map((item,index) => {toast(item.msg.includes("Value error,")?item.msg.replace("Value error, ",''): capitalizeFirstLetter(item.loc[item.loc.length-1]) + " " + item.msg.substr(item.msg.indexOf(" ")+1),{type: "error"})}) : toast(error.response?.data.detail ,{type: "error"})
         }
     });
+
+            // navigate("/");
+        
+            
     let {data: loan,error : fetchError,isLoading, refetch} = useGetDebtLoan(notification.debt_id);
     // return (
     //     <>
@@ -50,6 +56,7 @@ function NotificationPopUp({notification}) {
         centered
       >
         <Modal.Header closeButton>
+        <ToastContainer />
             
           <Modal.Title id="contained-modal-title-vcenter">
             {notification.title}

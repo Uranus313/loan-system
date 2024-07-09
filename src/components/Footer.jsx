@@ -1,5 +1,6 @@
 import '../component styles/Footer.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import { ToastContainer,toast } from "react-toastify";
 
 // no edits needed for now
 function Footer(){

@@ -14,6 +14,7 @@ import NotificationsPage from "../components/NotificationsPage";
 import AllUsers from "../components/AllUsers";
 import PrivateAdminLayout from "../components/PrivateAdminLayout";
 import AllLoans from "../components/AllLoans";
+import AddBank from "../components/AddBank";
 const router = createBrowserRouter([
     {path: '/', element:<Layout /> ,children:[
         {path: '', element:<App />},
@@ -31,7 +32,8 @@ const router = createBrowserRouter([
         ]},
         {path: 'admin/',element: <PrivateAdminLayout />, children: [
             {path:'allUsers',element:<AllUsers />},
-            {path: "allLoans",element:<AllLoans />}
+            {path: "allLoans",element:<AllLoans />},
+            {path: "addBank",element:<AddBank />}
         ]}
         
 

@@ -1,6 +1,7 @@
 import Card from 'react-bootstrap/Card';
 import NotificationPopUp from './NotificationPopUp';
 import Badge from 'react-bootstrap/Badge';
+import { ToastContainer,toast } from "react-toastify";
 
 function NotificationCard({notificiation}) {
   return (
