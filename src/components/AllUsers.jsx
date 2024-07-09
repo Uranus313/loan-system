@@ -9,6 +9,7 @@ function AllUsers(){
     let {user: originalUser} = useOutletContext();
     return (
         <div className="row container-fluid mx-auto my-4">
+            
         {isLoading? <Loading /> : users?.map((user,index) =>
         {   
             if (user.user_id != originalUser.user_id){
