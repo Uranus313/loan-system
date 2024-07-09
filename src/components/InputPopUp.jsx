@@ -52,7 +52,7 @@ function InputPopUp() {
       <ToastContainer />
       </div>
       {/* this button appears in the ProfileInfo page, this makes the popUp show up */}
-      <Button variant="primary" onClick={handleShow}>
+      <Button variant="primary" className='bg-danger border-0 rounded-3' onClick={handleShow}>
 
         Delete Account
       </Button>

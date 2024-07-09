@@ -73,60 +73,63 @@ function EditProfile(){
     }
     
     return (
-        <form className={'d-flex flex-column align-items-center bg-gradient'} action="post" onSubmit={ formFunction? (event) => handleSubmit(event): (event) => {event.preventDefault()}} >
-            {/* for using toast you need 2 things, 1_the toast function that accepts a string and an object with configs 2_ toast container that shows where you want your notifications to appear */}
-            <ToastContainer />
-            <div className={'d-grid p-4 rounded-3 bg-secondary-subtle'}>
-                <h4>Fill Every Field You Want to Change</h4>
-                {/* you can comment the following line because we show the errors with toast now */}
-                {changeInfo.error && <div style={{color : 'rgb(230, 18, 18)'}}>{Array.isArray(changeInfo.error.response?.data.detail)?  changeInfo.error.response?.data.detail.map((item,index) => <p key={index}>{item.msg.includes("Value error,")?item.msg.replace("Value error, ",''): capitalizeFirstLetter(item.loc[item.loc.length-1]) + " " + item.msg.substr(item.msg.indexOf(" ")+1)}</p>) : <p>{changeInfo.error.response?.data.detail}</p>  }</div> }
-                {error? <p style={{color : 'rgb(230, 18, 18)'}}>{error}</p> : null }
-                <div className={'d-flex justify-content-between'}>
-                    <p className={'fw-bold me-3 '}>New Username :</p>
-                    <input className={'input-button rounded-1'} type="text" ref={usernameRef} placeholder={user?.username} />
-                </div>
-                <div className={'d-flex justify-content-between'}>
-                    <p className={'fw-bold me-3 '}>New First name :</p>
-                    <input className={'input-button rounded-1'} type="text" ref={firstNameRef} placeholder={user?.firstName} />
-                </div>
-                <div className={'d-flex justify-content-between'}>
-                    <p className={'fw-bold me-3 '}>New Middle Name :</p>
-                    <input className={'input-button rounded-1'} type="text" ref={middleNameRef} placeholder={user?.middleName}  />
-                </div>
-                <div className={'d-flex justify-content-between'}>
-                    <p className={'fw-bold me-3 '}>New Last Name :</p>
-                    <input className={'input-button rounded-1'} type="text" ref={lastNameRef} placeholder={user?.lastName} />
-                </div>
-                <div className={'d-flex justify-content-between'}>
-                    <p className={'fw-bold me-3 '}>New ID Number :</p>
-                    <input className={'input-button rounded-1'} type="number" ref={IDNumberRef} placeholder={user?.IDNumber}  />
-                </div>
-                <div className={'d-flex justify-content-between'}>
-                    <p className={'fw-bold me-3 '}>Email :</p>
-                    <input className={'input-button rounded-1'} type="email" ref={emailRef} placeholder={user?.email} />
-                </div>
-                <div className={'d-flex justify-content-between'}>
-                    <p className={'fw-bold me-3 '}>New Date of Birth :</p>
-                    <input  className={'input-button rounded-1'} type="date" ref={dateOfBirthRef}  defaultValue={user?.dateOfBirth} />
-                </div>
-                {/* when you write into new password, an input for old password opens up */}
-                <div className={'d-flex justify-content-between'}>
-                    <p className={'fw-bold me-3 '}>New Password :</p>
-                    <input className={'input-button rounded-1'} type= {passVisibility} ref={passwordRef} placeholder="password" onChange={(event) => {event.target.value== ''? setOldPassInput(false) : setOldPassInput(true)}}/>
-                </div>
-                <div className={'d-flex justify-content-between'}>
-                    <p className={'fw-bold me-3 '}>Repeat New Password :</p>
-                    <input className={'input-button rounded-1'} type={passVisibility} ref={repeatPasswordRef} placeholder="repeat password" />
-                </div>
-                <div className={oldPassInput? 'd-flex justify-content-between' : 'd-none'}>
-                    <p className={'fw-bold me-3 '}>Current Password :</p>
-                    <input className={'input-button rounded-1'} type={passVisibility} ref={oldPasswordRef} placeholder="Current password" />
-                </div>
-                <button className={'show-pass-btn rounded-1'} type='button' onClick={passVisibility == "password"? () => {setPassVisibility("text");setPassVisibilitySwitchText('hide password')}: () => {setPassVisibility("password");setPassVisibilitySwitchText('show password')}}>{passVisibilitySwitchText}</button>
-                <button className={'submit-button rounded-1'} type="submit">SUBMIT</button>
+        <form className='d-flex flex-column align-items-center p-4' action="post" onSubmit={formFunction ? (event) => handleSubmit(event) : (event) => { event.preventDefault(); }}>
+        <ToastContainer />
+        <div className='d-grid p-4 rounded-3 shadow-lg bg-light' style={{ backgroundColor: '#ffffff', maxWidth: '600px', width: '100%' }}>
+          <h4 className='mb-5 text-primary text-center'>Fill Every Field You Want to Change</h4>
+          {changeInfo.error && (
+            <div style={{ color: 'rgb(230, 18, 18)' }}>
+              {Array.isArray(changeInfo.error.response?.data.detail)
+                ? changeInfo.error.response?.data.detail.map((item, index) => (
+                  <p key={index}>{item.msg.includes("Value error,") ? item.msg.replace("Value error, ", '') : capitalizeFirstLetter(item.loc[item.loc.length - 1]) + " " + item.msg.substr(item.msg.indexOf(" ") + 1)}</p>
+                ))
+                : <p>{changeInfo.error.response?.data.detail}</p>}
             </div>
-
-        </form>
+          )}
+          {error ? <p style={{ color: 'rgb(230, 18, 18)' }}>{error}</p> : null}
+  
+          {[
+            { label: 'New Username', type: 'text', ref: usernameRef, placeholder: user?.username },
+            { label: 'New First Name', type: 'text', ref: firstNameRef, placeholder: user?.firstName },
+            { label: 'New Middle Name', type: 'text', ref: middleNameRef, placeholder: user?.middleName },
+            { label: 'New Last Name', type: 'text', ref: lastNameRef, placeholder: user?.lastName },
+            { label: 'New ID Number', type: 'number', ref: IDNumberRef, placeholder: user?.IDNumber },
+            { label: 'Email', type: 'email', ref: emailRef, placeholder: user?.email },
+            { label: 'New Date of Birth', type: 'date', ref: dateOfBirthRef, placeholder: user?.dateOfBirth }
+          ].map((field, idx) => (
+            <div key={idx} className='d-flex justify-content-between align-items-center m-2'>
+              <p className='col-5 fw-bold text-secondary m-0'>{field.label}:</p>
+              <input className='form-control rounded-1 bg-dark-subtle' type={field.type} ref={field.ref} placeholder={field.placeholder} />
+            </div>
+          ))}
+  
+          <div className='d-flex justify-content-between align-items-center m-2'>
+            <p className='col-5 fw-bold text-secondary'>New Password:</p>
+            <input className='form-control rounded-1  bg-dark-subtle' type={passVisibility} ref={passwordRef} placeholder="password" onChange={(event) => { event.target.value === '' ? setOldPassInput(false) : setOldPassInput(true); }} />
+          </div>
+  
+          <div className='d-flex justify-content-between align-items-center m-2'>
+            <p className='col-5 fw-bold text-secondary'>Repeat New Password:</p>
+            <input className='form-control rounded-1 bg-dark-subtle' type={passVisibility} ref={repeatPasswordRef} placeholder="repeat password" />
+          </div>
+  
+          {oldPassInput && (
+            <div className='d-flex justify-content-between align-items-center m-2'>
+              <p className='col-5 fw-bold text-secondary'>Current Password:</p>
+              <input className='form-control rounded-1 bg-dark-subtle' type={passVisibility} ref={oldPasswordRef} placeholder="Current password" />
+            </div>
+          )}
+  
+            <div className="form-check form-switch m-2">
+                <input className={'form-check-input '} type="checkBox" id="flexSwitchCheckDefault" onClick={passVisibility == "password"? () => {setPassVisibility("text");setPassVisibilitySwitchText('hide password')}: () => {setPassVisibility("password");setPassVisibilitySwitchText('show password')}} />
+                    <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Show Password</label>
+            </div>
+  
+          <div className='d-flex justify-content-center mt-3'>
+            <button className='col-5 btn btn-primary btn-lg' type="submit">SUBMIT</button>
+          </div>
+        </div>
+      </form>
     )
 }
 export default EditProfile;

@@ -4,19 +4,35 @@ import LoanPopUp from './LoanPopUp';
 
 function LoanCard({imgURL , amount,bankName,startDate,debtNumber,paidDebtNumber,nextDebtDeadline,note,debts}) {
   return (
-    <Card style={{ width: '18rem' }}>
-      <Card.Img variant="top" className='d-none' src={imgURL? imgURL:null} />
-      <Card.Body>
-        <Card.Title>{bankName}</Card.Title>
-        <Card.Text>{amount}</Card.Text>
-        <Card.Text>{startDate}</Card.Text>
-        <Card.Text>{paidDebtNumber} / {debtNumber}</Card.Text>
-        <Card.Text>{nextDebtDeadline}</Card.Text>
-
-        {/* <Button variant="primary">Go somewhere</Button> */}
-        <LoanPopUp title={bankName} rows={[{title:"Amount",text: amount},{title:"Total debts",text: debtNumber},{title:"Paid Debts",text: paidDebtNumber},{title:"Next Debt",text: nextDebtDeadline},{title:"note",text: note}]} debts={debts}/>
-      </Card.Body>
-    </Card>
+      <Card className='shadow-lg mb-4' style={{ width: '18rem', borderRadius: '10px', overflow: 'hidden' }}>
+        {imgURL && <Card.Img variant="top" src={imgURL} style={{ height: '150px', objectFit: 'cover' }} />}
+        <Card.Body className='p-4'>
+          <Card.Title className='mb-3 text-primary'>{bankName}</Card.Title>
+          <Card.Text className='mb-2'>
+            <strong>Amount:</strong> {amount}
+          </Card.Text>
+          <Card.Text className='mb-2'>
+            <strong>Start Date:</strong> {startDate}
+          </Card.Text>
+          <Card.Text className='mb-2'>
+            <strong>Paid Debts:</strong> {paidDebtNumber} / {debtNumber}
+          </Card.Text>
+          <Card.Text className='mb-2'>
+            <strong>Next Deadline:</strong> {nextDebtDeadline}
+          </Card.Text>
+          <LoanPopUp 
+            title={bankName} 
+            rows={[
+              { title: "Amount", text: amount }, 
+              { title: "Total Debts", text: debtNumber }, 
+              { title: "Paid Debts", text: paidDebtNumber }, 
+              { title: "Next Debt", text: nextDebtDeadline }, 
+              { title: "Note", text: note }
+            ]} 
+            debts={debts} 
+          />
+        </Card.Body>
+      </Card>
   );
 }
 

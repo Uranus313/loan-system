@@ -11,7 +11,7 @@ body{
     width: 100%; background: rgb(47,205,65);
     background: linear-gradient(21deg, rgba(47,205,65,1) 0%, rgba(222,247,225,1) 21%, rgba(255,255,255,1) 25%);
   }
-  
+
   .home {
     margin-bottom: 200px;
   }

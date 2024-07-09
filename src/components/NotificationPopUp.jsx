@@ -37,8 +37,8 @@ function NotificationPopUp({notification}) {
     // );
   return (
     <>
-        <Button variant="primary" onClick={() => {setModalShow(true); submitReadNotification.mutate([{notification_id : notification.notification_id, isRead : true}])}}>
-          expand
+        <Button variant="primary" className='rounded-5' onClick={() => {setModalShow(true); submitReadNotification.mutate([{notification_id : notification.notification_id, isRead : true}])}}>
+          Read
         </Button>
       <Modal
         size="lg"
