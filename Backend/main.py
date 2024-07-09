@@ -6,28 +6,8 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from fastapi.middleware.cors import CORSMiddleware
 from database import SessionLocal, engine
-from apscheduler.schedulers.background import BackgroundScheduler
-from apscheduler.triggers.cron import CronTrigger
 import crud, models, schemas, tokens, re
-
-# import smtplib
-# Import the email modules we'll need
-# from email.mime.text import MIMEText
-
-# msg = MIMEText("hello")
-# # me == the sender's email address
-# # you == the recipient's email address
-# msg['Subject'] = 'The contents of goodbye' 
-# msg['From'] = "mehrbodmh82@gmail.com"
-# msg['To'] = "mehrbodmh14@gmail.com"
-
-# # Send the message via our own SMTP server, but don't include the
-# # envelope header.
-# s = smtplib.SMTP('smtp.gmail.com',587)
-# s.starttls()  # Enable TLS
-# s.login("loansystem313@gmail.com", "ukuv mosa hczv autq")
-# s.sendmail("loansystem313@gmail.com", ["mehrbodmh14@gmail.com"], msg.as_string())
-# s.quit()
+import email_sender
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -49,45 +29,6 @@ def get_db():
         yield db
     finally:
         db.close()
-
-
-def job_function():
-    db = SessionLocal()
-
-    loans = crud.get_loans(db)
-    for loan in loans:
-        for debt in loan['debts']:
-            deadlineDate = date.today() +timedelta(days=3)
-
-            if not debt.paidDate and deadlineDate >= debt.deadline and debt.deadline >= date.today():
-                notifications = crud.get_loan_notifications(db, loan['loan_id'])
-
-                checker = False
-                for notification in notifications:
-                    if notification.debt_id == debt.debt_id:
-                        checker = True
-                        break
-
-                if not checker:
-                    if loan['bank']:
-                        bankName = loan['bank'].name
-                    else:
-                        bankName = loan['customBank'].name
-
-                    db_notification = schemas.NotificationCreate(title="Debt Reminder", text=f"Your debt deadline from loan received in {loan['startDate']} from {bankName} bank is in {debt.deadline}", sendDate=date.today(), isRead=False, user_id=loan['receiver_id'], debt_id=debt.debt_id)
-                    crud.register_notification(db, db_notification)
-
-
-sched = BackgroundScheduler()
-trigger = CronTrigger(
-        year="*",
-        month="*",
-        day="*",
-        hour="12"
-    )
-sched.add_job(job_function, trigger= trigger)
-sched.start()
-
 
 @app.get("/")
 def read_root():

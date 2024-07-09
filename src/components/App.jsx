@@ -13,7 +13,7 @@ function App() {
 
   return (
     <div className='home overflow-hidden'>
-
+      s
       <div className='row d-flex justify-content-around text-black intro'>
         <div className='col-md-5 order-md-1 order-2 col-8 text-start text-md-start text-center' style={{fontSize:"25px"}}>
           <h1 className='mb-3 home-title'>Loan System</h1>
