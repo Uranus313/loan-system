@@ -126,7 +126,7 @@ function EditProfile(){
             </div>
   
           <div className='d-flex justify-content-center mt-3'>
-            <button className='col-5 btn btn-primary btn-lg' type="submit">SUBMIT</button>
+            <button className='col-5 btn btn-primary' type="submit">SUBMIT</button>
           </div>
         </div>
       </form>

@@ -64,7 +64,7 @@ function SignIn(){
 
     return (
 
-        <form className="col-5 col-md-4 col-lg-3 mx-auto d-flex align-items-center flex-column bg-light login-form" action="post" onSubmit={(event) => handleSubmit(event)}>
+        <form className="col-10 col-sm-6 col-md-5 col-lg-4 mx-auto d-flex align-items-center flex-column bg-light login-form" action="post" onSubmit={(event) => handleSubmit(event)}>
         <ToastContainer />
         <div className="d-grid p-4 rounded-3 shadow-lg w-100">
           <h5 className="text-center mb-5 text-primary">PLEASE FILL THE FORM TO SIGN IN</h5>
@@ -99,7 +99,7 @@ function SignIn(){
           />
   
           {/* Submit Button */}
-          <Button variant="primary" type="submit" className="w-100 mt-3 rounded-1 submit-btn">Submit</Button>
+          <Button variant="primary" type="submit" className="col-5 mx-auto mt-3 rounded-1 submit-btn">Submit</Button>
         </div>
       </form>
     )

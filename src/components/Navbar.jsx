@@ -21,8 +21,8 @@ function UserNavbar({user,isMenuOpen,logOut,setIsMenuOpen}) {
             >
               <Offcanvas.Header closeButton>
                 {/* showing the username */}
-                <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${expand}`} className={'text-black username-title fw-bolder d-flex '}>
-                  {user?.username}{user?.isAdmin && <h6 className='p-0 m-0 d-flex align-items-end'><Badge bg="secondary">Admin</Badge></h6> }
+                <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${expand}`} className={'text-black username-title fw-bolder d-flex'}>
+                  {user?.username}{user?.isAdmin && <h6 className='ms-2 d-flex align-items-center m-0'><Badge bg="primary">Admin</Badge></h6> }
                 </Offcanvas.Title>
               </Offcanvas.Header>
               <hr className={'mb-3 mt-0 '}></hr>

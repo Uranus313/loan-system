@@ -55,7 +55,7 @@ function LoanPopUp({title,rows,debts,user}) {
     let counter = 0;
   return (
     <>
-      <Button variant="primary" className='mt-5' onClick={() => {setModalShow(true); console.log(user)}}>
+      <Button variant="primary" className={!user? 'mt-3' : ''} onClick={() => {setModalShow(true); console.log(user)}}>
         Show More Detailes
       </Button>
     <Modal
