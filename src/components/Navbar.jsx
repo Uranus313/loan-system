@@ -33,8 +33,10 @@ function UserNavbar({user,isMenuOpen,logOut,setIsMenuOpen}) {
                   <Link className={'text-decoration-none mb-2 p-2 menu-option'} to={'/user/myLoans'} >Loans</Link>
                   <Link className={'text-decoration-none mb-2 p-2 menu-option'} to={'/user/addLoan'}>Add Loan</Link>
                   <Link className={'text-decoration-none mb-2 p-2 menu-option'} to={'/user/notifications'}>Notifications</Link>
-                  <Link className={'text-decoration-none mb-2 p-2 menu-option'} style={{display: "block",textWrap: "nowrap"}} to={'/user/addPayment'}>Submit Debt Payment</Link>
+                  <Link state={{hello : 1}} className={'text-decoration-none mb-2 p-2 menu-option'} style={{display: "block",textWrap: "nowrap"}} to={'/user/addPayment'} >Submit Debt Payment</Link>
                   <Link to={'/admin/allUsers'} className={user?.isAdmin? 'text-decoration-none mb-2 p-2 menu-option' : 'd-none'} >All Users</Link>
+                  <Link to={'/admin/allLoans'} className={user?.isAdmin? 'text-decoration-none mb-2 p-2 menu-option' : 'd-none'} >All Loans</Link>
+
                   <Link className={'text-decoration-none mb-2 p-2 logout-option'} onClick={() => {localStorage.removeItem("auth-token"); logOut();
                     }} to={'/signIn'}>log out</Link>
                 </Nav>

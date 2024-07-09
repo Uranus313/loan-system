@@ -2,7 +2,7 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import LoanPopUp from './LoanPopUp';
 
-function LoanCard({imgURL , amount,bankName,startDate,debtNumber,paidDebtNumber,nextDebtDeadline,note,debts}) {
+function LoanCard({imgURL , amount,bankName,startDate,debtNumber,paidDebtNumber,nextDebtDeadline,note,debts,user}) {
   return (
       <Card className='shadow-lg mb-4' style={{ width: '18rem', borderRadius: '10px', overflow: 'hidden' }}>
         {imgURL && <Card.Img variant="top" src={imgURL} style={{ height: '150px', objectFit: 'cover' }} />}
@@ -20,6 +20,9 @@ function LoanCard({imgURL , amount,bankName,startDate,debtNumber,paidDebtNumber,
           <Card.Text className='mb-2'>
             <strong>Next Deadline:</strong> {nextDebtDeadline}
           </Card.Text>
+        {user &&  <Card.Text>{user.username}</Card.Text>}
+        
+
           <LoanPopUp 
             title={bankName} 
             rows={[
@@ -29,7 +32,7 @@ function LoanCard({imgURL , amount,bankName,startDate,debtNumber,paidDebtNumber,
               { title: "Next Debt", text: nextDebtDeadline }, 
               { title: "Note", text: note }
             ]} 
-            debts={debts} 
+            debts={debts} user={user} 
           />
         </Card.Body>
       </Card>

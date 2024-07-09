@@ -9,7 +9,9 @@ function useGetDebtLoan(debt_id){
             return apiClient.getWithToken();
         },
         staleTime: 30 * 60 * 1000,
-        retry: 3
+        retry: 3,
+        enabled: false,
+        refetchOnWindowFocus : false
     })
 }
 export default useGetDebtLoan;

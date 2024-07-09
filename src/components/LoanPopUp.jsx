@@ -6,7 +6,7 @@ import DebtRow from './DebtRow';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient ,useMutation} from '@tanstack/react-query';
 import APIClient from '../connections/APIClient';
-function LoanPopUp({title,rows,debts}) {
+function LoanPopUp({title,rows,debts,user}) {
     let [modalShow,setModalShow] = useState(false);
     let [remainingDebtsShow,SetRemainingDebtsShow] = useState(false);
     let [overdueDebtsShow,SetOverdueDebtsShow] = useState(false);
@@ -26,11 +26,24 @@ function LoanPopUp({title,rows,debts}) {
           console.log(error.response?.data.detail)
       }
       });
-
+      let apiClient2 = new APIClient("user/loans/" + debts[0].loan_id)
+      const deleteLoan = useMutation({
+        mutationFn: (loan) => apiClient2.delWithToken(loan),
+        onSuccess: (res ) => {
+            queryClient.invalidateQueries(["loans"]);
+  
+            // navigate("/");
+        },
+          onError: (error) =>{
+            console.log(error)
+            console.log(error.response?.data.detail)
+        }
+        });
+  
     let counter = 0;
   return (
     <>
-      <Button variant="primary" className='mt-5' onClick={() => setModalShow(true)}>
+      <Button variant="primary" className='mt-5' onClick={() => {setModalShow(true); console.log(user)}}>
         Show More Detailes
       </Button>
     <Modal
@@ -151,9 +164,11 @@ function LoanPopUp({title,rows,debts}) {
         }
       </Modal.Body>
       <Modal.Footer>
+        
         <Button onClick={() => setModalShow(false)}>Close</Button>
-        {debts && !debts[debts.length-1].paidDate && <Button onClick={() => navigate('/user/addPayment',{state: {loan_id : debts[0].loan_id}})}>pay debt</Button>}
-        {debts && !debts[debts.length-1].paidDate && <Button onClick={() => checkOut.mutate({loan_id : debts[0].loan_id, paidDate : new Date().toISOString().split("T")[0]})}>Check Out</Button>}
+        <Button onClick={() => deleteLoan.mutate()}>Delete Loan</Button>
+        {!user && user !== null && debts && !debts[debts.length-1].paidDate && <Button onClick={() => navigate('/user/addPayment',{state: {loan_id : debts[0].loan_id}})}>pay debt</Button>}
+        {!user && user !== null && debts && !debts[debts.length-1].paidDate && <Button onClick={() => checkOut.mutate({loan_id : debts[0].loan_id, paidDate : new Date().toISOString().split("T")[0]})}>Check Out</Button>}
       </Modal.Footer>
     </Modal>
     </>

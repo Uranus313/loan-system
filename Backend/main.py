@@ -241,6 +241,19 @@ def register_loan(current_user: Annotated[models.User, Depends(tokens.get_curren
         # Handle SQLAlchemy errors
         db.rollback()  # Rollback the transaction
         raise HTTPException(status_code=500, detail="Database error: " + str(e))
+@app.delete("/user/loans/{loan_id}")
+def delete_loan(current_user: Annotated[models.User, Depends(tokens.get_current_user)], loan_id: int,
+             db: Session = Depends(get_db)):
+    try:
+        db_loan = crud.validate_user_loan(db, loan_id, current_user.user_id)
+        if not db_loan:
+            raise HTTPException(status_code=400, detail="This loan does not belong to this user")
+        
+        return crud.delete_loan(db,  loan_id)
+    except SQLAlchemyError as e:
+        # Handle SQLAlchemy errors
+        db.rollback()  # Rollback the transaction
+        raise HTTPException(status_code=500, detail="Database error: " + str(e))
 
 @app.put("/user/loans")
 def update_debts(current_user: Annotated[models.User, Depends(tokens.get_current_user)],loan_id: Annotated[int, Body()],
@@ -312,7 +325,7 @@ def register_customBanks(current_user: Annotated[models.User, Depends(tokens.get
                          db: Session = Depends(get_db)):
     try:
         if not customBank.name:
-            raise HTTPException(status_code=400, detail="Name shoud not be null")
+            raise HTTPException(status_code=400, detail="Name should not be null")
         return crud.register_user_customBank(db, current_user.user_id, customBank)
     except SQLAlchemyError as e:
         # Handle SQLAlchemy errors
@@ -349,6 +362,19 @@ def update_notification(current_user: Annotated[models.User, Depends(tokens.get_
             if not db_notification:
                 raise HTTPException(status_code=400, detail="Some of These notifications do not belong to this user")
         return crud.update_user_notifications(db, updated_notifications)
+    except SQLAlchemyError as e:
+        # Handle SQLAlchemy errors
+        db.rollback()  # Rollback the transaction
+        raise HTTPException(status_code=500, detail="Database error: " + str(e))
+
+@app.post("/user/notifications", response_model=schemas.Notification)
+def update_notification(current_user: Annotated[models.User, Depends(tokens.get_current_user)],
+                        notification: schemas.NotificationCreate , db: Session = Depends(get_db)):
+    try:
+        if current_user.isAdmin:
+            return crud.register_notification(db, notification,current_user.user_id)
+        raise HTTPException(status_code=400, detail="You don't have permission")     
+
     except SQLAlchemyError as e:
         # Handle SQLAlchemy errors
         db.rollback()  # Rollback the transaction
@@ -551,7 +577,7 @@ def register_notification(current_user: Annotated[models.User, Depends(tokens.ge
         db.rollback()  # Rollback the transaction
         raise HTTPException(status_code=500, detail="Database error: " + str(e))
 
-@app.get("/admin/userLoanDebts/{laon_id}", response_model=list[schemas.Debt])
+@app.get("/admin/userLoanDebts/{loan_id}", response_model=list[schemas.Debt])
 def get_user_loan_debts(current_user: Annotated[models.User, Depends(tokens.get_current_user)], loan_id: int,
                    db: Session = Depends(get_db)):
     try:
