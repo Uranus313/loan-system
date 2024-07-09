@@ -17,7 +17,7 @@ function Header({user, logOut, isMenuOpen, setIsMenuOpen,signedIn,isLoading}){
             </div>    
             <div className='row-col-12 d-flex align-items-center justify-content-between px-4'>
                 <div className='col-6 z-1'>
-                    <Link style={{textDecoration:"none"}} className="navbar-text-logo m-0 text-white">LOAN REMINDER</Link>
+                    <Link style={{textDecoration:"none"}} className="navbar-text-logo m-0 text-white" to={signedIn? "/user/panel":"/"}>LOAN REMINDER</Link>
                 </div>
                 {/* if you're getting the data from the api, it shows a spinned for loading */}
                 {isLoading ? <div className="spinner-border text-white" role="status">

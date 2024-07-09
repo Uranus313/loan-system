@@ -4,7 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import teleg from '../assets/Payday-Loan.gif'
 import '../component styles/App.css'
 import { FaBell, FaRegClock, FaHandHoldingUsd} from 'react-icons/fa';
-;
+import { Link } from "react-router-dom";
 
 
 //main page , still unfinished , if you want add some images and texts like welcom and...
@@ -13,12 +13,13 @@ function App() {
 
   return (
     <div className='home overflow-hidden'>
+      s
       <div className='row d-flex justify-content-around text-black intro'>
         <div className='col-md-5 order-md-1 order-2 col-8 text-start text-md-start text-center' style={{fontSize:"25px"}}>
           <h1 className='mb-3 home-title'>Loan System</h1>
           <p style={{fontSize:"20px", letterSpacing:'3px', color:"green"}}> An efficient and user-friendly application </p>
           <p>Manage and organize your loans and debts with us and you will never be late! </p>
-          <button className='mt-5 btn btn-outline-danger fs-5 buttonHome'>Start Managing</button>
+          <Link to={"/signIn"} className='mt-5 btn btn-outline-danger fs-5 buttonHome'>Start Managing</Link>
         </div>
         <div className='order-md-2 order-1 col-md-5 col-8  p-0'>
           <img className='imgHome' src={teleg}></img>

@@ -180,7 +180,7 @@ function LoanPopUp({title,rows,debts,user}) {
       <Modal.Footer>
         
         <Button onClick={() => setModalShow(false)}>Close</Button>
-        <Button onClick={() => deleteLoan.mutate()}>Delete Loan</Button>
+        {!user && user !== null &&<Button onClick={() => deleteLoan.mutate()}>Delete Loan</Button>}
         {!user && user !== null && debts && !debts[debts.length-1].paidDate && <Button onClick={() => navigate('/user/addPayment',{state: {loan_id : debts[0].loan_id}})}>pay debt</Button>}
         {!user && user !== null && debts && !debts[debts.length-1].paidDate && <Button onClick={() => checkOut.mutate({loan_id : debts[0].loan_id, paidDate : new Date().toISOString().split("T")[0]})}>Check Out</Button>}
       </Modal.Footer>
