@@ -17,7 +17,7 @@ function ProfileInfo(){
           {[
             { label: 'Username', value: user?.username },
             { label: 'First Name', value: user?.firstName },
-            { label: 'Middle Name', value: user?.middleName },
+            { label: 'Middle Name', value: user==''? user.middleName : 'Not Set'},
             { label: 'Last Name', value: user?.lastName },
             { label: 'ID Number', value: user?.IDNumber },
             { label: 'Email', value: user?.email },

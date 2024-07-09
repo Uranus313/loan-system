@@ -20,20 +20,22 @@ function LoanCard({imgURL , amount,bankName,startDate,debtNumber,paidDebtNumber,
           <Card.Text className='mb-2'>
             <strong>Next Deadline:</strong> {nextDebtDeadline}
           </Card.Text>
-        {user &&  <Card.Text>{user.username}</Card.Text>}
+        {user &&  <Card.Text><strong>User: </strong>{user.username}</Card.Text>}
         
-
+        <div className='text-center'>
           <LoanPopUp 
-            title={bankName} 
-            rows={[
-              { title: "Amount", text: amount }, 
-              { title: "Total Debts", text: debtNumber }, 
-              { title: "Paid Debts", text: paidDebtNumber }, 
-              { title: "Next Debt", text: nextDebtDeadline }, 
-              { title: "Note", text: note }
-            ]} 
-            debts={debts} user={user} 
-          />
+              title={bankName} 
+              rows={[
+                { title: "Amount", text: amount }, 
+                { title: "Total Debts", text: debtNumber }, 
+                { title: "Paid Debts", text: paidDebtNumber }, 
+                { title: "Next Debt", text: nextDebtDeadline }, 
+                { title: "Note", text: note }
+              ]} 
+              debts={debts} user={user}
+            />
+        </div>
+
         </Card.Body>
       </Card>
   );
