@@ -13,7 +13,7 @@ function ProfileInfo(){
         
         <div className='d-flex flex-column align-items-center'>
         <div className='card p-4 rounded-3 shadow-lg h-100 m-5' style={{ backgroundColor: '#ffffff', maxWidth: '600px', width: '100%'}}>
-          <h4 className='mb-4 text-primary my-4'>Your Info</h4>
+          <h4 className='text-primary my-4 px-2'>Your Info</h4>
           {[
             { label: 'Username', value: user?.username },
             { label: 'First Name', value: user?.firstName },

@@ -1,4 +1,3 @@
-import context from "react-bootstrap/esm/AccordionContext";
 import { useOutletContext } from "react-router-dom";
 
 function UserPanel(){
@@ -6,12 +5,12 @@ function UserPanel(){
     return(
         <>
 
-            <div className="d-flex justify-content-center mb-2 mt-5">
-                <h1 style={{fontFamily:'Agency FB',fontWeight:'bold'}}>WELCOME TO OUR WEBSITE!!</h1>
+            <div className="d-flex justify-content-center m-0">
+                <h1 style={{fontFamily:'Agency FB',fontWeight:'bold'}} className="text-primary my-5">WELCOME TO OUR WEBSITE!!</h1>
             </div>
 
-            <div className="d-flex justify-content-center mt-2">
-                <div className="card text-center w-25 mt-5" style={{width: "18rem"}}>
+            <div className="w-100 row d-flex justify-content-center m-0">
+                <div className="col-12 card text-center m-5">
                     <div className="card-header" style={{backgroundColor: "green", color: "white"}}> ADD LOANS TO KEEP TRACK OF THEM! </div>
                     <div className="card-body p-3">
                         <p className="card-text">
@@ -22,7 +21,7 @@ function UserPanel(){
                     </div>
                 </div>
 
-                <div className="card text-center w-25 m-5" style={{width: "18rem"}}>
+                <div className="col-12 card text-center m-5">
                     <div className="card-header bg-danger" style={{color: "white"}}>
                         MANAGE YOUR LOANS IN A FAST WAY
                     </div>
@@ -41,8 +40,8 @@ function UserPanel(){
             <hr></hr>
 
 
-            <div className="d-flex justify-content-center mt-2 mb-5">
-                <div className="card text-center w-25 mt-5" style={{width: "18rem"}}>
+            <div className="w-100 row d-flex justify-content-center m-0">
+                <div className="col-12 card text-center m-5">
                     <div className="card-header bg-secondary" style={{color: "white"}}>GET NOTIFICATIONS ABOUT YOUR LOANS</div>
                     <div className="card-body p-3">
                         <p className="card-text">
@@ -53,7 +52,7 @@ function UserPanel(){
                     </div>
                 </div>
             
-                <div className="card text-center w-25 m-5" style={{width: "18rem"}}>
+                <div className="col-12 card text-center m-5">
                     <div className="card-header bg-primary" style={{color: "white"}}>
                         SUBMIT PAYMENT DEBT
                     </div>
