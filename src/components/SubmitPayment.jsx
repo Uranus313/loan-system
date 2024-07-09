@@ -16,7 +16,7 @@ function SubmitPayment(){
     // console.log(new Date().toISOString().split("T")[0]);
     let location = useLocation();
     let locState = location.state;
-
+    console.log(locState)
     // console.log('ooooo',locState);
     const apiClient = new APIClient('user/debts');
     const queryClient = useQueryClient();

@@ -8,6 +8,7 @@ import LoanRow from "./LoanRow";
 import Loading from "./Loading";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import APIClient from "../connections/APIClient";
+import NotificationMakePopUp from "./NotificationMakePopUp";
 function UserPopUp({ user }) {
   let [modalShow, setModalShow] = useState(false);
   let [remainingLoansShow, SetRemainingLoansShow] = useState(false);
@@ -182,7 +183,7 @@ function UserPopUp({ user }) {
           {user.isAdmin? <Button onClick={() => demoteAdmin.mutate()}>Demote admin</Button>:<Button onClick={() => promoteAdmin.mutate()}>Promote admin</Button>}
           <Button onClick={() => deleteUser.mutate()} variant="danger" disabled={user.isAdmin}>Delete User</Button>
           <Button onClick={() => setModalShow(false)}>Close</Button>
-                    
+          <NotificationMakePopUp user={user} />          
         </Modal.Footer>
       </Modal>
     </>
