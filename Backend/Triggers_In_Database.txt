@@ -22,17 +22,15 @@ create or replace function delete_user()
 	$$
 	language plpgsql;
 
-create or replace trigger users_before_delete before delete on users
-	for each row execute function delete_user();
-
-
-
-
-	create or replace function delete_loan()
+create or replace function delete_loan()
 	returns trigger
 	as
 	$$
 	begin
+		
+		update notifications
+		set
+		debt_id = null where debt_id in (select debt_id from debts where debts.loan_id = old.loan_id);
 		delete from debts where debts.loan_id = old.loan_id;
 
 		return old;
