@@ -5,16 +5,16 @@ create or replace function delete_user()
 	begin
 		update custom_banks
 		set
-	    user_id = case when user_id = old.user_id then null else user_id end,
-		receiver_id = case when receiver_id = old.user_id then null else receiver_id end;
+	    user_id = case when user_id = old.user_id then null else user_id end;
 
 		update loans
 		set
-	    user_id = case when user_id = old.user_id then null else user_id end;
+		receiver_id = case when receiver_id = old.user_id then null else receiver_id end;
 
 		update notifications
 		set
-		user_id = case when user_id = old.user_id then null else user_id end;
+		user_id = case when user_id = old.user_id then null else user_id end,
+		sender_id = case when sender_id = old.user_id then null else sender_id end;
 
 		return old;
 
