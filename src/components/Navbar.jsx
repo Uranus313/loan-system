@@ -5,6 +5,7 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import '../component styles/Navbar.css'
 import {Link} from "react-router-dom";
 import { Badge } from 'react-bootstrap';
+import { ToastContainer,toast } from "react-toastify";
 
 function UserNavbar({user,isMenuOpen,logOut,setIsMenuOpen}) {
   let expand = false;

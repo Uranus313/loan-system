@@ -4,6 +4,8 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import UserNavbar from "./Navbar.jsx";
 import logo from '../assets/logo.png';
 import { Button } from 'react-bootstrap';
+import { ToastContainer,toast } from "react-toastify";
+
 function Header({user, logOut, isMenuOpen, setIsMenuOpen,signedIn,isLoading}){
     const navigate = useNavigate();
 

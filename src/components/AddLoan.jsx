@@ -8,6 +8,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import useGetBanks from "../hooks/useGetBanks";
 import { Form, Button} from 'react-bootstrap';
 import Loading from "./Loading";
+import { ToastContainer,toast } from "react-toastify";
 //unfinished page
 function AddLoan(){
     // let banks = [{bank_id : 1,name: "Melli"},{bank_id: 2, name: "Sepah"},{bank_id:3, name: "Pasargad"}]
@@ -28,17 +29,22 @@ function AddLoan(){
     const apiClient = new APIClient('user/loans');
     const apiClient2 = new APIClient('user/banks');
 
+
     let queryClient = useQueryClient();
     const uploadLoan = useMutation({
         mutationFn: (loan) => apiClient.postWithToken(loan),
         onSuccess: (loan) =>{
             queryClient.invalidateQueries(["loan"]);
             console.log(loan);
+            toast("your loan successfully added",{onOpen: () => {setFormFunction(false)}, onClose: () => navigate("/user/panel"), type: 'success',autoClose: 500,pauseOnHover: false});
+
             // navigate("/");
         },
         onError: (error) =>{
             console.log(error)
             console.log(error.response?.data.detail)
+            Array.isArray(error.response?.data.detail)?  error.response?.data.detail.map((item,index) => {toast(item.msg.includes("Value error,")?item.msg.replace("Value error, ",''): capitalizeFirstLetter(item.loc[item.loc.length-1]) + " " + item.msg.substr(item.msg.indexOf(" ")+1),{type: "error"})}) : toast(error.response?.data.detail ,{type: "error"})
+
         }
     });
     const addCustomBank = useMutation({
@@ -64,15 +70,15 @@ function AddLoan(){
 
         //checking errors for empty inputs, wrong date and ....
         if(amountRef.current.value.trim() == '' || parseInt(amountRef.current.value.trim()) < 1){
-            setError("amount shouldn't be empty or smaller than 1");
+            toast("amount shouldn't be empty or smaller than 1",{type: "error"});
         }else if(interestRef.current.value.trim() == '' || parseInt(interestRef.current.value.trim()) < 0){
-            setError("interest shouldn't be empty or smaller than 0");
+            toast("interest shouldn't be empty or smaller than 0",{type: "error"});
         }else if(debtCountRef.current.value.trim() == '' || parseInt(debtCountRef.current.value.trim()) < 1){
-            setError("debt count shouldn't be empty or smaller than 1");
+            toast("debt count shouldn't be empty or smaller than 1",{type: "error"});
         }else if(startDateRef.current.value.trim() == ''){
-            setError("start date shouldn't be empty");
+            toast("start date shouldn't be empty",{type: "error"});
         }else if(customBankNameRef.current.value.trim() == '' &&  newBankSelected ){
-            setError("custom bank name shouldn't be empty");
+            toast("custom bank name shouldn't be empty",{type: "error"});
         }else{
             let loan = {};
             if(customBankSelected){
@@ -102,6 +108,7 @@ function AddLoan(){
           <Loading />
         ) : (
           <Form className="d-flex flex-column align-items-center bg-light p-4 rounded-3 shadow-lg mx-auto my-5" style={{ maxWidth: '600px'}} onSubmit={(event) => handleSubmit(event)}>
+            <ToastContainer />
             <h4 className="mb-5 text-primary">Please enter the details to add a loan</h4>
   
             {error && <p style={{ color: 'rgb(230, 18, 18)' }}>{error}</p>}

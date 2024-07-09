@@ -6,6 +6,8 @@ import DebtRow from './DebtRow';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient ,useMutation} from '@tanstack/react-query';
 import APIClient from '../connections/APIClient';
+import { ToastContainer,toast } from "react-toastify";
+
 function LoanPopUp({title,rows,debts,user}) {
     let [modalShow,setModalShow] = useState(false);
     let [remainingDebtsShow,SetRemainingDebtsShow] = useState(false);
@@ -18,25 +20,35 @@ function LoanPopUp({title,rows,debts,user}) {
       mutationFn: (loan) => apiClient.putWithToken(loan),
       onSuccess: (res ) => {
           queryClient.invalidateQueries(["loans"]);
+          toast("all your debts are successfully paid",{onOpen: () => {setFormFunction(false)}, onClose: () => navigate("/user/panel"), type: 'success',autoClose: 500,pauseOnHover: false});
 
           // navigate("/");
       },
         onError: (error) =>{
           console.log(error)
           console.log(error.response?.data.detail)
+          
+            Array.isArray(error.response?.data.detail)?  error.response?.data.detail.map((item,index) => {toast(item.msg.includes("Value error,")?item.msg.replace("Value error, ",''): capitalizeFirstLetter(item.loc[item.loc.length-1]) + " " + item.msg.substr(item.msg.indexOf(" ")+1),{type: "error"})}) : toast(error.response?.data.detail ,{type: "error"})
       }
       });
+
+ 
+            // navigate("/");
+
+            
       let apiClient2 = new APIClient("user/loans/" + debts[0].loan_id)
       const deleteLoan = useMutation({
         mutationFn: (loan) => apiClient2.delWithToken(loan),
         onSuccess: (res ) => {
             queryClient.invalidateQueries(["loans"]);
-  
+            toast("your loan successfully deleted",{onOpen: () => {setFormFunction(false)}, onClose: () => navigate("/user/panel"), type: 'success',autoClose: 500,pauseOnHover: false});
+
             // navigate("/");
         },
           onError: (error) =>{
             console.log(error)
             console.log(error.response?.data.detail)
+            Array.isArray(error.response?.data.detail)?  error.response?.data.detail.map((item,index) => {toast(item.msg.includes("Value error,")?item.msg.replace("Value error, ",''): capitalizeFirstLetter(item.loc[item.loc.length-1]) + " " + item.msg.substr(item.msg.indexOf(" ")+1),{type: "error"})}) : toast(error.response?.data.detail ,{type: "error"})
         }
         });
   
@@ -54,6 +66,8 @@ function LoanPopUp({title,rows,debts,user}) {
       centered
     >
       <Modal.Header closeButton>
+      <ToastContainer />
+
         <Modal.Title id="contained-modal-title-vcenter" className='text-primary'>
           {title}
         </Modal.Title>

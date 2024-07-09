@@ -1,6 +1,8 @@
 import useGetUsers from "../hooks/useGetUsers";
 import Loading from "./Loading";
 import UserCard from "./UserCard";
+import { ToastContainer,toast } from "react-toastify";
+
 function AllUsers(){
     let {data: users,error : fetchError,isLoading} = useGetUsers();
     return (

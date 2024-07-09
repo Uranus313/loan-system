@@ -2,7 +2,7 @@ function LoanRow({loan,index}){
     return(<tr>
         <td>{index}</td>
         <td>{loan.loan_id}</td>
-        <td>{loan.bank.name}</td>
+        <td>{loan.bank?.name}</td>
         <td>{loan.bankType}</td>
         <td>{loan.amount}</td>
         <th>{loan.interest}</th>

@@ -2,27 +2,17 @@ import { useMutation } from "@tanstack/react-query";
 import { useRef } from "react";
 import { Button } from "react-bootstrap";
 import APIClient from "../connections/APIClient";
+import { ToastContainer,toast } from "react-toastify";
 
 function AddBank(){
     const nameRef = useRef();
-    const apiClient = new APIClient('/user/banks'); 
+    const apiClient = new APIClient('/admin/bank'); 
     const addBank = useMutation({
-        mutationFn: (debt) => {  
-            console.log(debt);
-            return apiClient.putWithToken(debt)},
+        mutationFn: (bank) => {  
+            console.log(bank);
+            return apiClient.postWithToken(bank)},
         onSuccess: (res ) => {
             console.log(res.data);
-            for (let i = 0;i<loans.length; i++){
-                let loan = loans[i];
-                if (loan.loan_id == res.data.loan_id){
-                    console.log(loan.debtNumber == loan.paidDebtNumber+1)
-                    console.log(loan)
-                    if(loan.debtNumber == loan.paidDebtNumber+1){
-                        setSelectedLoan(0);
-                    }
-                    break;
-                }
-            }
             queryClient.invalidateQueries(["loan"]);
 
             // navigate("/");
@@ -32,7 +22,13 @@ function AddBank(){
             console.log(error.response?.data.detail)
         }
     });
+    function handleSubmit(event){
+        event.preventDefault();
+        if(nameRef.current.value.trim() == ''){
 
+        }
+        addBank
+    }
     return(
         <form action="" onSubmit={(event) => handleSubmit(event)}>
             <p>bank</p>

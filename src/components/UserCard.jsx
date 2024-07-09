@@ -2,6 +2,8 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { Badge } from 'react-bootstrap';
 import UserPopUp from './UserPopUp';
+import { ToastContainer,toast } from "react-toastify";
+
 function UserCard({user}) {
   return (
     <Card style={{ width: '18rem' }}>

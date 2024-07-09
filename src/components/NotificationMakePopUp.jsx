@@ -6,6 +6,8 @@ import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import APIClient from '../connections/APIClient';
+
+
 import SignInContext from '../contexts/SignInContext';
 function NotificationMakePopUp({user}){
     const [show, setShow] = useState(false);
@@ -23,7 +25,7 @@ function NotificationMakePopUp({user}){
       onSuccess: () =>{
           queryClient.invalidateQueries(["notification"]);
           handleLogOut();
-          toast("message sent deleted",{onClose: () => {handleClose();}, type: 'success',autoClose: 1000,pauseOnHover: false});
+          toast("message sent ",{onClose: () => {handleClose();}, type: 'success',autoClose: 500,pauseOnHover: false});
           
       },
       onError: (error) =>{
@@ -59,6 +61,8 @@ function NotificationMakePopUp({user}){
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
             <Modal.Title>Send message</Modal.Title>
+        <ToastContainer />
+
           </Modal.Header>
           <Form className='p-0 m-0' onSubmit={(event) => handleSubmit(event)}>
   

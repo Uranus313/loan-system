@@ -593,7 +593,7 @@ def get_user_loan_debts(current_user: Annotated[models.User, Depends(tokens.get_
         db.rollback()  # Rollback the transaction
         raise HTTPException(status_code=500, detail="Database error: " + str(e))
 
-@app.get("/admin/bank/", response_model=schemas.Bank)
+@app.post("/admin/bank/", response_model=schemas.Bank)
 def register_bank(current_user: Annotated[models.User, Depends(tokens.get_current_user)], bank: schemas.bankCreate,
                    db: Session = Depends(get_db)):
     try:
