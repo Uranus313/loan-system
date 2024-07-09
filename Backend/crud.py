@@ -197,13 +197,21 @@ def get_user_banks(db: Session, user_id: int):
 
     return banks_dict
 
-def register_user_customBank(db: Session, user_id: int, customBnak: schemas.CustomBankCreate):
-    db_customBank = models.CustomBank(user_id=user_id, **customBnak.model_dump())
+def register_user_customBank(db: Session, user_id: int, customBank: schemas.CustomBankCreate):
+    db_customBank = models.CustomBank(user_id=user_id, **customBank.model_dump())
     db.add(db_customBank)
     db.commit()
     db.refresh(db_customBank)
 
     return db_customBank
+
+def register_bank(db: Session, bank: schemas.bankCreate):
+    db_bank = models.Bank(**bank.model_dump())
+    db.add(db_bank)
+    db.commit()
+    db.refresh(db_bank)
+
+    return db_bank
 
 def delete_user_customBank(db: Session, user_id: int, bank_id: int):
     db_customBank = db.query(models.CustomBank).filter(models.CustomBank.user_id == user_id).\

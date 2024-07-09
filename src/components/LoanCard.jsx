@@ -4,7 +4,7 @@ import LoanPopUp from './LoanPopUp';
 
 function LoanCard({imgURL , amount,bankName,startDate,debtNumber,paidDebtNumber,nextDebtDeadline,note,debts,user}) {
   return (
-      <Card className='shadow-lg mb-4' style={{ width: '18rem', borderRadius: '10px', overflow: 'hidden' }}>
+      <Card className='m-0 shadow-lg mb-4' style={{ width: '18rem', borderRadius: '10px', overflow: 'hidden' }}>
         {imgURL && <Card.Img variant="top" src={imgURL} style={{ height: '150px', objectFit: 'cover' }} />}
         <Card.Body className='p-4'>
           <Card.Title className='mb-3 text-primary'>{bankName}</Card.Title>
