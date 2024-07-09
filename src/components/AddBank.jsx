@@ -33,11 +33,13 @@ function AddBank(){
         addBank.mutate({name: nameRef.current.value.trim()});
     }
     return(
-        <form action="" onSubmit={(event) => handleSubmit(event)}>
+        <form className="row d-flex" action="" onSubmit={(event) => handleSubmit(event)}>
             <ToastContainer />
-            <p>bank</p>
-            <input type="text" ref={nameRef} placeholder="bank name"  />
-            <Button type="submit">Submit</Button>
+            <h2 className="text-primary w-100 text-center my-5">Add Bank</h2>
+            <div className="col-12 d-flex justify-content-center align-items-center gap-2">
+                <input className="col-5 col-sm-4 col-md-3 p-2 rounded-3 bg-dark-subtle border-0" type="text" ref={nameRef} placeholder="bank name"  />
+                <Button className="col-3 col-sm-2 col-md-1 p-2 rounded-3" type="submit">Submit</Button>
+            </div>
         </form>
     )
     

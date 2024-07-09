@@ -213,6 +213,9 @@ def register_bank(db: Session, bank: schemas.bankCreate):
 
     return db_bank
 
+def validate_bank(db: Session, bank_name: str):
+    return db.query(models.Bank).filter(models.Bank.name == bank_name).first()
+
 def delete_user_customBank(db: Session, user_id: int, bank_id: int):
     db_customBank = db.query(models.CustomBank).filter(models.CustomBank.user_id == user_id).\
         filter(models.CustomBank.bank_id == bank_id).first()
