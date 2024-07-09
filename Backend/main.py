@@ -540,6 +540,9 @@ def register_bank(current_user: Annotated[models.User, Depends(tokens.get_curren
     try:
         if not current_user.isAdmin:
             raise HTTPException(status_code=400, detail="You don't have permission")
+        db_bank = crud.validate_bank(db, bank.name)
+        if db_bank:
+            raise HTTPException(status_code=400, detail="Bank with this name already exists")
         db_bank = crud.register_bank(db, bank)
         return db_bank
     except SQLAlchemyError as e:
