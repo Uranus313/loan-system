@@ -3,8 +3,7 @@ import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import teleg from '../assets/Payday-Loan.gif'
 import '../component styles/App.css'
-import { useState } from 'react'
-// import './App.css'
+import { FaBell, FaRegClock, FaHandHoldingUsd} from 'react-icons/fa';
 
 
 //main page , still unfinished , if you want add some images and texts like welcom and...
@@ -25,31 +24,40 @@ function App() {
         </div>
       </div>
 
-      <div className={'justify-content-center row gap-lg-5'}>
-        <div className="card col-md-2 col-12">
-            <div className="card-body">
-              <p className="card-text fw-bold fs-4">
-                Have you ever been stressed over not being able to manage your loans? no need, just add them to your
-                account and we will manage it for you!
+    <div className='container'>
+      <div className='row justify-content-around'>
+        <div className='col-md-3 col-12 m-3 justify-content-center d-flex'>
+          <div className='card h-100 text-center border-0 shadow-sm rounded m-0' style={{ background: 'linear-gradient(135deg, #f6d365 0%, #fda085 100%)' }}>
+            <div className='card-body'>
+              <FaHandHoldingUsd size={50} color='#fff' className='mb-4' />
+              <p className='card-text text-white fw-bold fs-5'>
+                Have you ever been stressed over not being able to manage your loans? No need, just add them to your account and we will manage it for you!
               </p>
             </div>
+          </div>
         </div>
-        <div className="card col-md-2 col-12">
-            <div className="card-body">
-              <p className="card-text fw-bold fs-4">
-                You can also add you debts and we will take of them for you, no need to stress over remembering their
-                due times!
+        <div className='col-md-3 col-12 m-3 justify-content-center d-flex'>
+          <div className='card h-100 text-center border-0 shadow-sm rounded m-0' style={{ background: 'linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)' }}>
+            <div className='card-body'>
+              <FaRegClock size={50} color='#fff' className='mb-4' />
+              <p className='card-text text-white fw-bold fs-5'>
+                You can also add your debts and we will take care of them for you, no need to stress over remembering their due times!
               </p>
             </div>
+          </div>
         </div>
-        <div className="card col-md-2 col-12">
-            <div className="card-body">
-              <p className="card-text fw-bold fs-4">
+        <div className='col-md-3 col-12 m-3 justify-content-center d-flex'>
+          <div className='card h-100 text-center border-0 shadow-sm rounded m-0' style={{ background: 'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)' }}>
+            <div className='card-body'>
+              <FaBell size={50} color='#fff' className='mb-4' />
+              <p className='card-text text-white fw-bold fs-5'>
                 We will send you notifications whenever the due time of a debt or a loan is close!
               </p>
             </div>
+          </div>
         </div>
       </div>
+    </div>
 
     </div>
     )

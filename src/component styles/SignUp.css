@@ -23,19 +23,6 @@ form {
     cursor: pointer;
 }
 
-.submit-button {
-    background-color: green;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    color: white;
-    margin-top: 8px;
-}
-
-.submit-button:hover {
-    background-color: forestgreen;
-    cursor: pointer;
-}
 
 .error {
     color : rgb(230, 18, 18);

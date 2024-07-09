@@ -25,7 +25,7 @@ function NotificationPopUp({notification}) {
             console.log(error.response?.data.detail)
         }
     });
-    let {data: loan,error : fetchError,isLoading,refetch} = useGetDebtLoan(notification.debt_id);
+    let {data: loan,error : fetchError,isLoading, refetch} = useGetDebtLoan(notification.debt_id);
     // return (
     //     <>
     //     <Button onClick={() => navigate(-1)}>back</Button>
@@ -37,10 +37,10 @@ function NotificationPopUp({notification}) {
     // );
   return (
     <>
-        <Button variant="primary" onClick={() => {setModalShow(true);if(notification.debt_id){refetch();} if(notification.isRead == false){
+        <Button variant="primary" className='rounded-5' onClick={() => {setModalShow(true);if(notification.debt_id){refetch();} if(notification.isRead == false){
           submitReadNotification.mutate([{notification_id : notification.notification_id, isRead : true}])
         } }}>
-          expand
+          Read
         </Button>
       <Modal
         size="lg"

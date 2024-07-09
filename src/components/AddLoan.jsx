@@ -3,11 +3,10 @@ import { useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '/src/component styles/SignUp.css'
 import APIClient from "../connections/APIClient";
-import { useContext } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
-import useGetLoans from "../hooks/useGetLoans";
 import useGetBanks from "../hooks/useGetBanks";
+import { Form, Button} from 'react-bootstrap';
 import Loading from "./Loading";
 //unfinished page
 function AddLoan(){
@@ -58,9 +57,6 @@ function AddLoan(){
         }
     });
     
-
-
-    
     const navigate = useNavigate();
     function handleSubmit(event){
         event.preventDefault(); 
@@ -102,64 +98,68 @@ function AddLoan(){
     }
     return (
         <>
-            {isLoading? <Loading /> : <form className={'d-flex flex-column align-items-center bg-gradient'} action="post" onSubmit={(event) => handleSubmit(event)}>
-            <div className={'d-grid p-4 rounded-3 bg-secondary-subtle'}>
-                <h4>WELCOME TO OUR WEBSITE</h4>
-                <p>Please enter the details to add loan</p>
-
-                {/* if error exists : */}
-                {error? <p style={{color : 'rgb(230, 18, 18)'}}>{error}</p> : null }
-                <div className={'d-flex justify-content-between'}>
-                    <p className={'fw-bold me-3 '}>Amount :</p>
-                    <input className={'input-button rounded-1'} type="number" ref={amountRef} placeholder="amount" />
-                </div>
-                <div className={'d-flex justify-content-between'}>
-                    <p className={'fw-bold me-3 '}>Interest :</p>
-                    <input className={'input-button rounded-1'} type="number" ref={interestRef} placeholder="interest" />
-                </div>
-                <div className={'d-flex justify-content-between'}>
-                    <p className={'fw-bold me-3 '}>How Many Debts? :</p>
-                    <input className={'input-button rounded-1'} type="number" ref={debtCountRef} placeholder="debt number" />
-                </div>
-                <div className={'d-flex justify-content-between'}>
-                    <p className={'fw-bold me-3 '}>Start Date :</p>
-                    <input className={'input-button rounded-1'} type="date" ref={startDateRef}/>
-                </div>
-                <div className={'d-flex justify-content-between mb-2'}>
-                    <label className={'fw-bold me-3 '} htmlFor="bankSelector">Choose a Bank:</label>
-                    <select name="bankSelector" id="bankSelector" ref={bankSelectorRef} onChange={(event) => {if(event.target.value == "customBank") {setCustomBankSelected(true);setSelectedBank(0);
-                            if(banks.customBanks.length==0){setNewBankSelected(true)}}else{
-                                setCustomBankSelected(false);setNewBankSelected(false);setSelectedBank(event.target.value)
-                            }}}>    
-                        { banks.banks?.map((item,index) => <option  value={item.bank_id} key={index}>{item.name}</option>)}
-                        <option value="customBank">Custom Bank</option>
-                    </select>
-                </div>
-                <div className={customBankSelected? ' d-flex justify-content-between mb-2' : 'd-none'  }>
-                    <label className={'fw-bold me-3 '} htmlFor="customBankSelector">Choose a Bank:</label>
-                    <select name="customBankSelector" id="customBankSelector" ref={bankSelectorRef} onChange={(event) => {
-                        {if(event.target.value == "#new bank#"){
-                            setSelectedBank(0);setNewBankSelected(true);
-                        }else{
-                            setNewBankSelected(false);setSelectedBank(event.target.value )}
-                        }}
-                    }>    
-                        { banks.customBanks?.map((item,index) => <option value={item.bank_id} key={index}>{item.name}</option>)}
-                        <option onClick={() => {}} value="#new bank#">New Bank</option>
-                    </select>
-                </div>
-                <div className={ newBankSelected? ' d-flex justify-content-between' : 'd-none'  }>
-                    <p className={'fw-bold me-3 '}>Custom Bank Name :</p>
-                    <input className={'input-button rounded-1'} type="text" ref={customBankNameRef} placeholder="custom bank"/>
-                </div>
-                <div className={'d-flex justify-content-between'}>
-                    <p className={'fw-bold me-3 '}>Note :</p>
-                    <input className={'input-button rounded-1'} type="text" ref={noteRef} placeholder="note" />
-                </div>
-                <button className={'submit-button rounded-1'} type="submit">SUBMIT</button>
-            </div>
-        </form>}
-        </>
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <Form className="d-flex flex-column align-items-center bg-light p-4 rounded-3 shadow-lg mx-auto my-5" style={{ maxWidth: '600px'}} onSubmit={(event) => handleSubmit(event)}>
+            <h4 className="mb-5 text-primary">Please enter the details to add a loan</h4>
+  
+            {error && <p style={{ color: 'rgb(230, 18, 18)' }}>{error}</p>}
+  
+            <Form.Group className="mb-3 w-100 d-flex justify-content-between align-items-center">
+              <Form.Label className="col-5 fw-bold m-0">Amount:</Form.Label>
+              <Form.Control className="flex-grow-1 bg-dark-subtle" type="number" ref={amountRef} placeholder="Amount" />
+            </Form.Group>
+  
+            <Form.Group className="mb-3 w-100 d-flex justify-content-between align-items-center">
+              <Form.Label className="col-5 fw-bold m-0">Interest:</Form.Label>
+              <Form.Control className="flex-grow-1 bg-dark-subtle" type="number" ref={interestRef} placeholder="Interest" />
+            </Form.Group>
+  
+            <Form.Group className="mb-3 w-100 d-flex justify-content-between align-items-center">
+              <Form.Label className="col-5 fw-bold m-0">How Many Debts?</Form.Label>
+              <Form.Control className="flex-grow-1 bg-dark-subtle" type="number" ref={debtCountRef} placeholder="Debt Number" />
+            </Form.Group>
+  
+            <Form.Group className="mb-3 w-100 d-flex justify-content-between align-items-center">
+              <Form.Label className="col-5 fw-bold m-0">Start Date:</Form.Label>
+              <Form.Control className="flex-grow-1 bg-dark-subtle" type="date" ref={startDateRef} />
+            </Form.Group>
+  
+            <Form.Group className="mb-3 w-100 d-flex justify-content-between align-items-center">
+              <Form.Label className="col-5 fw-bold m-0" htmlFor="bankSelector">Choose a Bank:</Form.Label>
+              <Form.Select className="bg-dark-subtle" name="bankSelector" id="bankSelector" ref={bankSelectorRef} onChange={(event) => {if(event.target.value == "customBank") {setCustomBankSelected(true);setSelectedBank(0); if(banks.customBanks.length==0){setNewBankSelected(true)}}else{ setCustomBankSelected(false);setNewBankSelected(false);setSelectedBank(event.target.value) }}}>
+                {banks.banks?.map((item, index) => <option value={item.bank_id} key={index}>{item.name}</option>)}
+                <option value="customBank">Custom Bank</option>
+              </Form.Select>
+            </Form.Group>
+  
+            {customBankSelected && (
+              <Form.Group className="mb-3 w-100 d-flex justify-content-between align-items-center">
+                <Form.Label className="col-5 fw-bold m-0" htmlFor="customBankSelector">Choose a Bank:</Form.Label>
+                <Form.Select className="bg-dark-subtle" name="customBankSelector" id="customBankSelector" ref={bankSelectorRef} onChange={(event) => {if(event.target.value == "#new bank#"){ setSelectedBank(0); setNewBankSelected(true); }else{ setNewBankSelected(false); setSelectedBank(event.target.value) }}}>
+                  {banks.customBanks?.map((item, index) => <option value={item.bank_id} key={index}>{item.name}</option>)}
+                  <option value="#new bank#">New Bank</option>
+                </Form.Select>
+              </Form.Group>
+            )}
+  
+            {newBankSelected && (
+              <Form.Group className="mb-3 w-100 d-flex justify-content-between align-items-center">
+                <Form.Label className="col-5 fw-bold m-0">Custom Bank Name:</Form.Label>
+                <Form.Control className="flex-grow-1 bg-dark-subtle" type="text" ref={customBankNameRef} placeholder="Custom Bank" />
+              </Form.Group>
+            )}
+  
+            <Form.Group className="mb-3 w-100 d-flex justify-content-between align-items-center">
+              <Form.Label className="col-5 fw-bold m-0">Note:</Form.Label>
+              <Form.Control className="flex-grow-1 bg-dark-subtle" type="text" ref={noteRef} placeholder="Note" />
+            </Form.Group>
+  
+            <Button className="col-5 mt-3" variant="primary" type="submit">SUBMIT</Button>
+          </Form>
+        )}
+      </>
         
     )
 }
