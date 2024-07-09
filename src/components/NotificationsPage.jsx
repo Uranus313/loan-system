@@ -8,11 +8,13 @@ function NotificationsPage(){
     let navigate = useNavigate();
     return (
         <>
-        <Button onClick={() => navigate(-1)}>back</Button>
-        {isLoading? <Loading /> : norifications?.map((notification,index) => 
-        <div key={index} className="d-flex">
-            <NotificationCard notificiation={notification}  />
-        </div>) }
+        <div className="row d-flex m-3">
+            {isLoading? <Loading /> : norifications?.map((notification,index) => 
+            <div key={index} className="d-flex col-12 mb-3">
+                <NotificationCard notificiation={notification}  />
+            </div>) }
+        </div>
+
         </>
     );
 }

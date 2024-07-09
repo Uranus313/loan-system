@@ -43,8 +43,8 @@ function LoanPopUp({title,rows,debts,user}) {
     let counter = 0;
   return (
     <>
-      <Button variant="primary" onClick={() => {setModalShow(true); console.log(user)}}>
-        Launch vertically centered modal
+      <Button variant="primary" className='mt-5' onClick={() => {setModalShow(true); console.log(user)}}>
+        Show More Detailes
       </Button>
     <Modal
       size="lg"
@@ -54,21 +54,21 @@ function LoanPopUp({title,rows,debts,user}) {
       centered
     >
       <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
+        <Modal.Title id="contained-modal-title-vcenter" className='text-primary'>
           {title}
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body className=' overflow-x-scroll'>
+      <Modal.Body>
         
         {rows.map((row,index) => 
         {if(row.text || row.text == 0) {return (<div key={index} className='d-flex w-100 justify-content-between'>
-            <p>{row.title}</p>
-            <p >{row.text}</p>
+          <strong>{row.title}</strong>
+          <p >{row.text}</p>
         </div>);}else{ return null}}
         )}
         {debts && 
-            <div className='d-flex flex-column overflow-x-scroll'>
-                <Button variant="primary" className='text-white' onClick={remainingDebtsShow? () => SetRemainingDebtsShow(false):() => SetRemainingDebtsShow(true)}>{remainingDebtsShow? "hide remaining debts" : "show remaining debts"}</Button>
+            <div className='d-flex flex-column'>
+                <Button variant="primary" className='text-white mt-3' onClick={remainingDebtsShow? () => SetRemainingDebtsShow(false):() => SetRemainingDebtsShow(true)}>{remainingDebtsShow? "hide remaining debts" : "show remaining debts"}</Button>
                 <div className={remainingDebtsShow? "d-block":"d-none"}>
                 <h4>Remaining Debts</h4>
                 <Table striped bordered hover className=' overflow-x-scroll'>
