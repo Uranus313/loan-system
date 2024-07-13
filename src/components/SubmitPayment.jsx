@@ -72,7 +72,7 @@ function SubmitPayment(){
         {isLoading ? (
           <Loading />
         ) : loans.length === 0 ? (
-          <p className="text-primary">You have no loans</p>
+          <h2 className="text-primary text-center">You have no loans</h2>
         ) : (
             <Form
               className="col-10 col-md-6 col-lg-5 d-flex flex-column p-5 align-items-center bg-light shadow-lg mx-auto"
