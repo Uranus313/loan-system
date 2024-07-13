@@ -39,7 +39,8 @@ function SignIn(){
     });
     
     
-    useEffect(() => localStorage.removeItem("auth-token"),[])
+    useEffect(() => {localStorage.removeItem("auth-token"); queryClient.invalidateQueries(["user"]);},[]);
+     
     function handleSubmit(event){
         // handle this errors with toast notifications too (just like edit profile)
         event.preventDefault(); 
