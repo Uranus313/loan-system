@@ -56,7 +56,7 @@ async def login_for_access_token(response: Response, form_data: Annotated[OAuth2
 
         access_token_expires = timedelta(minutes=tokens.ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = tokens.create_access_token(
-            data={"sub": user.user_id}, expires_delta=access_token_expires
+            data={"sub": str(user.user_id)}, expires_delta=access_token_expires
         )
 
         response.headers["auth-token"] = access_token
@@ -82,7 +82,7 @@ def register_user(response: Response, user: schemas.UserCreate, db: Session = De
             db_user = crud.register_user(db, user)
             access_token_expires = timedelta(minutes=tokens.ACCESS_TOKEN_EXPIRE_MINUTES)
             access_token = tokens.create_access_token(
-                data={"sub": db_user.user_id}, expires_delta=access_token_expires
+                data={"sub": str(db_user.user_id)}, expires_delta=access_token_expires
             )
 
             response.headers["auth-token"] = access_token
