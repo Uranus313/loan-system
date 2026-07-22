@@ -266,24 +266,6 @@ npm run preview  # Preview the production build locally
 uvicorn main:app --reload
 ```
 
-## Security Notes
-
-Before deploying the application:
-
-- Remove committed secrets and rotate any credentials that have already been exposed.
-- Load the database URL and all secrets from environment variables.
-- Restrict CORS to trusted frontend origins.
-- Disable debug/reload mode.
-- Use HTTPS.
-- Add database migrations, automated tests, and production logging.
-- Review authorization rules for every administrator endpoint.
-
-A `requirements.txt` file is included under `Backend/` to simplify backend setup.
-
 ## Current Status
 
 This repository is an academic team project. It contains the main user, loan, installment, bank, notification, and administrator workflows. Additional testing, migrations, deployment configuration, and security hardening are recommended before production use.
-
-## License
-
-No license has been specified for this repository. All rights remain with the project authors unless a license is added.
