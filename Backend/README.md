@@ -128,17 +128,3 @@ Authorization: Bearer <access-token>
 ```
 
 The token is created after a successful login and validated before protected operations.
-
-## Important Deployment Notes
-
-- Do not commit `config.env`.
-- Move the PostgreSQL URL from `database.py` to an environment variable.
-- Restrict CORS instead of allowing every origin.
-- Rotate any credential that has previously been committed.
-- Add Alembic migrations and a pinned `requirements.txt`.
-- Add automated tests before production deployment.
-
-
-## requirements.txt
-
-The backend dependencies are pinned in `requirements.txt` for easier environment setup.
